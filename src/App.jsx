@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import {
   Github, Linkedin, Mail, Download, ArrowRight, ArrowLeft,
-  Menu, X, ChevronDown, MapPin, CircleCheck, Layers, Database, Wrench,
-  Sparkles, Monitor, ExternalLink, FolderGit2, ArrowUp,
+  Menu, X, MapPin, Layers, Database, Wrench,
+  Sparkles, ExternalLink, FolderGit2, ArrowUp,
   Code2, Server, Settings2, BrainCircuit,
   BarChart3, BookOpen, MessageSquare, Bot, Workflow,
   Mic, Heart,
@@ -11,9 +11,12 @@ import {
 
 // Datos del portafolio y tema, separados en sus propios archivos para mantener todo ordenado
 import { DATOS, CATEGORIAS } from "./data/portafolio";
-import { TEMA, DISPLAY, SANS, MONO } from "./theme/theme";
+import { TEMA, DISPLAY, SANS, MONO, TIPO, CAPA } from "./theme/theme";
 import { useReveal, movReducido } from "./hooks/useReveal";
 import Bienvenida from "./components/Bienvenida";
+import Atmosfera, { Cursor } from "./components/Atmosfera";
+import Hero from "./components/Hero";
+import EstilosGlobales from "./components/EstilosGlobales";
 
 // Iconos Lucide para marcas sin logo en Simple Icons (clave -> componente)
 const LUCIDE_TECH = { powerbi: BarChart3, gpt: MessageSquare, notebooklm: BookOpen, perplexity: Bot, n8n: Workflow };
@@ -67,7 +70,7 @@ function Contador({ valor, visible }) {
    se muestra el degradado del proyecto en su lugar.
    `tinte` aplica un velo de marca (cobre/cian) para que las fotos
    se vean premium y coherentes con el tema oscuro, no "de stock". */
-function Foto({ src, alt = "", gradiente = ["#121823", "#1A2330"], className = "", style = {}, tinte = true, children }) {
+function Foto({ src, alt = "", gradiente = ["#14171C", "#1A1E24"], className = "", style = {}, tinte = true, children }) {
   const [falla, setFalla] = useState(false);
   return (
     <div
@@ -79,21 +82,15 @@ function Foto({ src, alt = "", gradiente = ["#121823", "#1A2330"], className = "
           src={src} alt={alt} loading="lazy"
           onError={() => setFalla(true)}
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: tinte ? "saturate(0.85) contrast(1.05) brightness(0.82)" : undefined }}
+          style={{ filter: tinte ? "saturate(0.95) contrast(1.03)" : undefined }}
         />
       )}
-      {/* Velo de marca: oscurece la base y aporta tinte cobre→cian */}
+      {/* Velo muy leve para asentar la imagen sobre el fondo claro */}
       {tinte && !falla && src && (
-        <>
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(135deg, rgba(7,9,13,0.55), rgba(7,9,13,0.25) 45%, rgba(7,9,13,0.7))" }}
-          />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(135deg, rgba(232,152,62,0.18), transparent 50%, rgba(34,211,238,0.14))", mixBlendMode: "overlay" }}
-          />
-        </>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(160deg, transparent 45%, rgba(10,11,13,0.75))" }}
+        />
       )}
       {children}
     </div>
@@ -145,182 +142,13 @@ function IconoTech({ t, slug, color, nombre, tam = 22, lucide: IconoLucide }) {
   );
 }
 
-// Tarjeta con inclinación 3D y foco de luz que sigue al cursor
-function TiltCard({ children, className = "" }) {
-  const ref = useRef(null);
-  const onMove = (e) => {
-    if (movReducido() || !ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width;
-    const y = (e.clientY - r.top) / r.height;
-    ref.current.style.transform =
-      `perspective(900px) rotateX(${(0.5 - y) * 5}deg) rotateY(${(x - 0.5) * 5}deg) translateY(-4px)`;
-    ref.current.style.setProperty("--mx", `${x * 100}%`);
-    ref.current.style.setProperty("--my", `${y * 100}%`);
-  };
-  const onLeave = () => { if (ref.current) ref.current.style.transform = ""; };
-  return (
-    <div
-      ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}
-      className={`h-full ${className}`}
-      style={{ transition: "transform 0.25s ease", willChange: "transform" }}
-    >
-      {children}
-    </div>
-  );
-}
-
 /* ============================================================
-   ATMÓSFERA GLOBAL — aurora, grano de película y luz de cursor
+   ATMÓSFERA GLOBAL — retícula de fondo y luz de cursor
    ============================================================ */
 
-// Grano de película (SVG embebido, sin peticiones externas)
-const GRANO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E";
-
-function FondoGlobal({ t }) {
-  const quieta = movReducido();
-  return (
-    <div aria-hidden className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
-      {/* Patrón de puntos técnico global — quita la sensación de vacío */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: "radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-          maskImage: "radial-gradient(ellipse 100% 100% at 50% 0%, #000 30%, rgba(0,0,0,0.4) 70%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 100% 100% at 50% 0%, #000 30%, rgba(0,0,0,0.4) 70%, transparent 100%)",
-        }}
-      />
-      {/* Constelación de nodos animada (canvas, ligero) */}
-      <Constelacion t={t} />
-      {/* Aurora cobre */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          top: "-16%", left: "-12%", width: "58vw", height: "58vw", minWidth: 480, minHeight: 480,
-          background: `radial-gradient(circle, rgba(232,152,62,0.18), transparent 62%)`,
-          filter: "blur(70px)",
-          animation: quieta ? "none" : "deriva1 22s ease-in-out infinite",
-        }}
-      />
-      {/* Aurora cian */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          bottom: "-20%", right: "-14%", width: "52vw", height: "52vw", minWidth: 420, minHeight: 420,
-          background: `radial-gradient(circle, rgba(34,211,238,0.14), transparent 62%)`,
-          filter: "blur(70px)",
-          animation: quieta ? "none" : "deriva2 28s ease-in-out infinite",
-        }}
-      />
-      {/* Aurora central tenue */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          top: "32%", left: "28%", width: "44vw", height: "44vw",
-          background: `radial-gradient(circle, rgba(232,152,62,0.07), transparent 60%)`,
-          filter: "blur(80px)",
-          animation: quieta ? "none" : "deriva1 30s ease-in-out infinite reverse",
-        }}
-      />
-      {/* Grano de película sobre todo */}
-      <div
-        className="absolute inset-0"
-        style={{ backgroundImage: `url("${GRANO}")`, opacity: 0.05, mixBlendMode: "overlay" }}
-      />
-    </div>
-  );
-}
-
-/* Constelación de nodos conectados — fondo tecnológico animado y ligero.
-   Se pausa con prefers-reduced-motion y baja densidad en móvil. */
-function Constelacion({ t }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    if (movReducido()) return;
-    // En móvil de gama media prioriza fluidez/batería: sin canvas animado
-    if (window.matchMedia("(max-width: 768px)").matches) return;
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let w, h, raf, nodos = [];
-    const colores = ["232,152,62", "34,211,238"];
-
-    const dimensionar = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = canvas.clientWidth; h = canvas.clientHeight;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // Densidad adaptativa: menos nodos en pantallas chicas
-      const objetivo = Math.min(Math.floor((w * h) / 26000), w < 640 ? 26 : 64);
-      nodos = Array.from({ length: objetivo }, () => ({
-        x: Math.random() * w, y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.22, vy: (Math.random() - 0.5) * 0.22,
-        c: colores[Math.random() < 0.62 ? 0 : 1],
-      }));
-    };
-
-    const dibujar = () => {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < nodos.length; i++) {
-        const a = nodos[i];
-        a.x += a.vx; a.y += a.vy;
-        if (a.x < 0 || a.x > w) a.vx *= -1;
-        if (a.y < 0 || a.y > h) a.vy *= -1;
-        // Líneas a nodos cercanos
-        for (let j = i + 1; j < nodos.length; j++) {
-          const b = nodos[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 130) {
-            ctx.strokeStyle = `rgba(${a.c},${0.16 * (1 - dist / 130)})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-          }
-        }
-        // Punto
-        ctx.fillStyle = `rgba(${a.c},0.55)`;
-        ctx.beginPath(); ctx.arc(a.x, a.y, 1.4, 0, Math.PI * 2); ctx.fill();
-      }
-      raf = requestAnimationFrame(dibujar);
-    };
-
-    dimensionar();
-    dibujar();
-    window.addEventListener("resize", dimensionar);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", dimensionar); };
-  }, []);
-
-  return (
-    <canvas
-      ref={ref}
-      className="absolute inset-0 w-full h-full"
-      style={{ opacity: 0.5 }}
-    />
-  );
-}
-
-// Halo que sigue al cursor por toda la página (solo con mouse)
-function LuzCursor() {
-  const ref = useRef(null);
-  useEffect(() => {
-    if (movReducido() || !window.matchMedia("(pointer: fine)").matches) return;
-    let raf = null;
-    const f = (e) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        if (ref.current) {
-          ref.current.style.background =
-            `radial-gradient(560px circle at ${e.clientX}px ${e.clientY}px, rgba(232,152,62,0.055), transparent 70%)`;
-        }
-        raf = null;
-      });
-    };
-    window.addEventListener("mousemove", f, { passive: true });
-    return () => window.removeEventListener("mousemove", f);
-  }, []);
-  return <div ref={ref} aria-hidden className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }} />;
-}
+/* Fondo global corporativo: una retícula tenue y un velo suave.
+   Sin auroras de color, sin canvas animado, sin grano: en un tema claro
+   el vacío se resuelve con estructura y aire, no con luces de color. */
 
 // Barra de progreso de lectura (parte superior)
 function BarraProgreso({ t }) {
@@ -337,7 +165,7 @@ function BarraProgreso({ t }) {
   return (
     <div
       className="fixed top-0 left-0 h-0.5"
-      style={{ zIndex: 70, width: `${p * 100}%`, background: `linear-gradient(90deg, ${t.accent}, ${t.accent2})`, transition: "width 0.1s linear" }}
+      style={{ zIndex: 70, width: `${p * 100}%`, background: t.accent, transition: "width 0.1s linear" }}
     />
   );
 }
@@ -384,7 +212,7 @@ function Marquesina({ t }) {
             <span
               key={i}
               className="flex items-center gap-2.5 shrink-0 px-4 py-2 rounded-xl"
-              style={{ background: "rgba(7,9,13,0.5)", border: `1px solid ${t.borderSoft}` }}
+              style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
             >
               <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={16} />
               <span style={{ fontFamily: MONO, fontSize: 12.5, color: t.text, fontWeight: 500, whiteSpace: "nowrap" }}>{item.nombre}</span>
@@ -425,7 +253,7 @@ function SepSeccion({ t }) {
 /* Cabecera de sección numerada — firma visual unificada.
    num: "01" · eyebrow: texto monoespaciado · titulo: H2 grande · acento cobre|cian */
 function CabeceraSeccion({ t, num, eyebrow, titulo, descripcion, acento = "cobre", children }) {
-  const col = acento === "cian" ? t.accent2Text : t.accentText;
+  const col = t.accentText;
   return (
     <div className="mb-10 md:mb-12">
       <Reveal>
@@ -437,7 +265,7 @@ function CabeceraSeccion({ t, num, eyebrow, titulo, descripcion, acento = "cobre
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <h2
             className="max-w-2xl"
-            style={{ color: t.text, fontSize: "clamp(1.8rem, 3.6vw, 2.9rem)", lineHeight: 1.1, fontWeight: 700, letterSpacing: "-0.025em" }}
+            style={{ color: t.text, fontFamily: DISPLAY, fontSize: "clamp(2rem, 4vw, 3.1rem)", lineHeight: 1.05, fontWeight: 400, letterSpacing: "-0.02em" }}
           >
             {titulo}
           </h2>
@@ -465,11 +293,11 @@ function Chip({ t, children }) {
 }
 
 function Boton({ t, primario, icono: Icono, children, href, onClick, descarga }) {
-  const base = "boton-base inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 hover:-translate-y-0.5";
-  const clase = primario ? base + " btn-brillo" : base + " boton-sec";
+  const base = "boton-base inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm";
+  const clase = primario ? base : base + " boton-sec";
   const estilo = primario
-    ? { background: t.accent, color: "#14100A", boxShadow: "0 4px 18px rgba(232,152,62,0.28)" }
-    : { background: "rgba(13,17,23,0.5)", color: t.text, border: `1px solid ${t.border}` };
+    ? { background: t.accent, color: "#14100A", boxShadow: "0 4px 18px -4px rgba(232,152,62,0.45)" }
+    : { background: t.surface, color: t.text, border: `1px solid ${t.border}` };
   const props = { className: clase, style: estilo, onClick };
   if (href !== undefined) {
     return (
@@ -501,7 +329,9 @@ const SECCIONES = [
   { id: "contacto", label: "Contacto" },
 ];
 
-function Nav({ t, irASeccion, enDetalle, volver, seccionActiva }) {
+/* Navegación. `oscuro` invierte los colores para las secciones a sangre
+   (Proyectos, Contacto), donde un nav claro sería ilegible. */
+function Nav({ t, irASeccion, enDetalle, volver, seccionActiva, oscuro }) {
   const [abierto, setAbierto] = useState(false);
   const [conFondo, setConFondo] = useState(false);
 
@@ -511,26 +341,39 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Al abrir el menú móvil bloqueamos el scroll del fondo
+  useEffect(() => {
+    if (!abierto) return;
+    const previo = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previo; };
+  }, [abierto]);
+
   const click = (id) => { setAbierto(false); enDetalle ? volver(id) : irASeccion(id); };
+
+  // Paleta activa según el fondo de la sección
+  const c = oscuro
+    ? { texto: t.text, suave: t.muted, tenue: t.faint, borde: t.border, bordeSuave: t.borderSoft, acento: t.accent, fondo: "rgba(14,15,18,0.85)", logoBg: t.text, logoFg: t.bg }
+    : { texto: t.text, suave: t.muted, tenue: t.faint, borde: t.border, bordeSuave: t.borderSoft, acento: t.accentText, fondo: "rgba(10,11,13,0.82)", logoBg: t.text, logoFg: t.bg };
 
   return (
     <header
       className="fixed top-0 left-0 right-0"
       style={{
         zIndex: 50,
-        background: conFondo || abierto ? "rgba(7,9,13,0.82)" : "transparent",
+        background: conFondo || abierto ? c.fondo : "transparent",
         backdropFilter: conFondo || abierto ? "blur(14px)" : "none",
-        borderBottom: `1px solid ${conFondo || abierto ? t.borderSoft : "transparent"}`,
+        borderBottom: `1px solid ${conFondo || abierto ? c.bordeSuave : "transparent"}`,
         transition: "background 0.3s ease, border-color 0.3s ease",
       }}
     >
-      <nav className="max-w-5xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
-        <button type="button" onClick={() => click("inicio")} className="group flex items-center gap-2.5" style={{ color: t.text }}>
+      <nav className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 h-16 flex items-center justify-between">
+        <button type="button" onClick={() => click("inicio")} className="flex items-center gap-2.5" style={{ color: c.texto }}>
           <span
-            className="w-7 h-7 rounded-md flex items-center justify-center font-bold text-sm transition-transform duration-300 group-hover:rotate-12"
-            style={{ background: `linear-gradient(135deg, ${t.accent}, #C77622)`, color: "#14100A", fontFamily: MONO }}
+            className="w-7 h-7 rounded-md flex items-center justify-center text-sm"
+            style={{ background: c.logoBg, color: c.logoFg, fontFamily: SANS, fontWeight: 600, letterSpacing: "-0.03em" }}
           >
-            A
+            AC
           </span>
           <span className="font-semibold text-sm tracking-tight hidden sm:block">{DATOS.nombre}</span>
         </button>
@@ -544,9 +387,9 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva }) {
                 type="button"
                 onClick={() => click(s.id)}
                 className="nav-link px-3 py-2 rounded-md text-sm transition-colors duration-200"
-                style={{ color: activa ? t.accentText : t.muted, fontWeight: activa ? 600 : 400 }}
-                onMouseEnter={(e) => { if (!activa) e.currentTarget.style.color = t.text; }}
-                onMouseLeave={(e) => { if (!activa) e.currentTarget.style.color = t.muted; }}
+                style={{ color: activa ? c.texto : c.suave, fontWeight: activa ? 600 : 400 }}
+                onMouseEnter={(e) => { if (!activa) e.currentTarget.style.color = c.texto; }}
+                onMouseLeave={(e) => { if (!activa) e.currentTarget.style.color = c.suave; }}
               >
                 {s.label}
               </button>
@@ -558,25 +401,29 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva }) {
           type="button"
           onClick={() => setAbierto(!abierto)}
           aria-label="Menú"
+          aria-expanded={abierto}
           className="flex md:hidden w-9 h-9 rounded-lg items-center justify-center"
-          style={{ border: `1px solid ${t.border}`, color: t.text }}
+          style={{ border: `1px solid ${c.borde}`, color: c.texto }}
         >
           {abierto ? <X size={17} /> : <Menu size={17} />}
         </button>
       </nav>
 
       {abierto && (
-        <div className="md:hidden px-5 pt-2 pb-5 flex flex-col gap-1 menu-movil" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+        <div
+          className="md:hidden px-6 pt-2 pb-6 flex flex-col gap-1 menu-movil"
+          style={{ borderTop: `1px solid ${c.bordeSuave}`, background: c.fondo }}
+        >
           {SECCIONES.map((s, i) => (
             <button
               key={s.id}
               type="button"
               onClick={() => click(s.id)}
-              className="menu-item flex items-center justify-between text-left px-3.5 py-3.5 rounded-xl text-base font-medium transition-colors duration-150"
-              style={{ color: t.text, animationDelay: `${i * 35}ms` }}
+              className="menu-item flex items-center justify-between text-left px-3.5 py-3.5 rounded-lg text-base font-medium"
+              style={{ color: c.texto, animationDelay: `${i * 35}ms` }}
             >
               {s.label}
-              <ArrowRight size={16} style={{ color: t.faint }} />
+              <ArrowRight size={16} style={{ color: c.tenue }} />
             </button>
           ))}
         </div>
@@ -586,298 +433,8 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva }) {
 }
 
 /* ============================================================
-   HERO — foto con anillo giratorio, orbes y contadores
+   HERO — declaración editorial a pantalla completa
    ============================================================ */
-
-function Hero({ t, irASeccion }) {
-  const [refStats, statsVisible] = useReveal();
-  return (
-    <section id="inicio" className="relative overflow-hidden pt-32 md:pt-44 pb-16 md:pb-24 px-5 md:px-8">
-      {/* Cuadrícula técnica que se desvanece */}
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-          backgroundSize: "46px 46px",
-          maskImage: "radial-gradient(ellipse 85% 65% at 50% 0%, #000 38%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 85% 65% at 50% 0%, #000 38%, transparent 100%)",
-        }}
-      />
-      {/* Glow dual cobre (izq) + cian (der) detrás del hero */}
-      <div
-        aria-hidden
-        className="absolute pointer-events-none"
-        style={{
-          top: "-10%", left: "-5%", width: "45vw", height: "45vw", maxWidth: 620, maxHeight: 620,
-          background: `radial-gradient(circle, ${t.accentSoft}, transparent 65%)`, filter: "blur(40px)",
-        }}
-      />
-      <div
-        aria-hidden
-        className="absolute pointer-events-none"
-        style={{
-          top: "0%", right: "-8%", width: "40vw", height: "40vw", maxWidth: 540, maxHeight: 540,
-          background: `radial-gradient(circle, rgba(34,211,238,0.08), transparent 65%)`, filter: "blur(40px)",
-        }}
-      />
-      {/* Línea de luz superior que cruza el hero */}
-      <div
-        aria-hidden
-        className="absolute top-0 inset-x-0 h-px pointer-events-none"
-        style={{ background: `linear-gradient(90deg, transparent, ${t.accent}66, ${t.accent2}66, transparent)` }}
-      />
-      {/* Palabra técnica gigante de fondo — profundidad y carácter */}
-      <div
-        aria-hidden
-        className="absolute pointer-events-none select-none hidden md:block"
-        style={{
-          top: "14%", left: "-2%", right: 0, textAlign: "left",
-          fontFamily: MONO, fontWeight: 500,
-          fontSize: "clamp(7rem, 20vw, 19rem)", lineHeight: 0.85,
-          letterSpacing: "-0.04em",
-          color: "transparent",
-          WebkitTextStroke: `1px rgba(255,255,255,0.035)`,
-          maskImage: "linear-gradient(180deg, #000 30%, transparent 95%)",
-          WebkitMaskImage: "linear-gradient(180deg, #000 30%, transparent 95%)",
-        }}
-      >
-        &lt;dev/&gt;
-      </div>
-
-      <div className="relative max-w-5xl mx-auto grid lg:grid-cols-12 gap-12 lg:gap-14 items-center">
-        {/* Columna de texto */}
-        <div className="lg:col-span-7">
-          <Reveal>
-            <div
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-7"
-              style={{ border: `1px solid ${t.border}`, background: "rgba(13,17,23,0.6)", backdropFilter: "blur(6px)" }}
-            >
-              <span className="relative flex w-2 h-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: t.ok }} />
-                <span className="relative inline-flex rounded-full w-2 h-2" style={{ background: t.ok }} />
-              </span>
-              <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.muted }}>
-                {DATOS.disponible.toUpperCase()}
-              </span>
-            </div>
-          </Reveal>
-
-          <h1
-            className="relative mb-5"
-            style={{ color: t.text, fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 1.03, fontWeight: 700, letterSpacing: "-0.03em", overflowWrap: "break-word" }}
-          >
-            {/* Resplandor detrás del nombre para que salte */}
-            <span
-              aria-hidden
-              className="absolute pointer-events-none"
-              style={{
-                left: "-6%", top: "10%", width: "70%", height: "120%",
-                background: `radial-gradient(60% 60% at 30% 50%, ${t.accentSoft}, transparent 70%)`,
-                filter: "blur(28px)", zIndex: -1,
-              }}
-            />
-            {DATOS.nombre.split(" ").map((palabra, i, arr) => (
-              <span
-                key={i}
-                className="palabra inline-block"
-                style={{
-                  animationDelay: `${180 + i * 140}ms`,
-                  // Apellido (\u00FAltima palabra) con gradiente cobre\u2192cian
-                  ...(i === arr.length - 1
-                    ? {
-                        background: `linear-gradient(100deg, ${t.accent}, ${t.accent2})`,
-                        WebkitBackgroundClip: "text",
-                        backgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                      }
-                    : {}),
-                }}
-              >
-                {palabra}{i < arr.length - 1 ? "\u00A0" : ""}
-              </span>
-            ))}
-          </h1>
-
-          <Reveal delay={140}>
-            <div className="flex items-start gap-3 mb-6">
-              <span className="h-px w-8 shrink-0 mt-2.5" style={{ background: `linear-gradient(90deg, ${t.accent}, transparent)` }} />
-              <p style={{ fontFamily: MONO, fontSize: "clamp(0.78rem, 1.5vw, 0.92rem)", color: t.accentText, letterSpacing: "0.01em", lineHeight: 1.6 }}>
-                {DATOS.titulo}
-                {DATOS.tituloLinea2 && (
-                  <>
-                    <br />
-                    <span style={{ color: t.muted }}>{DATOS.tituloLinea2}</span>
-                  </>
-                )}
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={200}>
-            <p className="leading-relaxed max-w-xl mb-9" style={{ color: t.muted, fontSize: "clamp(1rem, 1.4vw, 1.18rem)" }}>
-              {DATOS.descripcion}
-            </p>
-          </Reveal>
-
-          {/* CTAs con jerarqu\u00EDa clara: 2 principales + redes compactas */}
-          <Reveal delay={260}>
-            <div className="flex flex-wrap items-center gap-3 mb-5">
-              <Boton t={t} primario icono={Download} href={DATOS.cvUrl} descarga>Descargar CV</Boton>
-              <Boton t={t} icono={ArrowRight} onClick={() => irASeccion("proyectos")}>Ver proyectos</Boton>
-            </div>
-          </Reveal>
-
-          <Reveal delay={320}>
-            <div className="flex items-center gap-2.5">
-              {[
-                { Icono: Github, href: DATOS.github, label: "GitHub" },
-                { Icono: Linkedin, href: DATOS.linkedin, label: "LinkedIn" },
-                { Icono: Mail, href: `mailto:${DATOS.email}`, label: "Email" },
-              ].map(({ Icono, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel="noreferrer"
-                  className="enlace-social w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200"
-                  style={{ border: `1px solid ${t.border}`, background: "rgba(13,17,23,0.5)", color: t.muted }}
-                >
-                  <Icono size={17} />
-                </a>
-              ))}
-            </div>
-          </Reveal>
-
-          {/* Experiencia destacada — credibilidad inmediata */}
-          <Reveal delay={380}>
-            <div className="mt-9 pt-6" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
-              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.faint, textTransform: "uppercase" }}>
-                Experiencia
-              </span>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {DATOS.experiencia.map((e) => (
-                  <span
-                    key={e}
-                    className="px-3 py-1.5 rounded-lg"
-                    style={{ fontFamily: MONO, fontSize: 12, color: t.muted, fontWeight: 500, background: "rgba(13,17,23,0.5)", border: `1px solid ${t.borderSoft}`, whiteSpace: "nowrap" }}
-                  >
-                    {e}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </div>
-
-        {/* Columna de foto — reemplaza DATOS.fotos.perfil por tu foto real */}
-        <Reveal delay={300} className="lg:col-span-5">
-          <div className="relative max-w-xs sm:max-w-sm mx-auto lg:max-w-none">
-            {/* Anillo de luz giratorio detrás de la foto */}
-            <div
-              aria-hidden
-              className="absolute rounded-[1.75rem]"
-              style={{
-                inset: -12,
-                background: `conic-gradient(from 0deg, ${t.accent}, transparent 22%, ${t.accent2}, transparent 58%, ${t.accent})`,
-                filter: "blur(16px)", opacity: 0.45,
-                animation: movReducido() ? "none" : "girar 11s linear infinite",
-              }}
-            />
-            {/* Marco glass sutil */}
-            <div
-              aria-hidden
-              className="absolute rounded-3xl"
-              style={{ inset: -1, border: `1px solid rgba(255,255,255,0.06)` }}
-            />
-            <Foto
-              src={DATOS.fotos.perfil}
-              alt={`Foto de ${DATOS.nombre}`}
-              gradiente={["#121823", "#2A1F10"]}
-              tinte={false}
-              className="rounded-3xl"
-              style={{ aspectRatio: "1 / 1", boxShadow: t.shadowLg, border: `1px solid ${t.border}` }}
-            >
-              {/* Degradado inferior para fundir la foto con el tema oscuro */}
-              <div
-                className="absolute inset-x-0 bottom-0 pointer-events-none"
-                style={{ height: "55%", background: "linear-gradient(transparent, rgba(7,9,13,0.55) 55%, rgba(7,9,13,0.92))" }}
-              />
-              {/* Brillo sutil de marca en una esquina */}
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ background: `radial-gradient(120% 80% at 100% 0%, ${t.accent2Soft}, transparent 45%)`, mixBlendMode: "screen" }}
-              />
-              <div className="absolute inset-x-0 bottom-0 px-4 py-3.5">
-                <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.14em", color: "rgba(255,255,255,0.92)" }}>
-                  {DATOS.ubicacion.toUpperCase()} · CONECTA SYSTEMS
-                </span>
-              </div>
-            </Foto>
-            {/* Insignia flotante inferior izquierda — producción (cobre) */}
-            <div
-              className="absolute flex items-center gap-2 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bottom-[-12px] left-[-8px] sm:bottom-[-16px] sm:left-[-16px]"
-              style={{
-                background: t.surface, border: `1px solid ${t.border}`,
-                boxShadow: t.shadowMd,
-                animation: movReducido() ? "none" : "flotar 6s ease-in-out infinite",
-              }}
-            >
-              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: t.ok }} />
-              <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.text }}>En producción real</span>
-            </div>
-            {/* Insignia flotante superior derecha — rol (cian) */}
-            <div
-              className="absolute hidden sm:flex items-center gap-2 px-3.5 py-2.5 rounded-xl"
-              style={{
-                top: -14, right: -14, background: t.surface, border: `1px solid ${t.accent2Soft}`,
-                boxShadow: t.shadowMd,
-                animation: movReducido() ? "none" : "flotar 7.5s ease-in-out infinite reverse",
-              }}
-            >
-              <Sparkles size={13} style={{ color: t.accent2Text }} />
-              <span style={{ fontFamily: MONO, fontSize: 11, color: t.text }}>IA &amp; Automatización</span>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-
-      {/* Indicadores con contador animado */}
-      <div ref={refStats} className="relative max-w-5xl mx-auto mt-16 md:mt-20">
-        <div
-          className="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden"
-          style={{
-            background: t.borderSoft, border: `1px solid ${t.borderSoft}`, boxShadow: t.shadowSoft,
-            opacity: statsVisible ? 1 : 0, transform: statsVisible ? "translateY(0)" : "translateY(22px)",
-            transition: "opacity 0.65s ease 120ms, transform 0.65s cubic-bezier(0.22,1,0.36,1) 120ms",
-          }}
-        >
-          {DATOS.indicadores.map((ind, i) => (
-            <div
-              key={ind.etiqueta}
-              className="stat-cell relative p-6 md:p-7"
-              style={{ background: "rgba(13,17,23,0.7)" }}
-            >
-              <div
-                className="absolute top-0 left-0 h-px w-12"
-                style={{ background: i % 2 === 0 ? t.accent : t.accent2 }}
-              />
-              <div
-                className="mb-1.5"
-                style={{ fontFamily: DISPLAY, fontSize: "clamp(1.9rem, 4vw, 2.6rem)", fontWeight: 700, letterSpacing: "-0.02em", color: t.text }}
-              >
-                <Contador valor={ind.valor} visible={statsVisible} />
-              </div>
-              <div style={{ fontFamily: MONO, fontSize: 11, color: t.faint, letterSpacing: "0.04em", lineHeight: 1.5 }}>{ind.etiqueta}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-    </section>
-  );
-}
 
 /* ============================================================
    SOBRE MÍ
@@ -892,34 +449,61 @@ function SobreMi({ t }) {
           t={t}
           num="01"
           eyebrow="Sobre mí"
-          titulo="Construyo webs que funcionan y se ven bien"
+          titulo="Automatizo lo que hoy alguien hace a mano"
         />
 
         <div className="grid lg:grid-cols-5 gap-8 lg:gap-10 items-stretch">
-          {/* Foto — reemplaza DATOS.fotos.sobreMi por una foto tuya trabajando */}
+          {/* Panel "cómo trabajo": contenido propio en lugar de una foto de stock.
+              Comunica el método, que es lo que un empleador quiere saber. */}
           <Reveal delay={80} className="lg:col-span-2 flex">
-            <div className="relative w-full">
-              <div
-                aria-hidden
-                className="absolute rounded-2xl hidden lg:block"
-                style={{ inset: 0, transform: "translate(-12px, 12px)", border: `1px solid ${t.accent2Soft}`, background: t.accentSoft }}
-              />
-              <Foto
-                src={DATOS.fotos.sobreMi}
-                alt="Espacio de trabajo"
-                gradiente={["#121823", "#26190B"]}
-                className="rounded-2xl h-full w-full"
-                style={{ minHeight: 280, aspectRatio: "auto", border: `1px solid ${t.border}`, boxShadow: t.shadowMd }}
-              >
-                <div
-                  className="absolute inset-x-0 bottom-0 px-4 py-3"
-                  style={{ background: "linear-gradient(transparent, rgba(0,0,0,0.7))" }}
-                >
-                  <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.12em", color: "rgba(255,255,255,0.9)" }}>
-                    // CÓDIGO QUE LLEGA A PRODUCCIÓN
-                  </span>
-                </div>
-              </Foto>
+            <div
+              className="relative w-full rounded-2xl p-6 flex flex-col"
+              style={{ background: t.surface, border: `1px solid ${t.borderSoft}`, boxShadow: t.shadowSoft }}
+            >
+              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.faint, textTransform: "uppercase" }}>
+                Cómo trabajo
+              </span>
+
+              <ol className="mt-5 flex-1 flex flex-col justify-around space-y-0">
+                {[
+                  { n: "01", t: "Entender el proceso", d: "Qué se hace hoy a mano, cuántas horas cuesta y dónde se rompe." },
+                  { n: "02", t: "Decidir si la IA aplica", d: "A veces la respuesta es un script, no un modelo. Lo digo con franqueza." },
+                  { n: "03", t: "Construir el flujo", d: "Agente o automatización, con límites claros y control humano donde importa." },
+                  { n: "04", t: "Dejarlo usable", d: "Interfaz simple para quien no es técnico, y medición de lo que ahorró." },
+                ].map((paso, i, arr) => (
+                  <li
+                    key={paso.n}
+                    className="flex gap-3.5 py-3.5"
+                    style={{ borderBottom: i < arr.length - 1 ? `1px solid ${t.borderSoft}` : "none" }}
+                  >
+                    <span
+                      className="shrink-0"
+                      style={{ fontFamily: MONO, fontSize: 11, color: t.accentText, fontWeight: 500, paddingTop: 2 }}
+                    >
+                      {paso.n}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block" style={{ fontSize: 14, fontWeight: 600, color: t.text, letterSpacing: "-0.01em" }}>
+                        {paso.t}
+                      </span>
+                      <span className="block mt-1" style={{ fontSize: 13, color: t.muted, lineHeight: 1.55 }}>
+                        {paso.d}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+
+              {/* Cierre: la marca bajo la que entrega el trabajo */}
+              <div className="mt-5 pt-4 flex items-center justify-between gap-3" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: t.faint, textTransform: "uppercase" }}>
+                  Conecta Systems
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="punto-vivo w-1.5 h-1.5 rounded-full" style={{ background: t.ok }} />
+                  <span style={{ fontFamily: MONO, fontSize: 10, color: t.muted, letterSpacing: "0.08em" }}>EN PRODUCCIÓN</span>
+                </span>
+              </div>
             </div>
           </Reveal>
 
@@ -935,25 +519,21 @@ function SobreMi({ t }) {
               )}
             </Reveal>
             <div className="grid sm:grid-cols-2 gap-4 flex-1">
+              {/* Capacidades como filas numeradas, no tarjetas: misma
+                  gramática visual que las tablas de Stack y Proyectos. */}
               {DATOS.sobreMi.puntos.map((p, i) => (
                 <Reveal key={p.titulo} delay={160 + i * 70}>
-                  <div
-                    className="tarjeta-suave group h-full p-5 rounded-2xl transition-all duration-300"
-                    style={{ background: t.card, border: `1px solid ${t.borderSoft}` }}
-                  >
-                    <div className="flex items-center gap-2.5 mb-2.5">
-                      <span
-                        className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
-                        style={{
-                          background: i % 2 === 0 ? t.accentSoft : t.accent2Soft,
-                          color: i % 2 === 0 ? t.accentText : t.accent2Text,
-                        }}
-                      >
-                        <CircleCheck size={15} />
-                      </span>
-                      <h3 className="font-semibold text-sm" style={{ color: t.text }}>{p.titulo}</h3>
+                  <div className="flex gap-4 py-5" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+                    <span
+                      className="shrink-0"
+                      style={{ fontFamily: MONO, fontSize: "var(--t-etiqueta)", color: t.accentText, letterSpacing: "0.06em", paddingTop: 3 }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div className="min-w-0">
+                      <h3 style={{ color: t.text, fontSize: "0.94rem" }}>{p.titulo}</h3>
+                      <p className="mt-1.5" style={{ color: t.muted, fontSize: "var(--t-menor)" }}>{p.texto}</p>
                     </div>
-                    <p className="text-sm leading-relaxed" style={{ color: t.muted }}>{p.texto}</p>
                   </div>
                 </Reveal>
               ))}
@@ -964,37 +544,31 @@ function SobreMi({ t }) {
         {/* Lema / mentalidad — cita destacada */}
         {DATOS.sobreMi.lema && (
           <Reveal delay={120}>
-            <div
-              className="relative mt-8 rounded-2xl overflow-hidden p-7 md:p-9"
-              style={{ background: t.card, border: `1px solid ${t.border}` }}
-            >
-              {/* Acentos de luz a los lados */}
-              <div aria-hidden className="absolute top-0 left-0 w-1 h-full" style={{ background: `linear-gradient(${t.accent}, ${t.accent2})` }} />
-              <div
-                aria-hidden
-                className="absolute -right-10 -top-10 w-48 h-48 rounded-full pointer-events-none"
-                style={{ background: `radial-gradient(circle, ${t.accent2Soft}, transparent 70%)` }}
-              />
-              <div className="relative flex flex-col md:flex-row md:items-center gap-5">
-                <div className="flex-1">
-                  <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", color: t.faint, textTransform: "uppercase" }}>
-                    Mi mentalidad
-                  </span>
-                  <p
-                    className="mt-2 mb-3"
-                    style={{ fontFamily: DISPLAY, fontWeight: 700, fontSize: "clamp(1.4rem, 3vw, 2rem)", lineHeight: 1.15, letterSpacing: "-0.02em" }}
-                  >
-                    <span style={{ color: t.text }}>Planifica como </span>
-                    <span style={{ background: `linear-gradient(100deg, ${t.accent}, ${t.accent2})`, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }}>Monje</span>
-                    <span style={{ color: t.text }}>, ejecuta como </span>
-                    <span style={{ background: `linear-gradient(100deg, ${t.accent2}, ${t.accent})`, WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }}>Ninja</span>
-                  </p>
-                  <p className="leading-relaxed max-w-2xl" style={{ color: t.muted, fontSize: "0.97rem" }}>
-                    {DATOS.sobreMi.lemaTexto}
-                  </p>
-                </div>
-              </div>
-            </div>
+            {/* Cita destacada (pull quote): recurso editorial clásico.
+                Sin caja ni glow — sólo una regla superior, tipografía grande
+                y la atribución en mono. Coherente con las tablas. */}
+            <figure className="mt-16 md:mt-20 pt-9" style={{ borderTop: `1px solid ${t.border}` }}>
+              <blockquote
+                className="max-w-[46rem]"
+                style={{
+                  fontFamily: DISPLAY,
+                  fontWeight: 400,
+                  fontSize: "clamp(1.7rem, 4vw, 2.9rem)",
+                  lineHeight: 1.12,
+                  letterSpacing: "-0.025em",
+                  color: t.text,
+                }}
+              >
+                Planifica como <span style={{ fontStyle: "italic", color: t.accentText }}>Monje</span>,
+                ejecuta como <span style={{ fontStyle: "italic", color: t.accentText }}>Ninja</span>.
+              </blockquote>
+              <figcaption className="mt-6 flex items-start gap-4 max-w-[42rem]">
+                <span className="h-px w-10 shrink-0 mt-3" style={{ background: t.border }} />
+                <span style={{ color: t.muted, fontSize: "var(--t-menor)" }}>
+                  {DATOS.sobreMi.lemaTexto}
+                </span>
+              </figcaption>
+            </figure>
           </Reveal>
         )}
       </div>
@@ -1006,74 +580,95 @@ function SobreMi({ t }) {
    TECNOLOGÍAS — logos reales con nombre y propósito
    ============================================================ */
 
-const ICONOS_CAT = { monitor: Code2, layers: Server, database: Database, wrench: Settings2, sparkles: BrainCircuit };
+const ICONOS_CAT = { monitor: Code2, layers: Server, database: Database, wrench: Settings2, sparkles: BrainCircuit, settings: Workflow };
 
-// Tarjeta de categoría colapsable (acordeón). Cerrada: muestra logos en fila.
-// Abierta: muestra el detalle de cada tecnología.
+/* Fila de categoría — estructura de tabla editorial, no tarjeta.
+   Cerrada: número, nombre y los logos alineados a la derecha.
+   Abierta: el detalle de cada tecnología en dos columnas.
+   Sin borde de caja ni sombra: solo una línea fina que separa filas. */
 function TarjetaCategoria({ t, cat, abierta, onToggle, delay }) {
   const Icono = ICONOS_CAT[cat.icono] || Layers;
+  const num = String(cat.orden || 1).padStart(2, "0");
   return (
     <Reveal delay={delay}>
-      <div
-        className="rounded-2xl overflow-hidden transition-all duration-300"
-        style={{
-          background: abierta ? t.cardHover : t.card,
-          border: `1px solid ${abierta ? t.border : t.borderSoft}`,
-          boxShadow: abierta ? t.shadowMd : "none",
-        }}
-      >
-        {/* Cabecera clicable */}
+      <div style={{ borderTop: `1px solid ${abierta ? t.border : t.borderSoft}` }}>
+        {/* Fila clicable */}
         <button
           type="button"
           onClick={onToggle}
           aria-expanded={abierta}
-          className="w-full text-left p-5 flex items-center gap-4 transition-colors duration-200"
+          className="fila-tabla w-full text-left py-6 md:py-7 flex items-baseline gap-5 md:gap-8"
         >
+          {/* Número de índice */}
           <span
-            className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300"
-            style={{
-              background: abierta ? "rgba(34,211,238,0.10)" : "rgba(255,255,255,0.04)",
-              color: abierta ? t.accent2Text : t.muted,
-              border: `1px solid ${abierta ? t.accent2Soft : t.borderSoft}`,
-            }}
+            className="shrink-0"
+            style={{ fontFamily: MONO, fontSize: 11.5, color: abierta ? t.accentText : t.faint, letterSpacing: "0.06em", transition: "color 240ms" }}
           >
-            <Icono size={18} strokeWidth={1.8} />
+            {num}
           </span>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold" style={{ color: t.text, fontFamily: DISPLAY }}>{cat.categoria}</h3>
-              <span style={{ fontFamily: MONO, fontSize: 11, color: t.faint }}>{String(cat.items.length).padStart(2, "0")}</span>
-            </div>
-            <p className="text-sm truncate" style={{ color: t.faint }}>{cat.descripcion}</p>
-          </div>
-          {/* Logos en miniatura (solo cuando está cerrada) */}
-          <div className={`hidden sm:flex items-center gap-1 transition-all duration-300 ${abierta ? "opacity-0 w-0 overflow-hidden" : "opacity-100"}`}>
+
+          {/* Nombre y propósito */}
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-2.5">
+              <Icono size={15} strokeWidth={1.8} style={{ color: abierta ? t.accentText : t.faint, transition: "color 240ms" }} />
+              <span
+                style={{
+                  fontFamily: DISPLAY,
+                  fontWeight: 400,
+                  fontSize: "clamp(1.35rem, 2.6vw, 2rem)",
+                  letterSpacing: "-0.02em",
+                  color: t.text,
+                  lineHeight: 1.1,
+                }}
+              >
+                {cat.categoria}
+              </span>
+              <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint }}>
+                {String(cat.items.length).padStart(2, "0")}
+              </span>
+            </span>
+            <span className="block mt-1.5" style={{ fontSize: 14, color: t.muted }}>
+              {cat.descripcion}
+            </span>
+          </span>
+
+          {/* Logos (se ocultan al abrir) */}
+          <span
+            className={`hidden md:flex items-center gap-1.5 shrink-0 transition-opacity duration-200 ${abierta ? "opacity-0" : "opacity-100"}`}
+          >
             {cat.items.slice(0, 5).map((item) => (
               <IconoTech key={item.nombre} t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={14} />
             ))}
-          </div>
-          {/* Flecha indicadora */}
+          </span>
+
+          {/* Indicador +/− : más sobrio que una flecha en círculo */}
           <span
-            className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
-            style={{ border: `1px solid ${t.border}`, color: t.muted, transform: abierta ? "rotate(180deg)" : "none", background: abierta ? t.accentSoft : "transparent" }}
+            className="shrink-0 relative"
+            style={{ width: 14, height: 14, color: t.muted }}
+            aria-hidden
           >
-            <ChevronDown size={15} />
+            <span className="absolute" style={{ top: 6.5, left: 0, width: 14, height: 1, background: "currentColor" }} />
+            <span
+              className="absolute"
+              style={{
+                top: 0, left: 6.5, width: 1, height: 14, background: "currentColor",
+                transform: abierta ? "scaleY(0)" : "scaleY(1)",
+                transition: "transform 240ms cubic-bezier(0.22,0.61,0.36,1)",
+              }}
+            />
           </span>
         </button>
 
-        {/* Contenido expandible */}
-        <div
-          className="grid transition-all duration-300 ease-out"
-          style={{ gridTemplateRows: abierta ? "1fr" : "0fr" }}
-        >
+        {/* Detalle expandible */}
+        <div className="grid transition-all duration-300 ease-out" style={{ gridTemplateRows: abierta ? "1fr" : "0fr" }}>
           <div className="overflow-hidden">
-            <div className="px-5 pb-5 pt-1 grid sm:grid-cols-2 gap-x-6 gap-y-4" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+            <div className="pb-8 pl-0 md:pl-[3.9rem] grid sm:grid-cols-2 gap-x-10 gap-y-5">
               {cat.items.map((item) => (
-                <div key={item.nombre} className="flex items-start gap-3 pt-1">
-                  <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} />
+                <div key={item.nombre} className="flex items-start gap-3">
+                  <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={18} />
                   <div className="min-w-0">
-                    <div className="font-medium text-sm" style={{ color: t.text }}>{item.nombre}</div>
-                    <div className="text-sm leading-snug" style={{ color: t.muted }}>{item.detalle}</div>
+                    <div className="font-semibold text-sm" style={{ color: t.text }}>{item.nombre}</div>
+                    <div className="text-sm leading-snug mt-0.5" style={{ color: t.muted }}>{item.detalle}</div>
                   </div>
                 </div>
               ))}
@@ -1084,6 +679,7 @@ function TarjetaCategoria({ t, cat, abierta, onToggle, delay }) {
     </Reveal>
   );
 }
+
 
 function Tecnologias({ t }) {
   // Primera categoría abierta por defecto, el resto cerradas
@@ -1096,19 +692,20 @@ function Tecnologias({ t }) {
           t={t}
           num="02"
           eyebrow="Stack tecnológico"
-          titulo="Herramientas elegidas con criterio"
-          descripcion="Cada tecnología de esta lista está en uso real en mis proyectos. No es una colección de logos: es el stack con el que entrego software."
-          acento="cian"
+          titulo="El stack con el que llevo IA a producción"
+          descripcion="Cada tecnología de esta lista está en uso real en mis proyectos. No es una colección de logos: es el stack con el que diseño, integro y sostengo sistemas de IA."
         />
 
         <Marquesina t={t} />
 
-        <div className="flex flex-col gap-3">
+        {/* Tabla de categorías: filas separadas por línea, sin tarjetas.
+            La última línea cierra la tabla por abajo. */}
+        <div style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
           {DATOS.tecnologias.map((cat, i) => (
             <TarjetaCategoria
               key={cat.categoria}
               t={t}
-              cat={cat}
+              cat={{ ...cat, orden: i + 1 }}
               abierta={abierta === i}
               onToggle={() => setAbierta(abierta === i ? -1 : i)}
               delay={i * 50}
@@ -1234,7 +831,7 @@ function Certificados({ t }) {
                 >
                   <div
                     className="barra-construccion h-full rounded-full"
-                    style={{ background: `linear-gradient(90deg, ${t.accent}, ${t.accent2})` }}
+                    style={{ background: t.accent }}
                   />
                 </div>
               </div>
@@ -1340,8 +937,8 @@ function Certificados({ t }) {
 // Color de acento por categoría de proyecto
 const COLOR_CAT = {
   implementado: "ok",     // verde — ya en uso real
-  negocio: "accent",      // cobre — solución de negocio
-  personal: "accent2",    // cian — exploración personal
+  negocio: "accent",      // azul — solución de negocio
+  personal: "accent2",    // grafito — exploración personal
 };
 
 function EtiquetaCategoria({ t, categoria, codigo }) {
@@ -1425,108 +1022,88 @@ function MiniaturaProyecto({ t, p, alta = false }) {
   );
 }
 
-// Tarjeta del mosaico "bento". `destacado` la hace grande (proyecto estrella):
-// la imagen ocupa todo el bloque como fondo y el texto va encima, abajo.
-function TarjetaBento({ t, p, abrir, delay, destacado }) {
-  const color = t[COLOR_CAT[p.categoria]] || t.accent;
+/* Fila de proyecto — tabla editorial sobre fondo oscuro.
+   El contenido manda: número, nombre, problema resuelto y stack.
+   La imagen aparece sólo como miniatura a la derecha, sin dominar. */
+function FilaProyecto({ t, p, abrir, delay, indice }) {
   return (
-    <Reveal delay={delay} className="h-full">
-      <button
-        type="button"
-        onClick={() => abrir(p.id)}
-        className="bento-item group relative w-full h-full text-left rounded-2xl overflow-hidden transition-all duration-300"
-        style={{ background: t.card, border: `1px solid ${t.borderSoft}`, minHeight: destacado ? 320 : 230 }}
+    <button
+      type="button"
+      onClick={() => abrir(p.id)}
+      data-cursor="ABRIR"
+      className="fila-proyecto fila-entra w-full text-left py-7 md:py-9 flex items-start gap-5 md:gap-9"
+      style={{
+        borderTop: `1px solid ${t.borderSoft}`,
+        animationDelay: `${delay}ms`,
+      }}
+    >
+      {/* Índice */}
+      <span
+        className="shrink-0 pt-1"
+        style={{ fontFamily: MONO, fontSize: 11.5, color: t.faint, letterSpacing: "0.06em" }}
       >
-        {/* Imagen de fondo a sangre completa */}
-        <div className="absolute inset-0">
-          <Foto src={p.imagen} alt={p.nombre} gradiente={p.gradiente} tinte={false} className="w-full h-full">
-            {/* Velo de marca + oscurecido para legibilidad del texto */}
-            <div
-              className="absolute inset-0"
-              style={{ background: `linear-gradient(160deg, ${p.gradiente[0]}AA 0%, ${p.gradiente[1]}33 40%, rgba(7,9,13,0.92) 100%)` }}
-            />
-            {/* Rejilla técnica sutil */}
-            <div
-              className="absolute inset-0 opacity-15"
-              style={{
-                backgroundImage: "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)",
-                backgroundSize: "30px 30px",
-                maskImage: "radial-gradient(120% 90% at 100% 0%, #000, transparent 65%)",
-                WebkitMaskImage: "radial-gradient(120% 90% at 100% 0%, #000, transparent 65%)",
-              }}
-            />
-          </Foto>
-        </div>
+        {String(indice).padStart(2, "0")}
+      </span>
 
-        {/* Brillo que sigue al cursor */}
-        <div className="foco absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ zIndex: 2 }} />
-
-        {/* Esquina superior: categoría + código */}
-        <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-          <EtiquetaCategoria t={t} categoria={p.categoria} codigo={p.codigo} />
-          <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: "rgba(255,255,255,0.65)" }}>
-            {p.codigo}
-          </span>
-        </div>
-
-        {/* Contenido inferior */}
-        <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 z-10">
-          <h3
-            className="font-bold mb-2 leading-tight"
-            style={{ color: "#fff", fontFamily: DISPLAY, fontSize: destacado ? "1.7rem" : "1.2rem", letterSpacing: "-0.01em" }}
-          >
-            {p.nombre}
-          </h3>
-          <p
-            className={`leading-relaxed mb-4 ${destacado ? "text-sm md:text-base max-w-xl" : "text-sm"}`}
+      {/* Cuerpo */}
+      <span className="min-w-0 flex-1">
+        <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span
+            className="titulo-proyecto"
             style={{
-              color: "rgba(255,255,255,0.82)",
-              // En las tarjetas pequeñas, recortamos a 2 líneas para mantener la altura uniforme
-              ...(destacado ? {} : { display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }),
+              fontFamily: DISPLAY,
+              fontWeight: 400,
+              fontSize: "clamp(1.5rem, 3.4vw, 2.6rem)",
+              letterSpacing: "-0.025em",
+              color: t.text,
+              lineHeight: 1.05,
             }}
           >
-            {p.corto}
-          </p>
-
-          {/* Stack: en destacado se ven todos; en pequeño, los primeros 3 */}
-          <div className="flex flex-wrap items-center gap-1.5 mb-4">
-            {(destacado ? p.stack : p.stack.slice(0, 3)).map((s) => (
-              <span
-                key={s}
-                className="px-2 py-1 rounded-md"
-                style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.9)", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(4px)", border: "1px solid rgba(255,255,255,0.12)" }}
-              >
-                {s}
-              </span>
-            ))}
-            {!destacado && p.stack.length > 3 && (
-              <span style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,0.6)" }}>+{p.stack.length - 3}</span>
-            )}
-          </div>
-
-          {/* Llamada a la acción */}
-          <span
-            className="inline-flex items-center gap-2 text-sm font-semibold"
-            style={{ color: "#fff" }}
-          >
-            Ver caso completo
-            <span
-              className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 group-hover:translate-x-1"
-              style={{ background: color, color: "#0A0A0A" }}
-            >
-              <ArrowRight size={14} />
-            </span>
+            {p.nombre}
           </span>
-        </div>
+          <span
+            className="px-2 py-0.5 rounded-full shrink-0"
+            style={{
+              fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.12em",
+              color: t.muted, border: `1px solid ${t.border}`, textTransform: "uppercase",
+            }}
+          >
+            {p.categoria === "implementado" ? "Cliente real" : p.categoria === "negocio" ? "Para terceros" : "Personal"}
+          </span>
+        </span>
 
-        {/* Línea de acento que aparece arriba en hover */}
-        <div
-          aria-hidden
-          className="absolute top-0 left-0 right-0 h-0.5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 z-10"
-          style={{ background: `linear-gradient(90deg, ${color}, transparent)` }}
+        <span className="block mt-3 leading-relaxed" style={{ color: t.muted, fontSize: "clamp(0.94rem, 1.2vw, 1.05rem)", maxWidth: "62ch" }}>
+          {p.corto}
+        </span>
+
+        {/* Stack en texto, sin chips */}
+        <span className="block mt-4" style={{ fontFamily: MONO, fontSize: 11, color: t.faint, letterSpacing: "0.04em" }}>
+          {p.stack.join("  ·  ")}
+        </span>
+
+        <span
+          className="cta-proyecto inline-flex items-center gap-2 mt-5"
+          style={{ fontSize: 13.5, fontWeight: 600, color: t.accent }}
+        >
+          Ver caso completo
+          <span aria-hidden className="flecha-cta" style={{ display: "inline-block" }}>→</span>
+        </span>
+      </span>
+
+      {/* Miniatura: contenida, en escala de grises hasta el hover */}
+      <span
+        className="mini-proyecto hidden md:block shrink-0 overflow-hidden rounded-lg"
+        style={{ width: 190, height: 124, background: t.surface, border: `1px solid ${t.borderSoft}` }}
+      >
+        <img
+          src={p.imagen}
+          alt=""
+          loading="lazy"
+          className="w-full h-full object-cover"
+          style={{ filter: "grayscale(1) contrast(1.04)", transition: "filter 300ms, transform 400ms cubic-bezier(0.22,0.61,0.36,1)" }}
         />
-      </button>
-    </Reveal>
+      </span>
+    </button>
   );
 }
 
@@ -1546,21 +1123,51 @@ function Proyectos({ t, abrir }) {
   const nota = CATEGORIAS.find((c) => c.id === filtro)?.nota;
 
   return (
-    <section id="proyectos" className="relative py-20 md:py-28 px-5 md:px-8">
-      <SepSeccion t={t} />
-      <div className="max-w-5xl mx-auto">
-        <CabeceraSeccion
-          t={t}
-          num="04"
-          eyebrow="Proyectos"
-          titulo="Problemas reales, soluciones en producción"
-          descripcion="Cada proyecto incluye su caso completo: el problema, la solución, la arquitectura y las decisiones técnicas detrás."
-          acento="cian"
-        />
+    <section
+      id="proyectos"
+      className="relative"
+      style={{ background: t.bg, color: t.text }}
+    >
+      {/* Retícula tenue sobre el oscuro: misma estructura, invertida */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(${t.borderSoft} 1px, transparent 1px), linear-gradient(90deg, ${t.borderSoft} 1px, transparent 1px)`,
+          backgroundSize: "72px 72px",
+          opacity: 0.5,
+        }}
+      />
 
-        {/* Pestañas de filtro */}
+      <div className="relative max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-20 md:py-28">
+        {/* Cabecera propia (en inverso) */}
+        <Reveal>
+          <div className="flex items-center gap-3 mb-6">
+            <span style={{ fontFamily: MONO, fontSize: 11.5, color: t.accent, letterSpacing: "0.08em" }}>04</span>
+            <span className="h-px w-7" style={{ background: t.accent, opacity: 0.5 }} />
+            <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", color: t.faint, textTransform: "uppercase" }}>
+              Proyectos
+            </span>
+          </div>
+          <h2
+            style={{
+              fontFamily: DISPLAY, fontWeight: 400,
+              fontSize: "clamp(2.1rem, 5.5vw, 4.2rem)",
+              lineHeight: 1.02, letterSpacing: "-0.03em",
+              color: t.text, maxWidth: "22ch",
+            }}
+          >
+            Sistemas que resuelven un problema concreto
+          </h2>
+          <p className="mt-6 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "58ch" }}>
+            Cada caso incluye el problema de negocio, la solución, la arquitectura y las
+            decisiones técnicas detrás — incluida la capa de IA y automatización.
+          </p>
+        </Reveal>
+
+        {/* Filtros: texto subrayado, no botones tipo pastilla */}
         <Reveal delay={60}>
-          <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex flex-wrap items-center gap-x-7 gap-y-3 mt-12 mb-2">
             {pestanas.map((tab) => {
               const activa = filtro === tab.id;
               return (
@@ -1568,41 +1175,38 @@ function Proyectos({ t, abrir }) {
                   key={tab.id}
                   type="button"
                   onClick={() => setFiltro(tab.id)}
-                  className="boton-base px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200"
+                  className="filtro-texto pb-1.5"
                   style={{
-                    background: activa ? t.accent : "rgba(13,17,23,0.6)",
-                    color: activa ? "#14100A" : t.muted,
-                    border: `1px solid ${activa ? t.accent : t.border}`,
+                    fontSize: 14,
+                    fontWeight: activa ? 600 : 400,
+                    color: activa ? t.text : t.faint,
+                    borderBottom: `1.5px solid ${activa ? t.accent : "transparent"}`,
+                    transition: "color 240ms, border-color 240ms",
                   }}
                 >
                   {tab.label}
-                  <span className="ml-1.5" style={{ fontFamily: MONO, fontSize: 11, opacity: 0.75 }}>{tab.n}</span>
+                  <span className="ml-1.5" style={{ fontFamily: MONO, fontSize: 10.5, opacity: 0.7 }}>{tab.n}</span>
                 </button>
               );
             })}
           </div>
-          <p className="text-sm mb-7" style={{ color: t.faint, minHeight: 20 }}>
+          <p className="text-sm mb-4" style={{ color: t.faint, minHeight: 20 }}>
             {nota || "Todo mi trabajo: clientes reales, proyectos aplicados y personales."}
           </p>
         </Reveal>
 
-        {/* Mosaico "bento": el primer proyecto destaca grande, el resto en rejilla */}
-        <div key={filtro} className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 auto-rows-fr">
-          {lista.map((p, i) => {
-            // El primer proyecto de la lista es el destacado: ocupa 2 columnas.
-            const destacado = i === 0 && lista.length > 1;
-            return (
-              <div key={p.id} className={destacado ? "md:col-span-2" : ""}>
-                <TarjetaBento
-                  t={t}
-                  p={p}
-                  abrir={abrir}
-                  delay={Math.min(i, 5) * 70}
-                  destacado={destacado}
-                />
-              </div>
-            );
-          })}
+        {/* Tabla de proyectos */}
+        <div key={filtro} style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
+          {lista.map((p, i) => (
+            <FilaProyecto
+              key={p.id}
+              t={t}
+              p={p}
+              abrir={abrir}
+              indice={i + 1}
+              delay={Math.min(i, 6) * 60}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -1784,7 +1388,7 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
                 <div
                   key={clave}
                   className="p-4 md:p-5 grid md:grid-cols-3 gap-1 md:gap-4"
-                  style={{ background: i % 2 ? t.surface2 : "rgba(13,17,23,0.65)", borderTop: i ? `1px solid ${t.borderSoft}` : "none" }}
+                  style={{ background: i % 2 ? t.surface2 : t.surface, borderTop: i ? `1px solid ${t.borderSoft}` : "none" }}
                 >
                   <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.accentText }} className="uppercase pt-0.5">
                     {titulo}
@@ -1981,7 +1585,7 @@ function Galeria({ t }) {
                   onClick={() => cambiarFiltro(tab.id)}
                   className="boton-base px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200"
                   style={{
-                    background: activaTab ? t.accent : "rgba(13,17,23,0.6)",
+                    background: activaTab ? t.accent : t.surface,
                     color: activaTab ? "#14100A" : t.muted,
                     border: `1px solid ${activaTab ? t.accent : t.border}`,
                   }}
@@ -2001,10 +1605,10 @@ function Galeria({ t }) {
             style={{
               border: `1px solid ${t.borderSoft}`,
               background: `
-                radial-gradient(circle at 20% 10%, rgba(232,152,62,0.05), transparent 40%),
-                radial-gradient(circle at 85% 90%, rgba(34,211,238,0.05), transparent 40%),
+                radial-gradient(circle at 20% 10%, rgba(232,152,62,0.05), transparent 45%),
+                radial-gradient(circle at 85% 90%, rgba(34,211,238,0.035), transparent 45%),
                 ${t.surface}`,
-              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03)",
+              boxShadow: "none",
             }}
           >
             {/* Textura de puntos del corcho/muro */}
@@ -2012,7 +1616,7 @@ function Galeria({ t }) {
               aria-hidden
               className="absolute inset-0 rounded-3xl pointer-events-none"
               style={{
-                backgroundImage: "radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)",
+                backgroundImage: `radial-gradient(${t.border} 1px, transparent 1px)`,
                 backgroundSize: "18px 18px",
               }}
             />
@@ -2033,7 +1637,7 @@ function Galeria({ t }) {
               onClick={() => setPagina((p) => Math.max(1, p - 1))}
               disabled={paginaSegura === 1}
               className="boton-base w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200"
-              style={{ border: `1px solid ${t.border}`, color: t.text, background: "rgba(13,17,23,0.6)", opacity: paginaSegura === 1 ? 0.4 : 1, cursor: paginaSegura === 1 ? "default" : "pointer" }}
+              style={{ border: `1px solid ${t.border}`, color: t.text, background: t.surface, opacity: paginaSegura === 1 ? 0.4 : 1, cursor: paginaSegura === 1 ? "default" : "pointer" }}
             >
               <ArrowLeft size={15} />
             </button>
@@ -2049,7 +1653,7 @@ function Galeria({ t }) {
                   className="boton-base w-10 h-10 rounded-full text-sm font-semibold transition-all duration-200"
                   style={{
                     fontFamily: MONO,
-                    background: activaPag ? t.accent : "rgba(13,17,23,0.6)",
+                    background: activaPag ? t.accent : t.surface,
                     color: activaPag ? "#14100A" : t.muted,
                     border: `1px solid ${activaPag ? t.accent : t.border}`,
                   }}
@@ -2065,7 +1669,7 @@ function Galeria({ t }) {
               onClick={() => setPagina((p) => Math.min(totalPaginas, p + 1))}
               disabled={paginaSegura === totalPaginas}
               className="boton-base w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200"
-              style={{ border: `1px solid ${t.border}`, color: t.text, background: "rgba(13,17,23,0.6)", opacity: paginaSegura === totalPaginas ? 0.4 : 1, cursor: paginaSegura === totalPaginas ? "default" : "pointer" }}
+              style={{ border: `1px solid ${t.border}`, color: t.text, background: t.surface, opacity: paginaSegura === totalPaginas ? 0.4 : 1, cursor: paginaSegura === totalPaginas ? "default" : "pointer" }}
             >
               <ArrowRight size={15} />
             </button>
@@ -2100,7 +1704,7 @@ function Galeria({ t }) {
               </button>
               <div className="absolute inset-x-0 bottom-0 p-5" style={{ background: "linear-gradient(transparent, rgba(7,9,13,0.92))" }}>
                 <h3 className="font-bold text-lg" style={{ color: "#fff" }}>{activa.titulo}</h3>
-                <p style={{ fontFamily: MONO, fontSize: 12, color: t.accentText }}>{activa.lugar} · {activa.fecha}</p>
+                <p style={{ fontFamily: MONO, fontSize: 12, color: "rgba(255,255,255,0.82)" }}>{activa.lugar} · {activa.fecha}</p>
               </div>
             </Foto>
           </div>
@@ -2121,128 +1725,110 @@ function Contacto({ t }) {
     { icono: Linkedin, etiqueta: "LinkedIn", valor: "Perfil profesional", href: DATOS.linkedin },
   ];
   return (
-    <section id="contacto" className="relative py-20 md:py-28 px-5 md:px-8">
-      <SepSeccion t={t} />
-      <div className="max-w-5xl mx-auto">
-        <div
-          className="relative overflow-hidden rounded-3xl p-8 md:p-14 text-center"
-          style={{ background: t.card, border: `1px solid ${t.border}`, boxShadow: t.shadowMd }}
-        >
-          {/* Borde superior de luz cobre→cian */}
-          <div
-            aria-hidden
-            className="absolute top-0 inset-x-0 h-px pointer-events-none"
-            style={{ background: `linear-gradient(90deg, transparent, ${t.accent}, ${t.accent2}, transparent)` }}
-          />
-          {/* Cuadrícula de puntos animada (detalle característico) */}
-          <div
-            aria-hidden
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage: "radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)",
-              backgroundSize: "22px 22px",
-              maskImage: "radial-gradient(ellipse 70% 70% at 50% 40%, #000, transparent 75%)",
-              WebkitMaskImage: "radial-gradient(ellipse 70% 70% at 50% 40%, #000, transparent 75%)",
-            }}
-          />
-          {/* Haz de luz que barre en diagonal (escáner) */}
-          <div
-            aria-hidden
-            className="absolute inset-0 pointer-events-none overflow-hidden"
-            style={{ opacity: movReducido() ? 0 : 1 }}
-          >
-            <div
-              className="absolute"
-              style={{
-                top: "-50%", left: "-30%", width: "40%", height: "200%",
-                background: `linear-gradient(90deg, transparent, ${t.accent2}1F, transparent)`,
-                transform: "rotate(18deg)",
-                animation: movReducido() ? "none" : "barrido 7s ease-in-out infinite",
-              }}
-            />
-          </div>
-          {/* Glow cobre */}
-          <div
-            aria-hidden
-            className="absolute pointer-events-none rounded-full"
-            style={{
-              top: -140, left: "38%", marginLeft: -200, width: 400, height: 260,
-              background: "radial-gradient(ellipse, rgba(232,152,62,0.16), transparent 70%)",
-              animation: movReducido() ? "none" : "flotar 10s ease-in-out infinite",
-            }}
-          />
-          {/* Glow cian */}
-          <div
-            aria-hidden
-            className="absolute pointer-events-none rounded-full"
-            style={{
-              top: -120, right: "30%", width: 340, height: 230,
-              background: "radial-gradient(ellipse, rgba(34,211,238,0.12), transparent 70%)",
-              animation: movReducido() ? "none" : "flotar 12s ease-in-out infinite reverse",
-            }}
-          />
-          <Reveal>
-            {/* Robot animado (Lottie) — detalle con carácter */}
-            <div className="relative inline-block mb-4">
-              <div className="avatar-saluda mx-auto" style={{ width: 200, height: 150 }}>
-                <DotLottieReact
-                  src="/robot.lottie"
-                  loop
-                  autoplay
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </div>
-            </div>
+    <section
+      id="contacto"
+      className="relative flex items-center"
+      style={{ background: t.bg, color: t.text, minHeight: "calc(100svh - 8.5rem)" }}
+    >
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(${t.borderSoft} 1px, transparent 1px), linear-gradient(90deg, ${t.borderSoft} 1px, transparent 1px)`,
+          backgroundSize: "72px 72px",
+          opacity: 0.5,
+        }}
+      />
 
-            <div className="flex items-center justify-center gap-2.5 mb-5">
-              <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 500, color: t.accentText, letterSpacing: "0.08em" }}>06</span>
-              <span className="h-px w-6" style={{ background: t.accentText, opacity: 0.6 }} />
-              <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.2em", color: t.accent2Text }}>CONTACTO</span>
-            </div>
-            <h2
-              className="max-w-2xl mx-auto mb-4"
-              style={{ color: t.text, fontSize: "clamp(1.7rem, 3.6vw, 2.7rem)", lineHeight: 1.12, fontWeight: 700, letterSpacing: "-0.025em" }}
-            >
-              ¿Buscas un desarrollador web que cuide cada detalle?
-            </h2>
-            <p className="max-w-xl mx-auto leading-relaxed mb-9" style={{ color: t.muted, fontSize: "1.05rem" }}>
-              Estoy abierto a oportunidades como desarrollador web / frontend, presenciales o remotas. También sumo automatización e IA cuando el proyecto lo necesita. Respondo rápido y con gusto conversamos sobre cómo puedo aportar a tu equipo.
-            </p>
-          </Reveal>
-          <Reveal delay={100}>
-            <div className="relative flex flex-col sm:flex-row justify-center gap-3 mb-9">
-              {canales.map((c, i) => (
+      <div className="relative max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-20 md:py-28">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end">
+          {/* Izquierda: la pregunta, a tamaño de cartel */}
+          <div className="lg:col-span-7">
+            <Reveal>
+              <div className="flex items-center gap-3 mb-6">
+                <span style={{ fontFamily: MONO, fontSize: 11.5, color: t.accent, letterSpacing: "0.08em" }}>06</span>
+                <span className="h-px w-7" style={{ background: t.accent, opacity: 0.5 }} />
+                <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", color: t.faint, textTransform: "uppercase" }}>
+                  Contacto
+                </span>
+              </div>
+              <h2
+                style={{
+                  fontFamily: DISPLAY, fontWeight: 400,
+                  fontSize: "clamp(2.2rem, 6vw, 4.6rem)",
+                  lineHeight: 1, letterSpacing: "-0.03em",
+                  color: t.text, maxWidth: "20ch",
+                }}
+              >
+                ¿Tienes un proceso que debería estar{" "}
+                <span style={{ fontStyle: "italic", color: t.accent }}>automatizado</span>?
+              </h2>
+              <p className="mt-7 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "52ch" }}>
+                Estoy abierto a oportunidades como Ingeniero de IA y Automatización,
+                presenciales o remotas. Cuéntame qué necesitas resolver y te digo con
+                franqueza si la IA es la respuesta.
+              </p>
+              <div className="mt-9">
                 <a
-                  key={c.etiqueta}
-                  href={c.href}
-                  target={c.href.startsWith("http") ? "_blank" : undefined}
-                  rel="noreferrer"
-                  className="canal-contacto group flex items-center gap-3 px-5 py-3.5 rounded-2xl text-left transition-all duration-300"
-                  style={{ background: t.surface2, border: `1px solid ${t.borderSoft}` }}
+                  href={`mailto:${DATOS.email}`}
+                  className="boton-base inline-flex items-center gap-2 px-5 py-3 rounded-lg font-medium text-sm"
+                  style={{ background: t.text, color: t.bg }}
                 >
-                  <span
-                    className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110"
-                    style={{
-                      background: i % 2 === 0 ? t.accentSoft : t.accent2Soft,
-                      color: i % 2 === 0 ? t.accentText : t.accent2Text,
-                    }}
-                  >
-                    <c.icono size={16} />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-xs" style={{ fontFamily: MONO, color: t.faint }}>{c.etiqueta}</span>
-                    <span className="block text-sm font-medium" style={{ color: t.text, wordBreak: "break-word" }}>{c.valor}</span>
-                  </span>
+                  <Mail size={16} strokeWidth={2} />
+                  Escríbeme ahora
                 </a>
-              ))}
-            </div>
-            <Boton t={t} primario icono={Mail} href={`mailto:${DATOS.email}`}>Escríbeme ahora</Boton>
-          </Reveal>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Derecha: canales como tabla, y el robot como firma discreta */}
+          <div className="lg:col-span-5">
+            <Reveal delay={100}>
+              <div style={{ borderTop: `1px solid ${t.border}` }}>
+                {canales.map((c) => (
+                  <a
+                    key={c.etiqueta}
+                    href={c.href}
+                    target={c.href.startsWith("http") ? "_blank" : undefined}
+                    rel="noreferrer"
+                    className="fila-canal flex items-center gap-4 py-4"
+                    style={{ borderBottom: `1px solid ${t.borderSoft}` }}
+                  >
+                    <c.icono size={16} style={{ color: t.faint, flexShrink: 0 }} />
+                    <span className="min-w-0 flex-1">
+                      <span className="block" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: t.faint, textTransform: "uppercase" }}>
+                        {c.etiqueta}
+                      </span>
+                      <span className="block mt-0.5" style={{ fontSize: 14.5, color: t.text, fontWeight: 500 }}>
+                        {c.valor}
+                      </span>
+                    </span>
+                    <span aria-hidden className="flecha-cta" style={{ color: t.faint }}>→</span>
+                  </a>
+                ))}
+              </div>
+
+              <div className="mt-8 flex items-center justify-between gap-4">
+                <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint, letterSpacing: "0.1em" }}>
+                  {DATOS.ubicacion.toUpperCase()}
+                </span>
+                <div className="avatar-saluda" style={{ width: 130, height: 98, opacity: 0.9 }}>
+                  <DotLottieReact
+                    src="/robot.lottie"
+                    loop
+                    autoplay
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                </div>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
 
 function Footer({ t }) {
   const redes = [
@@ -2250,21 +1836,19 @@ function Footer({ t }) {
     { Icono: Linkedin, href: DATOS.linkedin, label: "LinkedIn" },
     { Icono: Mail, href: `mailto:${DATOS.email}`, label: "Email" },
   ];
+  // Cierra en oscuro, continuando la sección de Contacto sin corte de color.
   return (
-    <footer className="relative py-10 px-5 md:px-8" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
-      {/* Acento de luz superior */}
-      <div
-        aria-hidden
-        className="absolute top-0 inset-x-0 h-px pointer-events-none"
-        style={{ background: `linear-gradient(90deg, transparent, ${t.accent}44, ${t.accent2}44, transparent)`, maxWidth: "40rem", margin: "0 auto" }}
-      />
-      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5">
+    <footer
+      className="relative"
+      style={{ background: t.bg, color: t.text, borderTop: `1px solid ${t.borderSoft}` }}
+    >
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-9 flex flex-col sm:flex-row items-center justify-between gap-5">
         <div className="flex flex-col items-center sm:items-start gap-1">
           <span className="text-sm" style={{ color: t.muted }}>
             © {new Date().getFullYear()} {DATOS.nombre}
           </span>
           <span className="inline-flex items-center gap-1.5" style={{ fontFamily: MONO, fontSize: 11, color: t.faint }}>
-            <MapPin size={12} /> {DATOS.ubicacion} · Hecho con React y criterio
+            <MapPin size={12} /> {DATOS.ubicacion} · IA aplicada con criterio
           </span>
         </div>
         <div className="flex items-center gap-2.5">
@@ -2275,8 +1859,8 @@ function Footer({ t }) {
               aria-label={label}
               target={href.startsWith("http") ? "_blank" : undefined}
               rel="noreferrer"
-              className="enlace-social w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200"
-              style={{ border: `1px solid ${t.border}`, background: "rgba(13,17,23,0.5)", color: t.muted }}
+              className="enlace-social-inv w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ border: `1px solid ${t.border}`, color: t.muted }}
             >
               <Icono size={16} />
             </a>
@@ -2317,6 +1901,8 @@ export default function App() {
   const proyectoActivo = vista.pagina === "proyecto" ? DATOS.proyectos.find((p) => p.id === vista.id) : null;
   const seccionActiva = vista.pagina === "seccion" ? vista.id : null;
 
+  // Todo el sitio es oscuro: el nav ya no necesita invertirse.
+
   // Mapa de secciones → componente. "inicio" muestra Hero + Sobre mí (portada).
   const render = {
     inicio: (
@@ -2338,109 +1924,11 @@ export default function App() {
   }
 
   return (
-    <div className="portafolio-entra" style={{ background: t.bg, color: t.text, fontFamily: SANS, minHeight: "100vh" }}>
-      <style>{`
-        /* Aparición suave del portafolio tras la intro (evita el salto en seco) */
-        .portafolio-entra { animation: portafolioEntra 0.6s ease both; }
-        @keyframes portafolioEntra { from { opacity: 0; } to { opacity: 1; } }
-        @media (prefers-reduced-motion: reduce) { .portafolio-entra { animation: none; } }
-        html { scroll-behavior: smooth; }
-        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; overflow-x: hidden; }
-        h1, h2, h3, h4 { font-family: ${DISPLAY}; }
-        @keyframes flotar { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(10px, -16px); } }
-        @keyframes deriva1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(70px, 50px) scale(1.18); } }
-        @keyframes deriva2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-60px, -40px) scale(1.12); } }
-        @keyframes girar { to { transform: rotate(360deg); } }
-        @keyframes barrido { 0% { transform: translateX(0) rotate(18deg); } 50% { transform: translateX(900%) rotate(18deg); } 100% { transform: translateX(0) rotate(18deg); } }
-        @keyframes marquesina { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        @keyframes aparecerPalabra { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes modalEntrada { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .palabra { display: inline-block; animation: aparecerPalabra 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
-        @keyframes seccionEntra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-        .seccion-entra { animation: seccionEntra 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
-        /* Robot que espera en Contacto: flotación sutil */
-        @keyframes flotarAvatar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        .avatar-saluda { animation: flotarAvatar 4.5s ease-in-out infinite; }
-        .modal-entrada { animation: modalEntrada 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
-        .marquesina:hover .pista { animation-play-state: paused; }
-        .btn-brillo { position: relative; overflow: hidden; }
-        .btn-brillo::after {
-          content: ""; position: absolute; top: 0; left: -130%; width: 55%; height: 100%;
-          background: linear-gradient(105deg, transparent, rgba(255,255,255,0.5), transparent);
-          transform: skewX(-18deg); transition: left 0.55s ease;
-        }
-        .btn-brillo:hover::after { left: 150%; }
-        .enlace-social:hover { transform: translateY(-2px); border-color: ${t.accent} !important; color: ${t.accentText} !important; background: ${t.accentSoft} !important; }
-        .enlace-social:active { transform: translateY(0) scale(0.94); }
-        .tarjeta-suave { will-change: transform; }
-        .tarjeta-suave:hover { transform: translateY(-4px); border-color: ${t.border} !important; background: ${t.cardHover} !important; box-shadow: ${t.shadowMd}; }
-        .canal-contacto:hover { transform: translateY(-3px); border-color: ${t.border} !important; box-shadow: ${t.shadowSoft}; }
-        .flecha-carrusel:hover { transform: translateY(-2px); border-color: ${t.accent} !important; color: ${t.accentText} !important; background: ${t.accentSoft} !important; }
-        .flecha-carrusel:active { transform: translateY(0) scale(0.92); }
-        /* Mosaico bento de proyectos: elevación e imagen con zoom al pasar el mouse */
-        .bento-item { will-change: transform; transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease, border-color 0.3s ease; }
-        .bento-item:hover { transform: translateY(-5px); border-color: ${t.border} !important; box-shadow: ${t.shadowLg}; }
-        .bento-item:active { transform: translateY(-2px) scale(0.995); }
-        .bento-item .zoomable img { transition: transform 0.6s cubic-bezier(0.22,1,0.36,1); }
-        .bento-item:hover .zoomable img { transform: scale(1.06); }
-        .tarjeta-certificado:hover { border-color: ${t.accent2} !important; box-shadow: ${t.shadowMd}; }
-        .tarjeta-certificado:active { transform: translateY(0) scale(0.98); }
-        /* Sección "En construcción": punto vivo, barra, polaroids y constructor */
-        .punto-vivo { animation: latido 1.6s ease-in-out infinite; }
-        .senal-mece { animation: senalMece 3.5s ease-in-out infinite; transform-origin: top center; }
-        @keyframes senalMece { 0%,100% { transform: translateX(-50%) rotate(-4deg); } 50% { transform: translateX(-50%) rotate(4deg); } }
-        .llave-mece { animation: llaveMece 2.6s ease-in-out infinite; transform-origin: center; }
-        @keyframes llaveMece { 0%,100% { transform: rotate(-15deg); } 50% { transform: rotate(15deg); } }
-        @keyframes latido { 0%,100% { opacity: 1; box-shadow: 0 0 0 0 ${t.accent}66; } 50% { opacity: 0.6; box-shadow: 0 0 0 5px transparent; } }
-        /* Muro de momentos: la polaroid se endereza y crece al pasar el mouse */
-        .momento-polaroid { transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease; transform-origin: center center; will-change: transform; }
-        .momento-polaroid:hover { transform: rotate(0deg) scale(1.04) !important; box-shadow: ${t.shadowLg}; z-index: 5; }
-        .barra-construccion { width: 40%; animation: progresoVaiven 2.4s ease-in-out infinite; }
-        @keyframes progresoVaiven {
-          0% { margin-left: 0; width: 25%; }
-          50% { margin-left: 60%; width: 40%; }
-          100% { margin-left: 0; width: 25%; }
-        }
-        .zoomable img { transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
-        .group:hover .zoomable img, .zoomable:hover img { transform: scale(1.07); }
-        .foco { background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), ${t.accentSoft}, transparent 65%); }
-        .sin-scroll { scrollbar-width: none; -ms-overflow-style: none; }
-        .sin-scroll::-webkit-scrollbar { display: none; }
-        /* Feedback de presión en botones (también en táctil) */
-        .boton-base:active { transform: translateY(0) scale(0.97); }
-        .boton-sec:hover { border-color: ${t.accent} !important; color: ${t.accentText} !important; background: ${t.accentSoft} !important; }
-        /* Menú móvil: entrada y feedback */
-        .menu-movil { animation: aparecerMenu 0.22s ease both; }
-        @keyframes aparecerMenu { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-        .menu-item { animation: aparecerPalabra 0.35s cubic-bezier(0.22,1,0.36,1) both; }
-        .menu-item:active { background: ${t.accentSoft}; transform: scale(0.98); }
-        /* Subrayado animado para los enlaces del nav */
-        .nav-link { position: relative; }
-        .nav-link::after {
-          content: ""; position: absolute; left: 12px; right: 12px; bottom: 5px; height: 1.5px;
-          background: linear-gradient(90deg, ${t.accent}, ${t.accent2});
-          transform: scaleX(0); transform-origin: left; transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
-        }
-        .nav-link:hover::after { transform: scaleX(1); }
-        /* Pulso sutil del punto "disponible" ya animado; aquí el punto de marca */
-        @keyframes pulsoBorde { 0%,100% { box-shadow: 0 4px 18px rgba(232,152,62,0.28); } 50% { box-shadow: 0 6px 26px rgba(232,152,62,0.42); } }
-        /* Scrollbar de marca (Chromium/Edge) */
-        @media (pointer: fine) {
-          *::-webkit-scrollbar { width: 11px; height: 11px; }
-          *::-webkit-scrollbar-track { background: ${t.bg}; }
-          *::-webkit-scrollbar-thumb { background: ${t.surface2}; border: 3px solid ${t.bg}; border-radius: 99px; }
-          *::-webkit-scrollbar-thumb:hover { background: ${t.border}; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          html { scroll-behavior: auto; }
-          *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-        }
-        ::selection { background: ${t.accent}; color: #14100A; }
-        a:focus-visible, button:focus-visible { outline: 2px solid ${t.accent}; outline-offset: 2px; border-radius: 6px; }
-      `}</style>
+    <div className="app-entra" style={{ background: t.bg, color: t.text, fontFamily: SANS, minHeight: "100vh" }}>
+      <EstilosGlobales t={t} />
 
-      <FondoGlobal t={t} />
-      <LuzCursor />
+      <Atmosfera t={t} />
+      <Cursor t={t} />
       <BarraProgreso t={t} />
 
       <Nav

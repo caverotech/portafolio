@@ -8,10 +8,10 @@
 
 export const DATOS = {
   nombre: "Alexys Cavero",
-  titulo: "Desarrollador Web Junior · Frontend",
-  tituloLinea2: "Automatización e IA · Estudiante de Ingeniería de Sistemas",
+  titulo: "Ingeniero de IA & Automatización",
+  tituloLinea2: "Agentes · LLMs · Procesos automatizados · Estudiante de Ingeniería de Sistemas",
   descripcion:
-    "Diseño y construyo sitios y aplicaciones web modernas, rápidas y a medida. Me enfoco en el frontend y la experiencia de usuario, y complemento con automatización de procesos e IA para entregar soluciones completas, listas para producción.",
+    "Diseño y construyo agentes de IA y flujos automatizados que reemplazan trabajo manual en negocios reales: integro modelos de lenguaje, orquesto procesos de punta a punta y desarrollo la interfaz que los vuelve usables. IA que entra en producción, no demos.",
   ubicacion: "Ica, Perú",
   disponible: "Disponible para oportunidades",
   email: "ing.alexyscavero@gmail.com",
@@ -19,121 +19,125 @@ export const DATOS = {
   linkedin: "https://www.linkedin.com/in/alexyscavero/",
   cvUrl: "/Alexys-Cavero-CV-2026.pdf",       // ← PDF en public/
 
-  /* FOTOS — placeholders de Unsplash (licencia libre).
-     Reemplázalas por tus fotos reales y capturas de tus proyectos.
+  /* FOTOS — reemplaza cada ruta por tus imágenes reales.
      Si una URL falla, el sitio muestra automáticamente un degradado. */
   fotos: {
-    // Imágenes tecnológicas oscuras (Unsplash). Reemplázalas por las tuyas reales cuando las tengas.
     perfil: "/Foto-2026.jpeg",   // ← TU FOTO profesional real
-    sobreMi: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1100&q=80",      // ← tu espacio de trabajo (ahora: código en pantalla)
   },
 
   indicadores: [
-    { valor: "9+", etiqueta: "proyectos construidos" },
-    { valor: "12+", etiqueta: "tecnologías en uso activo" },
+    { valor: "9+", etiqueta: "sistemas construidos y en uso" },
+    { valor: "6+", etiqueta: "modelos y plataformas de IA integrados" },
     { valor: "100%", etiqueta: "proyectos nacidos de necesidades reales" },
   ],
 
   // Experiencia destacada — da credibilidad inmediata en el hero
   experiencia: ["Indra", "Minsait", "Conecta Systems", "Academia Barnard", "Rafo Calderón"],
 
+  /* Capacidades de IA — el corazón del posicionamiento.
+     Se muestran en el hero como prueba concreta de qué sabes hacer. */
+  capacidadesIA: [
+    "Agentes de IA",
+    "Integración de LLMs",
+    "Automatización de procesos",
+    "RAG y bases de conocimiento",
+    "Ingeniería de prompts",
+    "Orquestación con n8n",
+  ],
+
   sobreMi: {
     intro:
-      "Me especializo en desarrollo web frontend: construyo sitios y aplicaciones con React, rápidas, responsive y cuidadas en el detalle visual. Junto a un compañero impulso Conecta Systems, una marca propia bajo la que entregamos webs a medida y automatizamos procesos para clientes y negocios locales, trabajando por temporadas según los proyectos. Me importa tanto que el producto funcione como que se vea y se sienta bien para quien lo usa.",
+      "Trabajo en la capa donde la inteligencia artificial deja de ser una demo y empieza a sostener un proceso real: agentes que atienden y resuelven, flujos que corren solos y modelos de lenguaje conectados a los datos del negocio. Junto a un compañero impulso Conecta Systems, marca propia bajo la que automatizamos procesos y entregamos sistemas a medida a clientes y negocios locales. Vengo del desarrollo web, y eso es una ventaja: no solo conecto el modelo, también construyo la interfaz por la que alguien lo usa sin manual.",
     // Lado humano: por qué la carrera y qué me mueve
     motivacion:
-      "Elegí Ingeniería de Sistemas porque me fascina convertir problemas reales en soluciones que funcionan. No me apasiona el código por el código: me apasiona ver cómo una idea bien construida le ahorra horas a un negocio, ordena el caos de alguien o acerca la tecnología a quien creía que no era para él.",
+      "Elegí Ingeniería de Sistemas porque me fascina convertir problemas reales en soluciones que funcionan. No me apasiona la tecnología por la tecnología: me apasiona ver cómo un sistema bien pensado le devuelve horas a una persona, ordena el caos de un negocio o acerca la IA a quien creía que no era para él.",
     // Frase/mentalidad personal
     lema: "Planifica como Monje, ejecuta como Ninja",
     lemaTexto:
       "Primero pienso con calma y estrategia; después ejecuto con foco y precisión. Claridad antes de actuar, decisión al hacerlo.",
     puntos: [
       {
-        titulo: "Desarrollo web frontend",
-        texto: "Interfaces modernas con React, Vite y Tailwind: rápidas, responsive y con foco en la experiencia de usuario. Es donde más disfruto y donde mejor trabajo.",
+        titulo: "Agentes de IA",
+        texto: "Construyo asistentes que no solo responden: consultan datos, ejecutan acciones y toman decisiones dentro de límites definidos. Diseño el flujo, las herramientas que puede usar y los puntos donde debe pedir confirmación humana.",
       },
       {
-        titulo: "Diseño y experiencia de usuario",
-        texto: "Cuido la estética, la jerarquía visual y los detalles. Una web no solo debe funcionar: debe verse profesional y sentirse fácil de usar.",
+        titulo: "Automatización de procesos",
+        texto: "Identifico el trabajo repetitivo de un negocio y lo convierto en un flujo que corre solo: orquestación con n8n y Node, tareas programadas e integración entre sistemas que antes no se hablaban.",
       },
       {
-        titulo: "Automatización con IA",
-        texto: "Integro Claude, GPT y Gemini en flujos reales: generación de contenido, tareas programadas y asistentes que ahorran horas de trabajo manual. Mi valor agregado.",
+        titulo: "Integración de LLMs",
+        texto: "Conecto Claude, GPT y Gemini a datos reales vía API: extracción de información de documentos, generación de contenido y bases de conocimiento consultables. Con criterio sobre costo, latencia y cuándo el modelo NO es la respuesta.",
       },
       {
-        titulo: "Del problema a la solución",
-        texto: "Cada proyecto parte de una necesidad concreta. Primero entiendo qué se necesita; después diseño y construyo la web que lo resuelve, lista para producción.",
+        titulo: "La interfaz que lo hace usable",
+        texto: "Un sistema de IA que nadie entiende no se usa. Desarrollo el frontend en React que lo vuelve operable para gente no técnica: es lo que separa un experimento de una herramienta que el cliente adopta.",
       },
     ],
   },
 
   tecnologias: [
     {
-      categoria: "Frontend",
-      icono: "monitor",
-      descripcion: "Interfaces rápidas, responsive y cuidadas al detalle.",
+      categoria: "IA y Agentes",
+      icono: "sparkles",
+      descripcion: "El núcleo de mi trabajo: modelos conectados a procesos reales.",
       items: [
-        { nombre: "React", slug: "react", color: "61DAFB", detalle: "Mi herramienta principal: componentes y SPAs reales en producción." },
-        { nombre: "JavaScript (ES6+)", slug: "javascript", color: "F7DF1E", detalle: "La base de todo: lógica, interactividad y manejo del DOM." },
+        { nombre: "Claude", slug: "claude", color: "D97757", detalle: "Mi modelo principal: agentes, análisis de documentos y generación de código vía API." },
+        { nombre: "GPT / OpenAI", lucide: "gpt", detalle: "Integración por API para razonamiento, extracción estructurada y generación." },
+        { nombre: "Gemini", slug: "googlegemini", color: "8E75FF", detalle: "Pipelines multimodales: procesamiento de imagen y documentos a escala." },
+        { nombre: "Ingeniería de prompts", slug: "", color: "", detalle: "Instrucciones versionadas y evaluadas, no improvisadas: salidas consistentes y verificables." },
+        { nombre: "RAG", slug: "", color: "", detalle: "Bases de conocimiento consultables: el modelo responde con los datos del negocio, no con invenciones." },
+        { nombre: "Agentes con herramientas", slug: "", color: "", detalle: "Diseño de agentes que ejecutan acciones con límites claros y confirmación humana donde importa." },
+        { nombre: "NotebookLM", lucide: "notebooklm", detalle: "Síntesis e investigación sobre corpus de documentación técnica." },
+        { nombre: "Perplexity", lucide: "perplexity", detalle: "Investigación con fuentes citadas y búsqueda aumentada." },
+      ],
+    },
+    {
+      categoria: "Automatización",
+      icono: "settings",
+      descripcion: "Procesos que corren solos, de punta a punta.",
+      items: [
+        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "Orquestación de flujos con IA: mi herramienta para conectar sistemas sin reinventar integraciones." },
+        { nombre: "Node.js", slug: "nodedotjs", color: "5FA04E", detalle: "Automatizaciones programadas, funciones serverless y scripts de proceso." },
+        { nombre: "APIs REST · Webhooks", slug: "", color: "", detalle: "El pegamento entre sistemas: integración y disparadores en tiempo real." },
+        { nombre: "Python", slug: "python", color: "3776AB", detalle: "Scripting de datos y automatización; lenguaje estándar del ecosistema de IA." },
+        { nombre: "Tareas programadas", slug: "", color: "", detalle: "Procesos que se ejecutan sin que nadie los recuerde: cron y disparadores por evento." },
+      ],
+    },
+    {
+      categoria: "Desarrollo de producto",
+      icono: "monitor",
+      descripcion: "La interfaz que hace usable al sistema de IA.",
+      items: [
+        { nombre: "React", slug: "react", color: "61DAFB", detalle: "Mi herramienta principal de interfaz: aplicaciones reales en producción." },
         { nombre: "TypeScript", slug: "typescript", color: "3178C6", detalle: "Tipado para detectar errores antes de llegar al usuario." },
-        { nombre: "HTML5", slug: "html5", color: "E34F26", detalle: "Estructura semántica y accesible en cada proyecto." },
-        { nombre: "CSS3", slug: "css", color: "663399", detalle: "Flexbox, grid y diseño responsive desde cero." },
-        { nombre: "Tailwind CSS", slug: "tailwindcss", color: "38BDF8", detalle: "Diseño consistente y rápido sin CSS muerto." },
+        { nombre: "JavaScript (ES6+)", slug: "javascript", color: "F7DF1E", detalle: "La base de todo: lógica, interactividad y manejo del DOM." },
+        { nombre: "Tailwind CSS", slug: "tailwindcss", color: "38BDF8", detalle: "Sistema visual consistente y rápido, sin CSS muerto." },
         { nombre: "Vite", slug: "vite", color: "9499FF", detalle: "Builds instantáneos y experiencia de desarrollo moderna." },
+        { nombre: "Figma", slug: "figma", color: "F24E1E", detalle: "Diseño de interfaces antes de construir." },
+        { nombre: "UI / UX", slug: "", color: "", detalle: "Jerarquía visual y usabilidad: que la herramienta se entienda sin manual." },
       ],
     },
     {
-      categoria: "Diseño y UI",
-      icono: "monitor",
-      descripcion: "Que la web no solo funcione: que se vea y se sienta bien.",
-      items: [
-        { nombre: "Figma", slug: "figma", color: "F24E1E", detalle: "Diseño y maquetación de interfaces antes de construir." },
-        { nombre: "Diseño Responsive", slug: "", color: "", detalle: "Experiencia impecable en móvil, tablet y escritorio." },
-        { nombre: "UI / UX", slug: "", color: "", detalle: "Jerarquía visual, usabilidad y atención al detalle." },
-      ],
-    },
-    {
-      categoria: "Backend (de apoyo)",
-      icono: "layers",
-      descripcion: "Lo suficiente para conectar mis webs de punta a punta.",
-      items: [
-        { nombre: "Node.js", slug: "nodedotjs", color: "5FA04E", detalle: "Funciones serverless y automatizaciones programadas." },
-        { nombre: "APIs REST", slug: "", color: "", detalle: "Consumo e integración de APIs en mis aplicaciones web." },
-        { nombre: "Java · Spring Boot", slug: "spring", color: "6DB33F", detalle: "Bases del backend empresarial vistas en la universidad." },
-      ],
-    },
-    {
-      categoria: "Base de datos",
+      categoria: "Datos",
       icono: "database",
-      descripcion: "Modelado y consultas pensadas para crecer.",
+      descripcion: "Sin datos ordenados no hay IA que funcione.",
       items: [
+        { nombre: "PostgreSQL · Supabase", slug: "postgresql", color: "4169E1", detalle: "Backend-as-a-service con auth y realtime; base para productos con IA." },
         { nombre: "SQL Server", slug: "microsoftsqlserver", color: "CC2927", detalle: "Procedimientos almacenados y trazabilidad en sistemas empresariales." },
-        { nombre: "PostgreSQL · Supabase", slug: "postgresql", color: "4169E1", detalle: "Backend-as-a-service con auth y realtime para productos ágiles." },
         { nombre: "MySQL", slug: "mysql", color: "4479A1", detalle: "Diseño relacional y normalización desde cero." },
+        { nombre: "Power BI", lucide: "powerbi", detalle: "Modelado y dashboards para inteligencia de negocio." },
       ],
     },
     {
-      categoria: "Herramientas",
+      categoria: "Infraestructura",
       icono: "wrench",
-      descripcion: "Flujo de trabajo profesional de punta a punta.",
+      descripcion: "Llevar y mantener lo construido en producción.",
       items: [
-        { nombre: "Git · GitHub", slug: "github", color: "E9EDF2", detalle: "Control de versiones y trabajo colaborativo." },
+        { nombre: "Git · GitHub", slug: "github", color: "16181D", detalle: "Control de versiones y trabajo colaborativo." },
+        { nombre: "Vercel", slug: "vercel", color: "16181D", detalle: "Despliegue continuo y funciones serverless en el borde." },
         { nombre: "Netlify", slug: "netlify", color: "00C7B7", detalle: "CI/CD, funciones serverless y Blobs en producción." },
         { nombre: "Docker", slug: "docker", color: "2496ED", detalle: "Entornos reproducibles para desarrollo y despliegue." },
-        { nombre: "Power BI", lucide: "powerbi", detalle: "Dashboards y modelado para inteligencia de negocio." },
-      ],
-    },
-    {
-      categoria: "IA y Automatización",
-      icono: "sparkles",
-      descripcion: "La IA como multiplicador, no como adorno.",
-      items: [
-        { nombre: "Claude", slug: "claude", color: "D97757", detalle: "Par de programación y motor de generación de documentos y código." },
-        { nombre: "GPT", lucide: "gpt", detalle: "Generación de contenido y razonamiento vía API." },
-        { nombre: "Gemini", slug: "googlegemini", color: "8E75FF", detalle: "Pipelines de contenido automatizado y multimodal de Google." },
-        { nombre: "Perplexity", lucide: "perplexity", detalle: "Investigación con fuentes citadas y búsqueda aumentada." },
-        { nombre: "NotebookLM", lucide: "notebooklm", detalle: "Investigación y síntesis de documentación técnica." },
-        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "Orquestación de flujos sin reinventar integraciones." },
+        { nombre: "Azure", slug: "microsoftazure", color: "0078D4", detalle: "Nube en formación activa: camino a la certificación AZ-900." },
       ],
     },
   ],
@@ -251,7 +255,7 @@ export const DATOS = {
       problema: "Un vendedor de lubricantes recorría su ruta sin mapa, sin orden de visitas y llevando las ventas en papel.",
       resultado: "Usada a diario en campo: ruta ordenada por cercanía, catálogo digital y carga de ventas desde Excel.",
       stack: ["JavaScript", "Leaflet", "Geolocalización", "Excel"],
-      gradiente: ["#0C4A6E", "#0E7490"],
+      gradiente: ["#1B2430", "#2E3D52"],
       imagen: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=900&q=80", // mapa / ruta GPS (oscuro). ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
@@ -294,7 +298,7 @@ export const DATOS = {
       problema: "La academia no tenía presencia digital: captaba alumnos solo por recomendación y volantes.",
       resultado: "Proyecto entregado y facturado a cliente real; primer canal digital de captación de la academia.",
       stack: ["React", "Tailwind", "Netlify"],
-      gradiente: ["#1E3A8A", "#3730A3"],
+      gradiente: ["#16202E", "#24344A"],
       imagen: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=900&q=80", // diseño web / interfaz (oscuro). ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
@@ -337,7 +341,7 @@ export const DATOS = {
       problema: "Capacitar vendedores nuevos dependía de que alguien con experiencia tuviera tiempo de enseñarles.",
       resultado: "Plataforma desplegada en Netlify con contenido estructurado por niveles y seguimiento de progreso.",
       stack: ["React", "Vite", "Tailwind"],
-      gradiente: ["#14532D", "#15803D"],
+      gradiente: ["#1E2A38", "#33465E"],
       imagen: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=900&q=80", // plataforma e-learning / app (oscuro). ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
@@ -381,7 +385,7 @@ export const DATOS = {
       problema: "Mucha gente usa IA suelta; pocos tienen un flujo de trabajo real y ordenado para sacarle provecho de verdad.",
       resultado: "Una web personal que muestra mi metodología con IA + un pipeline que me envía noticias a Telegram, filtradas a mi criterio.",
       stack: ["React", "APIs de IA", "Automatización", "Telegram"],
-      gradiente: ["#312E81", "#6D28D9"],
+      gradiente: ["#141C28", "#233247"],
       imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=80", // IA / flujo de trabajo (oscuro). ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
@@ -425,7 +429,7 @@ export const DATOS = {
       problema: "Analizar carreras implicaba cruzar datos dispersos a mano antes de cada jornada.",
       resultado: "Herramienta de uso real que ordena la información y reduce el análisis previo de horas a minutos.",
       stack: ["React", "Vite", "Visualización de datos"],
-      gradiente: ["#7C2D12", "#A16207"],
+      gradiente: ["#1C2635", "#2B3C52"],
       imagen: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80", // datos / estadísticas (oscuro). ← reemplazar con captura real del proyecto
       detalle: {
         resumen:
@@ -468,7 +472,7 @@ export const DATOS = {
       problema: "El actor no tenía presencia digital propia que centralizara su trayectoria y lo posicionara en búsquedas.",
       resultado: "Sitio web profesional que estructura su historial artístico y mejora su visibilidad y branding en internet.",
       stack: ["React", "Tailwind", "SEO", "Netlify"],
-      gradiente: ["#4C1D95", "#9333EA"],
+      gradiente: ["#172231", "#26374D"],
       imagen: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80", // escenario / actor (oscuro). ← reemplazar con captura real
       detalle: {
         resumen:
@@ -512,7 +516,7 @@ export const DATOS = {
       problema: "El conocimiento de qué herramienta usar para cada proyecto suele estar disperso y es difícil de transmitir.",
       resultado: "Un espacio propio que ordena mi stack y enseña, con criterio, cómo y cuándo usar cada herramienta.",
       stack: ["React", "Vite", "Tailwind"],
-      gradiente: ["#0F766E", "#0D9488"],
+      gradiente: ["#1A2432", "#2F4159"],
       imagen: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=80", // código / herramientas dev (oscuro). ← reemplazar con captura real
       detalle: {
         resumen:
@@ -556,7 +560,7 @@ export const DATOS = {
       problema: "En 2023, con la IA recién explotando, casi nadie la acercaba a los niños ni la explicaba de forma sencilla en Ica.",
       resultado: "Taller dictado durante 2 meses + charlas en 3 colegios: divulgación temprana de IA a estudiantes y comunidad escolar.",
       stack: ["Educación", "IA", "GPT", "Robótica básica"],
-      gradiente: ["#155E75", "#0E7490"],
+      gradiente: ["#152030", "#223144"],
       imagen: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80", // educación / niños aprendiendo (oscuro). ← reemplazar con foto real de Kidsapiens
       // tipo "historia": la página de detalle usa un layout distinto (no técnico)
       tipo: "historia",
@@ -591,7 +595,7 @@ export const DATOS = {
       problema: "Mantenerse al día en tecnología exige revisar muchas fuentes a mano; la información dispersa quita tiempo y enfoque.",
       resultado: "Un asistente automático que me entrega noticias relevantes a mi Telegram en mis horarios, sin que yo tenga que buscar nada.",
       stack: ["Automatización", "Gemini API", "Telegram Bot", "APIs de búsqueda"],
-      gradiente: ["#0E7490", "#0891B2"],
+      gradiente: ["#1D2836", "#31435C"],
       imagen: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?auto=format&fit=crop&w=900&q=80", // mensajería / notificaciones (oscuro). ← reemplazar con captura real
       detalle: {
         resumen:
