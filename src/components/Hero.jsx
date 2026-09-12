@@ -45,6 +45,16 @@ export default function Hero({ t = TEMA, irASeccion }) {
   const raton = useRatonSuave(0.06);
   const quieto = movReducido();
 
+  // El indicador de scroll cumple su funcion una sola vez: en cuanto el
+  // visitante se desplaza deja de tener sentido pedirle que se desplace.
+  const [arriba, setArriba] = React.useState(true);
+  React.useEffect(() => {
+    const alScroll = () => setArriba(window.scrollY < 90);
+    alScroll();
+    window.addEventListener("scroll", alScroll, { passive: true });
+    return () => window.removeEventListener("scroll", alScroll);
+  }, []);
+
   return (
     <section
       id="inicio"
@@ -244,7 +254,15 @@ export default function Hero({ t = TEMA, irASeccion }) {
             type="button"
             onClick={() => irASeccion("sobre-mi")}
             className="grupo-scroll flex items-center gap-3"
-            style={{ color: t.faint }}
+            style={{
+              color: t.faint,
+              opacity: arriba ? 1 : 0,
+              transform: arriba ? "translateY(0)" : "translateY(8px)",
+              pointerEvents: arriba ? "auto" : "none",
+              transition: "opacity 420ms ease, transform 420ms ease",
+            }}
+            aria-hidden={!arriba}
+            tabIndex={arriba ? 0 : -1}
             aria-label="Ir a Sobre mí"
           >
             <span className="riel-scroll relative block overflow-hidden" style={{ width: 1, height: 42, background: t.border }}>

@@ -412,11 +412,26 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva, oscuro }) {
    SOBRE MÍ
    ============================================================ */
 
+/* ============================================================
+   SOBRE MÍ — apertura en manifiesto, no en rejilla.
+
+   Orden de lectura:
+     1. LEMA      la frase que define cómo trabajo, al frente
+     2. RELATO    quién soy, en dos párrafos a ancho de lectura
+     3. MÉTODO    los cuatro pasos como una línea de tiempo horizontal
+     4. CAPACIDADES  en qué trabajo, como banda de texto continuo
+
+   Nada de cuadrículas de dos por dos: el contenido avanza en
+   bandas horizontales, que es como se lee una página, no una hoja
+   de cálculo.
+   ============================================================ */
 function SobreMi({ t }) {
+  const { intro, motivacion, lema, lemaTexto, puntos } = DATOS.sobreMi;
+
   return (
-    <section id="sobre-mi" className="relative py-20 md:py-28 px-5 md:px-8">
+    <section id="sobre-mi" className="relative py-20 md:py-28">
       <SepSeccion t={t} />
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16">
         <CabeceraSeccion
           t={t}
           num="01"
@@ -424,125 +439,175 @@ function SobreMi({ t }) {
           titulo="Automatizo lo que hoy alguien hace a mano"
         />
 
-        <div className="grid lg:grid-cols-5 gap-8 lg:gap-10 items-stretch">
-          {/* Panel "cómo trabajo": contenido propio en lugar de una foto de stock.
-              Comunica el método, que es lo que un empleador quiere saber. */}
-          <Reveal delay={80} className="lg:col-span-2 flex">
-            <div
-              className="relative w-full rounded-2xl p-6 flex flex-col"
-              style={{ background: t.surface, border: `1px solid ${t.borderSoft}`, boxShadow: t.shadowSoft }}
-            >
-              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.faint, textTransform: "uppercase" }}>
-                Cómo trabajo
-              </span>
-
-              <ol className="mt-5 flex-1 flex flex-col justify-around space-y-0">
-                {[
-                  { n: "01", t: "Entender el proceso", d: "Qué se hace hoy a mano, cuántas horas cuesta y dónde se rompe." },
-                  { n: "02", t: "Decidir si la IA aplica", d: "A veces la respuesta es un script, no un modelo. Lo digo con franqueza." },
-                  { n: "03", t: "Construir el flujo", d: "Agente o automatización, con límites claros y control humano donde importa." },
-                  { n: "04", t: "Dejarlo usable", d: "Interfaz simple para quien no es técnico, y medición de lo que ahorró." },
-                ].map((paso, i, arr) => (
-                  <li
-                    key={paso.n}
-                    className="flex gap-3.5 py-3.5"
-                    style={{ borderBottom: i < arr.length - 1 ? `1px solid ${t.borderSoft}` : "none" }}
-                  >
-                    <span
-                      className="shrink-0"
-                      style={{ fontFamily: MONO, fontSize: 11, color: t.accentText, fontWeight: 500, paddingTop: 2 }}
-                    >
-                      {paso.n}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block" style={{ fontSize: 14, fontWeight: 600, color: t.text, letterSpacing: "-0.01em" }}>
-                        {paso.t}
-                      </span>
-                      <span className="block mt-1" style={{ fontSize: 13, color: t.muted, lineHeight: 1.55 }}>
-                        {paso.d}
-                      </span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
-
-              {/* Cierre: la marca bajo la que entrega el trabajo */}
-              <div className="mt-5 pt-4 flex items-center justify-between gap-3" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
-                <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: t.faint, textTransform: "uppercase" }}>
-                  Conecta Systems
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <span className="punto-vivo w-1.5 h-1.5 rounded-full" style={{ background: t.ok }} />
-                  <span style={{ fontFamily: MONO, fontSize: 10, color: t.muted, letterSpacing: "0.08em" }}>EN PRODUCCIÓN</span>
-                </span>
-              </div>
-            </div>
-          </Reveal>
-
-          <div className="lg:col-span-3 flex flex-col">
-            <Reveal delay={120}>
-              <p className="leading-relaxed mb-4" style={{ color: t.muted, fontSize: "1.05rem" }}>
-                {DATOS.sobreMi.intro}
-              </p>
-              {DATOS.sobreMi.motivacion && (
-                <p className="leading-relaxed mb-6" style={{ color: t.muted, fontSize: "1.05rem" }}>
-                  {DATOS.sobreMi.motivacion}
-                </p>
-              )}
-            </Reveal>
-            <div className="grid sm:grid-cols-2 gap-4 flex-1">
-              {/* Capacidades como filas numeradas, no tarjetas: misma
-                  gramática visual que las tablas de Stack y Proyectos. */}
-              {DATOS.sobreMi.puntos.map((p, i) => (
-                <Reveal key={p.titulo} delay={160 + i * 70}>
-                  <div className="flex gap-4 py-5" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
-                    <span
-                      className="shrink-0"
-                      style={{ fontFamily: MONO, fontSize: "var(--t-etiqueta)", color: t.accentText, letterSpacing: "0.06em", paddingTop: 3 }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div className="min-w-0">
-                      <h3 style={{ color: t.text, fontSize: "0.94rem" }}>{p.titulo}</h3>
-                      <p className="mt-1.5" style={{ color: t.muted, fontSize: "var(--t-menor)" }}>{p.texto}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Lema / mentalidad — cita destacada */}
-        {DATOS.sobreMi.lema && (
-          <Reveal delay={120}>
-            {/* Cita destacada (pull quote): recurso editorial clásico.
-                Sin caja ni glow — sólo una regla superior, tipografía grande
-                y la atribución en mono. Coherente con las tablas. */}
-            <figure className="mt-16 md:mt-20 pt-9" style={{ borderTop: `1px solid ${t.border}` }}>
+        {/* ---------- 1 · LEMA: abre la sección, no la cierra ---------- */}
+        {lema && (
+          <Reveal>
+            <figure className="mb-14 md:mb-20">
               <blockquote
-                className="max-w-[46rem]"
                 style={{
                   fontFamily: DISPLAY,
                   fontWeight: 400,
-                  fontSize: "clamp(1.7rem, 4vw, 2.9rem)",
-                  lineHeight: 1.12,
-                  letterSpacing: "-0.025em",
+                  fontSize: "clamp(1.9rem, 5.5vw, 4rem)",
+                  lineHeight: 1.04,
+                  letterSpacing: "-0.035em",
                   color: t.text,
+                  maxWidth: "16ch",
+                  textWrap: "balance",
                 }}
               >
                 Planifica como <span style={{ fontStyle: "italic", color: t.accentText }}>Monje</span>,
                 ejecuta como <span style={{ fontStyle: "italic", color: t.accentText }}>Ninja</span>.
               </blockquote>
-              <figcaption className="mt-6 flex items-start gap-4 max-w-[42rem]">
-                <span className="h-px w-10 shrink-0 mt-3" style={{ background: t.border }} />
-                <span style={{ color: t.muted, fontSize: "var(--t-menor)" }}>
-                  {DATOS.sobreMi.lemaTexto}
-                </span>
-              </figcaption>
+              {lemaTexto && (
+                <figcaption className="mt-7 flex items-start gap-4" style={{ maxWidth: "44rem" }}>
+                  <span className="h-px w-10 shrink-0 mt-3" style={{ background: t.accent }} />
+                  <span style={{ color: t.muted, fontSize: "1.05rem", lineHeight: 1.6, textWrap: "pretty" }}>
+                    {lemaTexto}
+                  </span>
+                </figcaption>
+              )}
             </figure>
           </Reveal>
         )}
+
+        {/* ---------- 2 · RELATO: dos columnas de lectura ---------- */}
+        <Reveal delay={60}>
+          <div
+            className="grid md:grid-cols-2 gap-x-14 gap-y-6 pt-10 pb-14 md:pb-16"
+            style={{ borderTop: `1px solid ${t.border}` }}
+          >
+            <p className="leading-relaxed" style={{ color: t.text, fontSize: "1.08rem", textWrap: "pretty" }}>
+              {intro}
+            </p>
+            {motivacion && (
+              <p className="leading-relaxed" style={{ color: t.muted, fontSize: "1.08rem", textWrap: "pretty" }}>
+                {motivacion}
+              </p>
+            )}
+          </div>
+        </Reveal>
+
+        {/* ---------- 3 · MÉTODO: línea de tiempo horizontal ----------
+            Los cuatro pasos avanzan de izquierda a derecha sobre una
+            misma regla, como un proceso. En móvil se apilan, pero la
+            regla pasa a ser vertical: sigue leyéndose como secuencia. */}
+        <div className="metodo-banda pt-12 md:pt-14" style={{ borderTop: `1px solid ${t.border}` }}>
+          <Reveal>
+            <div className="flex items-baseline gap-4 mb-9">
+              <span
+                style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", color: t.accentText, textTransform: "uppercase" }}
+              >
+                Cómo trabajo
+              </span>
+              <span className="h-px flex-1" style={{ background: t.borderSoft }} />
+              <span className="inline-flex items-center gap-1.5 shrink-0">
+                <span className="punto-vivo w-1.5 h-1.5 rounded-full" style={{ background: t.ok }} />
+                <span style={{ fontFamily: MONO, fontSize: 10, color: t.faint, letterSpacing: "0.12em" }}>
+                  CONECTA SYSTEMS
+                </span>
+              </span>
+            </div>
+          </Reveal>
+
+          <ol className="grid md:grid-cols-4 gap-x-8 gap-y-9">
+            {[
+              { n: "01", t: "Entender el proceso", d: "Qué se hace hoy a mano, cuántas horas cuesta y dónde se rompe." },
+              { n: "02", t: "Decidir si la IA aplica", d: "A veces la respuesta es un script, no un modelo. Lo digo con franqueza." },
+              { n: "03", t: "Construir el flujo", d: "Agente o automatización, con límites claros y control humano donde importa." },
+              { n: "04", t: "Dejarlo usable", d: "Interfaz simple para quien no es técnico, y medición de lo que ahorró." },
+            ].map((paso, i) => (
+              <Reveal key={paso.n} delay={i * 80}>
+                <li className="paso-metodo relative pt-7">
+                  {/* Regla superior con el nodo del paso */}
+                  <span
+                    aria-hidden
+                    className="absolute top-0 left-0 right-0"
+                    style={{ height: 1, background: t.borderSoft }}
+                  />
+                  <span
+                    aria-hidden
+                    className="nodo-paso absolute top-0 left-0"
+                    style={{
+                      width: 7, height: 7, borderRadius: "50%",
+                      background: t.accent, transform: "translateY(-3px)",
+                    }}
+                  />
+                  <span
+                    className="block mb-2.5"
+                    style={{ fontFamily: MONO, fontSize: 11, color: t.accentText, letterSpacing: "0.1em" }}
+                  >
+                    {paso.n}
+                  </span>
+                  <h3
+                    className="mb-2"
+                    style={{ fontFamily: DISPLAY, color: t.text, fontSize: "1.15rem", fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.2, textWrap: "balance" }}
+                  >
+                    {paso.t}
+                  </h3>
+                  <p className="leading-relaxed" style={{ color: t.muted, fontSize: 14, textWrap: "pretty" }}>
+                    {paso.d}
+                  </p>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+
+        {/* ---------- 4 · CAPACIDADES: bandas a ancho completo ----------
+            Cada capacidad es una fila que ocupa todo el ancho: título
+            grande a la izquierda, explicación a la derecha. Es la misma
+            gramática que Proyectos y Stack, no una rejilla de tarjetas. */}
+        <div className="mt-16 md:mt-24">
+          <Reveal>
+            <div className="flex items-baseline gap-4 mb-2">
+              <span
+                style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", color: t.accent2Text, textTransform: "uppercase" }}
+              >
+                En qué trabajo
+              </span>
+              <span className="h-px flex-1" style={{ background: t.borderSoft }} />
+            </div>
+          </Reveal>
+
+          <div style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
+            {puntos.map((p, i) => (
+              <Reveal key={p.titulo} delay={i * 70}>
+                <div
+                  className="banda-capacidad grid md:grid-cols-[1fr_1.35fr] gap-3 md:gap-12 py-7 md:py-9"
+                  style={{ borderTop: `1px solid ${t.borderSoft}` }}
+                >
+                  <div className="flex items-baseline gap-4">
+                    <span
+                      className="shrink-0"
+                      style={{ fontFamily: MONO, fontSize: 11, color: t.faint, letterSpacing: "0.06em" }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3
+                      style={{
+                        fontFamily: DISPLAY,
+                        color: t.text,
+                        fontSize: "clamp(1.25rem, 2.6vw, 1.9rem)",
+                        fontWeight: 400,
+                        letterSpacing: "-0.025em",
+                        lineHeight: 1.1,
+                        textWrap: "balance",
+                      }}
+                    >
+                      {p.titulo}
+                    </h3>
+                  </div>
+                  <p
+                    className="leading-relaxed md:pt-1"
+                    style={{ color: t.muted, fontSize: "1rem", maxWidth: "62ch", textWrap: "pretty" }}
+                  >
+                    {p.texto}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -1096,83 +1161,109 @@ function MiniaturaProyecto({ t, p, alta = false, color = false }) {
 /* Fila de proyecto — tabla editorial sobre fondo oscuro.
    El contenido manda: número, nombre, problema resuelto y stack.
    La imagen aparece sólo como miniatura a la derecha, sin dominar. */
-function FilaProyecto({ t, p, abrir, delay, indice }) {
+/* Tarjeta de proyecto — la captura manda.
+   `destacado` la hace ocupar el doble de ancho y crecer en alto:
+   el mosaico deja de ser una rejilla uniforme y adquiere jerarquía. */
+function TarjetaProyecto({ t, p, abrir, indice, destacado = false }) {
+  const etiqueta =
+    p.categoria === "implementado" ? "Cliente real" : p.categoria === "negocio" ? "Para terceros" : "Personal";
+
   return (
     <button
       type="button"
       onClick={() => abrir(p.id)}
       data-cursor="ABRIR"
-      className="fila-proyecto fila-entra w-full text-left py-7 md:py-9 flex items-start gap-5 md:gap-9"
+      className={`tarjeta-proyecto group relative w-full text-left overflow-hidden ${destacado ? "md:col-span-2" : ""}`}
       style={{
-        borderTop: `1px solid ${t.borderSoft}`,
-        animationDelay: `${delay}ms`,
+        borderRadius: 16,
+        border: `1px solid ${t.borderSoft}`,
+        background: t.card,
+        animationDelay: `${Math.min(indice, 6) * 70}ms`,
       }}
     >
-      {/* Índice */}
+      {/* Captura a color, a sangre dentro de la tarjeta */}
       <span
-        className="shrink-0 pt-1"
-        style={{ fontFamily: MONO, fontSize: 11.5, color: t.faint, letterSpacing: "0.06em" }}
-      >
-        {String(indice).padStart(2, "0")}
-      </span>
-
-      {/* Cuerpo */}
-      <span className="min-w-0 flex-1">
-        <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <span
-            className="titulo-proyecto"
-            style={{
-              fontFamily: DISPLAY,
-              fontWeight: 400,
-              fontSize: "clamp(1.5rem, 3.4vw, 2.6rem)",
-              letterSpacing: "-0.025em",
-              color: t.text,
-              lineHeight: 1.05,
-            }}
-          >
-            {p.nombre}
-          </span>
-          <span
-            className="px-2 py-0.5 rounded-full shrink-0"
-            style={{
-              fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.12em",
-              color: t.muted, border: `1px solid ${t.border}`, textTransform: "uppercase",
-            }}
-          >
-            {p.categoria === "implementado" ? "Cliente real" : p.categoria === "negocio" ? "Para terceros" : "Personal"}
-          </span>
-        </span>
-
-        <span className="block mt-3 leading-relaxed" style={{ color: t.muted, fontSize: "clamp(0.94rem, 1.2vw, 1.05rem)", maxWidth: "62ch" }}>
-          {p.corto}
-        </span>
-
-        {/* Stack en texto, sin chips */}
-        <span className="block mt-4" style={{ fontFamily: MONO, fontSize: 11, color: t.faint, letterSpacing: "0.04em" }}>
-          {p.stack.join("  ·  ")}
-        </span>
-
-        <span
-          className="cta-proyecto inline-flex items-center gap-2 mt-5"
-          style={{ fontSize: 13.5, fontWeight: 600, color: t.accent }}
-        >
-          Ver caso completo
-          <span aria-hidden className="flecha-cta" style={{ display: "inline-block" }}>→</span>
-        </span>
-      </span>
-
-      {/* Miniatura: contenida, en escala de grises hasta el hover */}
-      <span
-        className="mini-proyecto hidden md:block shrink-0 overflow-hidden rounded-lg"
-        style={{ width: 190, height: 124, background: t.surface, border: `1px solid ${t.borderSoft}` }}
+        className="block relative overflow-hidden"
+        style={{ aspectRatio: destacado ? "16 / 9" : "4 / 3", background: t.bgAlt }}
       >
         <img
           src={p.imagen}
           alt=""
           loading="lazy"
-          className="w-full h-full object-cover"
-          style={{ filter: "grayscale(1) contrast(1.04)", transition: "filter 300ms, transform 400ms cubic-bezier(0.22,0.61,0.36,1)" }}
+          className="lienzo-proyecto absolute inset-0 w-full h-full object-cover"
         />
+        {/* Degradado inferior: sostiene el texto sin apagar la imagen */}
+        <span
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(to top, ${t.card} 0%, rgba(10,11,13,0.80) 26%, rgba(10,11,13,0.20) 58%, transparent 80%)`,
+          }}
+        />
+
+        {/* Índice y categoría, arriba */}
+        <span className="absolute top-3.5 left-4 right-4 flex items-center justify-between gap-3">
+          <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.text, letterSpacing: "0.1em", opacity: 0.85 }}>
+            {String(indice).padStart(2, "0")}
+          </span>
+          <span
+            className="px-2 py-1"
+            style={{
+              fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase",
+              color: t.text, background: "rgba(10,11,13,0.62)",
+              border: `1px solid ${t.border}`, borderRadius: 6, backdropFilter: "blur(6px)",
+            }}
+          >
+            {etiqueta}
+          </span>
+        </span>
+
+        {/* Nombre del proyecto, sobre la imagen */}
+        <span className="absolute left-4 right-4 bottom-3.5">
+          <span
+            className="block"
+            style={{
+              fontFamily: DISPLAY,
+              fontWeight: 500,
+              fontSize: destacado ? "clamp(1.5rem, 3.2vw, 2.4rem)" : "clamp(1.2rem, 2.2vw, 1.55rem)",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.05,
+              color: t.text,
+              textWrap: "balance",
+            }}
+          >
+            {p.nombre}
+          </span>
+        </span>
+      </span>
+
+      {/* Pie: descripción, stack y llamada */}
+      <span className="block p-4 md:p-5">
+        <span
+          className="block leading-relaxed"
+          style={{ color: t.muted, fontSize: destacado ? "1rem" : "0.9rem", maxWidth: "58ch", textWrap: "pretty" }}
+        >
+          {p.corto}
+        </span>
+
+        <span
+          className="mt-4 pt-3.5 flex items-center justify-between gap-4"
+          style={{ borderTop: `1px solid ${t.borderSoft}` }}
+        >
+          <span
+            className="min-w-0 truncate"
+            style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint, letterSpacing: "0.04em" }}
+          >
+            {p.stack.join("  ·  ")}
+          </span>
+          <span
+            className="cta-proyecto inline-flex items-center gap-1.5 shrink-0"
+            style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, color: t.accentText, letterSpacing: "0.1em", textTransform: "uppercase" }}
+          >
+            Ver caso
+            <span aria-hidden className="flecha-cta" style={{ display: "inline-block" }}>→</span>
+          </span>
+        </span>
       </span>
     </button>
   );
@@ -1194,12 +1285,8 @@ function Proyectos({ t, abrir }) {
   const nota = CATEGORIAS.find((c) => c.id === filtro)?.nota;
 
   return (
-    <section
-      id="proyectos"
-      className="relative"
-      style={{ background: t.bg, color: t.text }}
-    >
-      {/* Retícula tenue sobre el oscuro: misma estructura, invertida */}
+    <section id="proyectos" className="relative" style={{ background: t.bg, color: t.text }}>
+      {/* Retícula tenue sobre el oscuro */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
@@ -1211,7 +1298,6 @@ function Proyectos({ t, abrir }) {
       />
 
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-20 md:py-28">
-        {/* Cabecera propia (en inverso) */}
         <Reveal>
           <div className="flex items-center gap-3 mb-6">
             <span style={{ fontFamily: MONO, fontSize: 11.5, color: t.accent, letterSpacing: "0.08em" }}>04</span>
@@ -1261,21 +1347,22 @@ function Proyectos({ t, abrir }) {
               );
             })}
           </div>
-          <p className="text-sm mb-4" style={{ color: t.faint, minHeight: 20 }}>
+          <p className="text-sm mb-8" style={{ color: t.faint, minHeight: 20 }}>
             {nota || "Todo mi trabajo: clientes reales, proyectos aplicados y personales."}
           </p>
         </Reveal>
 
-        {/* Tabla de proyectos */}
-        <div key={filtro} style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
+        {/* Mosaico: el primero de cada vista ocupa el doble de ancho.
+            La rejilla deja de ser uniforme y gana jerarquía visual. */}
+        <div key={filtro} className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {lista.map((p, i) => (
-            <FilaProyecto
+            <TarjetaProyecto
               key={p.id}
               t={t}
               p={p}
               abrir={abrir}
               indice={i + 1}
-              delay={Math.min(i, 6) * 60}
+              destacado={i === 0}
             />
           ))}
         </div>
