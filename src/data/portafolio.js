@@ -89,14 +89,59 @@ export const DATOS = {
       ],
     },
     {
+      /* Esta categoría se despliega en árbol: Claude es la raíz y de
+         él salen tres ramas (Skills, MCP y Agentes), cada una con sus
+         propios ejemplos. La UI la dibuja `RamaClaude` en App.jsx. */
       categoria: "Automatización y Agentes",
       icono: "settings",
-      descripcion: "Claude dirige, n8n ejecuta. Es el núcleo de lo que construyo.",
+      descripcion: "Claude es la raíz. De ahí salen Skills, MCP y Agentes.",
+      arbol: true,
+      raiz: {
+        nombre: "Claude",
+        slug: "claude",
+        color: "D97757",
+        detalle: "Mi herramienta central de trabajo. Todo lo que automatizo nace aquí y se ramifica en tres formas de usarlo.",
+      },
+      ramas: [
+        {
+          nombre: "Skills",
+          clave: "skills",
+          resumen: "Procedimientos propios que Claude carga cuando la tarea lo pide. En vez de repetir las mismas instrucciones en cada conversación, el conocimiento queda escrito una vez y se aplica solo.",
+          hijos: [
+            { nombre: "Diseño de interfaces", detalle: "Criterios de maquetación, tipografía y color aplicados igual en cada pantalla que construyo." },
+            { nombre: "Bases de datos", detalle: "Convenciones de modelado, nombres y consultas para que el esquema salga coherente desde el principio." },
+            { nombre: "Documentación técnica", detalle: "Genera manuales, READMEs y fichas de entrega con la misma estructura en todos los proyectos." },
+            { nombre: "Revisión de código", detalle: "Pasa el código por los mismos criterios de calidad antes de darlo por terminado." },
+            { nombre: "Propuestas y cotizaciones", detalle: "Arma documentos comerciales con el formato y el tono de la marca." },
+          ],
+        },
+        {
+          nombre: "MCP",
+          clave: "mcp",
+          resumen: "El protocolo que conecta a Claude con aplicaciones reales. Deja de ser un chat y pasa a operar las herramientas directamente: lee, escribe y ejecuta dentro de cada sistema.",
+          hijos: [
+            { nombre: "n8n", destacado: true, detalle: "La conexión principal. Claude dirige los flujos de automatización y n8n los ejecuta contra los sistemas del negocio." },
+            { nombre: "Higgsfield", detalle: "Generación de vídeo pedida desde el mismo flujo, sin salir a otra herramienta." },
+            { nombre: "Meta Ads", detalle: "Creación y seguimiento de campañas: lectura de métricas y análisis de resultados." },
+            { nombre: "Bases de datos", detalle: "Consultas directas sobre Supabase o SQL Server para responder con datos reales del negocio." },
+            { nombre: "Figma", detalle: "Lectura de diseños para pasarlos a código sin traducir a mano cada medida." },
+            { nombre: "Y lo que exponga un servidor MCP", detalle: "El protocolo es abierto: cualquier aplicación con un servidor MCP entra en el flujo, desde herramientas de diseño hasta motores de videojuego." },
+          ],
+        },
+        {
+          nombre: "Agentes",
+          clave: "agentes",
+          resumen: "Tareas completas que se ejecutan solas, con límites definidos y confirmación humana donde importa. No responden: hacen.",
+          hijos: [
+            { nombre: "Rutinas programadas", detalle: "Trabajos que corren todos los días a una hora fija, sin que nadie los lance." },
+            { nombre: "Investigación automatizada", detalle: "Búsqueda, lectura y resumen de fuentes sobre un tema, entregado listo para decidir." },
+            { nombre: "Atención por WhatsApp", detalle: "Respuesta a mensajes con los datos del negocio, escalando a una persona cuando hace falta." },
+            { nombre: "Procesamiento de documentos", detalle: "Facturas, contratos y formularios convertidos en datos ordenados." },
+            { nombre: "Informes periódicos", detalle: "Métricas recogidas, comparadas y enviadas al canal donde se leen." },
+          ],
+        },
+      ],
       items: [
-        { nombre: "Claude · Skills", slug: "claude", color: "D97757", detalle: "Procedimientos propios que el modelo carga cuando la tarea lo pide. En vez de repetir instrucciones en cada conversación, el conocimiento queda versionado y se aplica solo." },
-        { nombre: "Claude · MCP", slug: "claude", color: "D97757", detalle: "El protocolo con el que conecto a Claude con sistemas reales: n8n, bases de datos, APIs, archivos y otros modelos. Es lo que lo convierte en un operador y no en un chat." },
-        { nombre: "Claude · Agentes", slug: "claude", color: "D97757", detalle: "Agentes y subagentes que ejecutan tareas completas con límites definidos: trabajan en paralelo, consultan datos y piden confirmación humana donde importa." },
-        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "Mi motor de automatización: flujos que corren solos conectando sistemas por APIs REST y webhooks. Claude los dirige mediante MCP en lugar de seguir una rama fija de nodos." },
         { nombre: "Node.js", slug: "nodedotjs", color: "5FA04E", detalle: "Automatizaciones programadas, funciones serverless y scripts de proceso." },
         { nombre: "Python", slug: "python", color: "3776AB", detalle: "Scripting de datos y automatización; lenguaje estándar del ecosistema de IA." },
       ],

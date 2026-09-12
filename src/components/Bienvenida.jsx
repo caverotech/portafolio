@@ -1,52 +1,43 @@
 import React, { useState, useEffect, useRef } from "react";
-import { TEMA, DISPLAY, SANS, MONO, TIPO } from "../theme/theme";
+import { TEMA, DISPLAY, MONO } from "../theme/theme";
 import { movReducido } from "../hooks/useReveal";
-import { DATOS } from "../data/portafolio";
 
 /* ============================================================
-   BIENVENIDA / INTRO DEL PORTAFOLIO
+   BIENVENIDA — apertura cinematográfica del portafolio
    ------------------------------------------------------------
-   Portada editorial que aparece ANTES del portafolio. Dos pasos:
+   Arranca sola, a pantalla completa. No hay tarjeta ni botón que
+   pulsar: el visitante llega y la secuencia ya está ocurriendo,
+   como el arranque de una película.
 
-     1. Tarjeta de presentación con el rol y un botón "Entrar".
-        (el clic es obligatorio: los navegadores bloquean el audio
-        automático, y aquí desbloqueamos el acorde de entrada)
-     2. Secuencia de inicialización de capacidades y revelado
-        del nombre.
+   Secuencia (≈4.2s, saltable en cualquier momento):
 
-   Tono: corporativo claro. Nada de auroras, aros giratorios ni
-   brillos que barren; el movimiento es corto y confirma progreso.
+     0. TELÓN      el negro se abre y aparece la retícula
+     1. MARCA      el monograma se dibuja trazo a trazo
+     2. LUGAR      coordenadas y año, al margen
+     3. NOMBRE     clip reveal por línea, a tamaño de cartel
+     4. ROL        la línea que debe recordarse
+     5. CAPACIDADES  se escriben una a una en el pie
+     6. SALIDA     el telón sube y entrega el portafolio
 
-   Uso en App.jsx:
-     {mostrarIntro && <Bienvenida onTerminar={() => setMostrarIntro(false)} />}
+   El sonido es opcional y secundario: los navegadores bloquean el
+   audio sin interacción, así que la intro funciona en silencio y
+   sólo suena si el visitante ya había interactuado con la página.
+   Nunca se le pide un clic para "desbloquear" nada.
    ============================================================ */
 
 const t = TEMA;
 
-/* ------------------------------------------------------------
-   Mini-motor de sonido (Web Audio API). Genera tonos sintéticos
-   sutiles sin archivos. Debe crearse tras un clic del usuario.
-   ------------------------------------------------------------ */
+/* Mini-motor de sonido (Web Audio API). Si el navegador lo bloquea
+   por falta de interacción previa, falla en silencio: la intro sigue
+   funcionando igual. Nunca condiciona la experiencia visual. */
 function crearAudio() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    const ctx = new Ctx();
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
 
-    // Tic discreto para cada capacidad que se registra.
-    const beep = (freq = 660, dur = 0.06, vol = 0.035, tipo = "sine") => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = tipo;
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + dur);
-    };
-
-    // Nota cálida con filtro y cola larga (sensación de reverb).
-    const nota = (freq, retardo = 0, dur = 1.8, vol = 0.06) => {
+    const nota = (freq, retardo = 0, dur = 1.8, vol = 0.05) => {
       const inicio = ctx.currentTime + retardo;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -63,264 +54,329 @@ function crearAudio() {
       osc.stop(inicio + dur);
     };
 
-    // Acorde de entrada: Sol mayor con 9ª (G–B–D–A) en arpegio suave.
+    const tic = (freq = 660, dur = 0.05, vol = 0.022) => nota(freq, 0, dur, vol);
+
+    // Sol mayor con 9ª, en arpegio lento
     const acorde = () => {
-      const acordeHz = [196, 392, 493.88, 587.33, 880]; // G2, G4, B4, D5, A5
-      acordeHz.forEach((f, i) => {
-        const grave = i === 0;
-        nota(f, i * 0.14, grave ? 2.6 : 2.0, grave ? 0.045 : 0.05);
+      [196, 392, 493.88, 587.33, 880].forEach((f, i) => {
+        nota(f, i * 0.16, i === 0 ? 3.0 : 2.4, i === 0 ? 0.04 : 0.042);
       });
     };
 
-    return { beep, acorde };
+    return { tic, acorde };
   } catch {
-    return { beep: () => {}, acorde: () => {} };
+    return null;
   }
 }
 
+/* Una línea del titular: máscara que la descubre de abajo a arriba */
+function LineaCartel({ children, activo, retardo = 0, estilo = {} }) {
+  return (
+    <span className="block overflow-hidden" style={{ paddingBottom: "0.08em" }}>
+      <span
+        className="block"
+        style={{
+          ...estilo,
+          transform: activo ? "translateY(0)" : "translateY(110%)",
+          opacity: activo ? 1 : 0,
+          transition: `transform 1100ms cubic-bezier(0.22,0.61,0.36,1) ${retardo}ms, opacity 700ms ease ${retardo}ms`,
+        }}
+      >
+        {children}
+      </span>
+    </span>
+  );
+}
+
 export default function Bienvenida({ onTerminar }) {
-  // Lo que se "inicializa" es el perfil profesional: cada línea es una
-  // capacidad real, así la intro comunica el posicionamiento.
+  // Las capacidades se escriben en el pie mientras el nombre está en pantalla
   const capacidades = [
     "Agentes de IA",
-    "Integración de LLMs",
+    "Orquestación con n8n",
+    "MCP y Skills",
     "Automatización de procesos",
-    "Bases de conocimiento (RAG)",
     "Interfaces en React",
   ];
 
-  const [arrancado, setArrancado] = useState(false); // ¿ya pulsó "Entrar"?
-  const [visibles, setVisibles] = useState(0);       // capacidades registradas
-  const [fase, setFase] = useState("carga");         // carga → revelar → salir
+  const [paso, setPaso] = useState(0);          // avance de la secuencia
+  const [capsVisibles, setCapsVisibles] = useState(0);
+  const [saliendo, setSaliendo] = useState(false);
   const audio = useRef(null);
+  const cerrado = useRef(false);
 
-  const iniciar = () => {
-    audio.current = crearAudio();
-    setArrancado(true);
-  };
+  // Cierre único: lo usan tanto el final natural como el salto manual
+  const cerrar = React.useCallback(() => {
+    if (cerrado.current) return;
+    cerrado.current = true;
+    setSaliendo(true);
+    setTimeout(onTerminar, 620);
+  }, [onTerminar]);
 
   useEffect(() => {
-    if (!arrancado) return;
     if (movReducido()) { onTerminar(); return; }
 
-    const timers = [];
-    const paso = 260;    // ritmo de registro (ms por capacidad)
-    const inicio = 260;  // pausa antes de la primera
+    // El audio se intenta de inmediato. Si el navegador lo bloquea,
+    // crearAudio devuelve null o el contexto queda suspendido: la
+    // intro continúa igual, sólo que muda.
+    audio.current = crearAudio();
 
+    const timers = [];
+    const en = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+    en(120, () => setPaso(1));                       // telón + retícula
+    en(420, () => { setPaso(2); audio.current?.tic(520); });  // marca
+    en(760, () => setPaso(3));                       // coordenadas
+    en(1000, () => { setPaso(4); audio.current?.acorde(); }); // nombre
+    en(1750, () => setPaso(5));                      // rol
+
+    // Capacidades, una a una
     capacidades.forEach((_, i) => {
-      timers.push(setTimeout(() => {
-        setVisibles(i + 1);
-        audio.current?.beep(540 + i * 55, 0.05, 0.03, "sine");
-      }, inicio + i * paso));
+      en(2150 + i * 190, () => {
+        setCapsVisibles(i + 1);
+        audio.current?.tic(560 + i * 60);
+      });
     });
 
-    const finCarga = inicio + capacidades.length * paso + 260;
-    timers.push(setTimeout(() => { setFase("revelar"); audio.current?.acorde(); }, finCarga));
-    timers.push(setTimeout(() => setFase("salir"), finCarga + 1400));
-    timers.push(setTimeout(onTerminar, finCarga + 2000));
+    en(3900, () => setPaso(6));
+    en(4250, cerrar);
 
     return () => timers.forEach(clearTimeout);
-  }, [arrancado]);
+  }, [cerrar, onTerminar]);
 
-  const progreso = Math.round((visibles / capacidades.length) * 100);
+  // Saltar: con clic, con Escape o con cualquier tecla
+  useEffect(() => {
+    const alPulsar = () => cerrar();
+    window.addEventListener("keydown", alPulsar);
+    return () => window.removeEventListener("keydown", alPulsar);
+  }, [cerrar]);
 
-  // -----------------------------------------------------------
-  // PASO 1 — tarjeta de presentación con botón "Entrar"
-  // -----------------------------------------------------------
-  if (!arrancado) {
-    return (
-      <div
-        className="fixed inset-0 flex items-center justify-center px-5 entrada-fade"
-        style={{ background: t.bg, zIndex: 200 }}
-      >
-        <EstilosBienvenida />
-
-        {/* Retícula técnica de fondo: estructura, sin color */}
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `linear-gradient(${t.borderSoft} 1px, transparent 1px), linear-gradient(90deg, ${t.borderSoft} 1px, transparent 1px)`,
-            backgroundSize: "72px 72px",
-            maskImage: "radial-gradient(ellipse 75% 70% at 50% 45%, #000, transparent 80%)",
-            WebkitMaskImage: "radial-gradient(ellipse 75% 70% at 50% 45%, #000, transparent 80%)",
-          }}
-        />
-
-        <div
-          className="tarjeta-intro relative w-full max-w-md rounded-2xl px-8 pt-9 pb-8"
-          style={{ background: t.surface, border: `1px solid ${t.border}`, boxShadow: t.shadowLg }}
-        >
-          {/* Encabezado: dominio y disponibilidad */}
-          <div className="flex items-center justify-between gap-3 pb-7" style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
-            <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em", color: t.faint }}>CAVEROTECH.COM</span>
-            <span className="flex items-center gap-1.5">
-              <span className="punto-online w-1.5 h-1.5 rounded-full" style={{ background: t.ok }} />
-              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: t.muted }}>DISPONIBLE</span>
-            </span>
-          </div>
-
-          {/* Monograma AC: cuadrado sobrio, coherente con el favicon */}
-          <div
-            className="mt-7 mb-6 rounded-xl flex items-center justify-center"
-            style={{ width: 56, height: 56, background: t.accent }}
-          >
-            <span style={{ fontFamily: SANS, fontWeight: 600, fontSize: "1.35rem", letterSpacing: "-0.03em", color: "#14100A" }}>
-              AC
-            </span>
-          </div>
-
-          {/* Nombre y rol */}
-          <h2
-            className="mb-3"
-            style={{ fontFamily: DISPLAY, fontWeight: 500, fontSize: "clamp(2rem, 6vw, 2.7rem)", color: t.text, letterSpacing: "-0.035em", lineHeight: 1.02 }}
-          >
-            {DATOS.nombre}
-          </h2>
-          <p style={{ fontFamily: SANS, fontSize: 16, fontWeight: 600, color: t.text, letterSpacing: "-0.01em" }}>
-            {DATOS.titulo}
-          </p>
-          <p className="mt-2" style={{ fontSize: 14, color: t.muted, lineHeight: 1.6 }}>
-            Agentes, LLMs y procesos automatizados que entran en producción.
-          </p>
-
-          {/* Botón principal */}
-          <button
-            type="button"
-            onClick={iniciar}
-            className="boton-entrar mt-8 inline-flex items-center justify-center gap-2.5 w-full px-7 py-3.5 rounded-lg"
-            style={{ background: t.accent, color: "#14100A", fontFamily: SANS, fontWeight: 600, fontSize: 15 }}
-          >
-            Entrar al portafolio
-            <span aria-hidden style={{ fontSize: 16, lineHeight: 1 }}>→</span>
-          </button>
-
-          {/* Pie con metadatos */}
-          <div className="flex items-center justify-between gap-4 mt-6" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.14em", color: t.faint }}>
-            <span>{DATOS.ubicacion.toUpperCase()}</span>
-            <span>PORTAFOLIO 2026</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // -----------------------------------------------------------
-  // PASO 2 — registro de capacidades y revelado del nombre
-  // -----------------------------------------------------------
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center px-6"
-      style={{ background: t.bg, zIndex: 200, transition: "opacity 0.7s ease", opacity: fase === "salir" ? 0 : 1 }}
+      className="bienvenida fixed inset-0 overflow-hidden"
+      style={{
+        background: t.bg,
+        zIndex: 200,
+        opacity: saliendo ? 0 : 1,
+        transition: "opacity 600ms cubic-bezier(0.22,0.61,0.36,1)",
+      }}
+      onClick={cerrar}
+      role="presentation"
     >
       <EstilosBienvenida />
 
-      {fase === "carga" ? (
-        <div className="w-full max-w-md">
-          <p style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", color: t.faint, textTransform: "uppercase" }}>
-            Perfil profesional
-          </p>
+      {/* ---------- ATMÓSFERA ---------- */}
+      {/* Retícula técnica: aparece con el telón */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `linear-gradient(${t.borderSoft} 1px, transparent 1px), linear-gradient(90deg, ${t.borderSoft} 1px, transparent 1px)`,
+          backgroundSize: "76px 76px",
+          maskImage: "radial-gradient(ellipse 80% 75% at 50% 45%, #000, transparent 82%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 75% at 50% 45%, #000, transparent 82%)",
+          opacity: paso >= 1 ? 1 : 0,
+          transform: paso >= 1 ? "scale(1)" : "scale(1.06)",
+          transition: "opacity 1400ms ease, transform 2400ms cubic-bezier(0.22,0.61,0.36,1)",
+        }}
+      />
 
-          {/* Lista de capacidades que se registran una a una */}
-          <div className="mt-6 space-y-0">
-            {capacidades.map((c, i) => {
-              const activa = i < visibles;
-              return (
-                <div
-                  key={c}
-                  className={activa ? "linea-cap flex items-center gap-3 py-3" : "flex items-center gap-3 py-3"}
-                  style={{
-                    borderBottom: `1px solid ${t.borderSoft}`,
-                    opacity: activa ? 1 : 0.25,
-                    transition: "opacity 0.3s ease",
-                  }}
-                >
-                  <span
-                    className="flex items-center justify-center rounded-full shrink-0"
-                    style={{
-                      width: 16, height: 16,
-                      background: activa ? t.accent : "transparent",
-                      border: activa ? "none" : `1px solid ${t.border}`,
-                      color: "#14100A", fontSize: 10, lineHeight: 1,
-                    }}
-                  >
-                    {activa ? "✓" : ""}
-                  </span>
-                  <span style={{ fontFamily: SANS, fontSize: 15, color: activa ? t.text : t.faint, fontWeight: 500 }}>
-                    {c}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+      {/* Luz cenital cálida: da volumen a la escena */}
+      <div
+        aria-hidden
+        className="absolute pointer-events-none"
+        style={{
+          top: "-30%", left: "50%", width: "120vmax", height: "110vmax",
+          transform: "translateX(-50%)",
+          background: `radial-gradient(ellipse 42% 48% at 50% 34%, rgba(232,152,62,0.13), transparent 66%)`,
+          opacity: paso >= 1 ? 1 : 0,
+          transition: "opacity 2000ms ease",
+        }}
+      />
 
-          {/* Progreso */}
-          <div className="mt-7 flex items-center gap-3">
-            <div className="flex-1 h-0.5 rounded-full overflow-hidden" style={{ background: t.borderSoft }}>
-              <div
-                className="h-full rounded-full"
-                style={{ width: `${progreso}%`, background: t.accent, transition: "width 0.35s cubic-bezier(0.22,0.61,0.36,1)" }}
-              />
-            </div>
-            <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint, minWidth: 34, textAlign: "right" }}>{progreso}%</span>
-          </div>
-        </div>
-      ) : (
-        // Revelado del nombre
-        <div className="text-center revelar-nombre">
-          <h1
-            style={{ fontFamily: DISPLAY, fontWeight: 500, fontSize: "clamp(2.4rem, 8vw, 4.8rem)", letterSpacing: "-0.04em", color: t.text, lineHeight: 1 }}
+      {/* Telón: dos hojas que se retiran arriba y abajo */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 telon-sup"
+        style={{
+          height: "50%", background: t.bg, zIndex: 4,
+          transform: paso >= 1 ? "translateY(-101%)" : "translateY(0)",
+          transition: "transform 1200ms cubic-bezier(0.76,0,0.24,1)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0"
+        style={{
+          height: "50%", background: t.bg, zIndex: 4,
+          transform: paso >= 1 ? "translateY(101%)" : "translateY(0)",
+          transition: "transform 1200ms cubic-bezier(0.76,0,0.24,1)",
+        }}
+      />
+
+      {/* ---------- CONTENIDO ---------- */}
+      <div className="relative h-full w-full max-w-[1500px] mx-auto px-6 md:px-10 lg:px-14 flex flex-col" style={{ zIndex: 2 }}>
+
+        {/* Cabecera: marca y coordenadas */}
+        <div className="flex items-start justify-between gap-6 pt-8 md:pt-10">
+          {/* Monograma que se dibuja */}
+          <div
+            className="flex items-center gap-3"
+            style={{
+              opacity: paso >= 2 ? 1 : 0,
+              transform: paso >= 2 ? "translateY(0)" : "translateY(-8px)",
+              transition: "opacity 700ms ease, transform 700ms cubic-bezier(0.22,0.61,0.36,1)",
+            }}
           >
-            {DATOS.nombre}
-          </h1>
-          <p className="mt-4" style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.26em", color: t.muted, textTransform: "uppercase" }}>
-            Ingeniero de IA &amp; Automatización
-          </p>
+            <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden>
+              <g fill="none" stroke={t.text} strokeWidth="4.2" strokeLinecap="round" strokeLinejoin="round">
+                <path className={paso >= 2 ? "trazo trazo-1" : ""} d="M14 45 L23.5 20 L33 45" style={{ strokeDasharray: 62, strokeDashoffset: paso >= 2 ? 0 : 62 }} />
+                <path className={paso >= 2 ? "trazo trazo-2" : ""} d="M18.2 36.5 H28.8" style={{ strokeDasharray: 11, strokeDashoffset: paso >= 2 ? 0 : 11 }} />
+                <path className={paso >= 2 ? "trazo trazo-3" : ""} d="M53 26.5 A11.5 11.5 0 1 0 53 38.5" style={{ strokeDasharray: 58, strokeDashoffset: paso >= 2 ? 0 : 58 }} />
+              </g>
+              <circle
+                cx="23.5" cy="20" r="3.6" fill={t.accent}
+                style={{
+                  opacity: paso >= 3 ? 1 : 0,
+                  transformOrigin: "23.5px 20px",
+                  transform: paso >= 3 ? "scale(1)" : "scale(0)",
+                  transition: "opacity 400ms ease 260ms, transform 500ms cubic-bezier(0.34,1.56,0.64,1) 260ms",
+                }}
+              />
+            </svg>
+            <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: t.faint }}>
+              CAVEROTECH.COM
+            </span>
+          </div>
+
+          {/* Coordenadas y año */}
+          <div
+            className="text-right"
+            style={{
+              opacity: paso >= 3 ? 1 : 0,
+              transform: paso >= 3 ? "translateY(0)" : "translateY(-8px)",
+              transition: "opacity 700ms ease, transform 700ms cubic-bezier(0.22,0.61,0.36,1)",
+            }}
+          >
+            <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.faint }}>
+              14°04′S 75°44′W
+            </div>
+            <div className="mt-1" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.faint }}>
+              PORTAFOLIO 2026
+            </div>
+          </div>
         </div>
-      )}
+
+        {/* Nombre a tamaño de cartel */}
+        <div className="flex-1 flex flex-col justify-center py-8">
+          <h1
+            style={{
+              fontFamily: DISPLAY,
+              fontSize: "clamp(3rem, 13vw, 11rem)",
+              fontWeight: 500,
+              lineHeight: 0.84,
+              letterSpacing: "-0.05em",
+              color: t.text,
+            }}
+          >
+            <LineaCartel activo={paso >= 4} retardo={0}>Alexys</LineaCartel>
+            <LineaCartel activo={paso >= 4} retardo={110}>
+              <span style={{ color: t.accent }}>Cavero</span>
+            </LineaCartel>
+          </h1>
+
+          {/* Rol */}
+          <div
+            className="mt-7 flex items-center gap-4"
+            style={{
+              opacity: paso >= 5 ? 1 : 0,
+              transform: paso >= 5 ? "translateY(0)" : "translateY(12px)",
+              transition: "opacity 800ms ease, transform 800ms cubic-bezier(0.22,0.61,0.36,1)",
+            }}
+          >
+            <span className="h-px shrink-0" style={{ width: 44, background: t.accent }} />
+            <span
+              style={{
+                fontFamily: MONO,
+                fontSize: "clamp(0.7rem, 1.5vw, 0.9rem)",
+                letterSpacing: "0.24em",
+                color: t.muted,
+                textTransform: "uppercase",
+              }}
+            >
+              Ingeniero de IA &amp; Automatización
+            </span>
+          </div>
+        </div>
+
+        {/* Pie: capacidades que se escriben + indicador de salto */}
+        <div className="pb-8 md:pb-10">
+          <div
+            className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-5"
+            style={{ borderTop: `1px solid ${t.borderSoft}` }}
+          >
+            {capacidades.map((c, i) => (
+              <span
+                key={c}
+                className="inline-flex items-center gap-2"
+                style={{
+                  opacity: i < capsVisibles ? 1 : 0,
+                  transform: i < capsVisibles ? "translateY(0)" : "translateY(6px)",
+                  transition: "opacity 420ms ease, transform 420ms cubic-bezier(0.22,0.61,0.36,1)",
+                }}
+              >
+                <span
+                  aria-hidden
+                  style={{ width: 3, height: 3, borderRadius: "50%", background: t.accent }}
+                />
+                <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.14em", color: t.muted, textTransform: "uppercase" }}>
+                  {c}
+                </span>
+              </span>
+            ))}
+          </div>
+
+          {/* Salto: presente pero discreto. La intro termina sola. */}
+          <div
+            className="mt-5 flex items-center justify-between gap-4"
+            style={{
+              opacity: paso >= 5 ? 1 : 0,
+              transition: "opacity 700ms ease",
+            }}
+          >
+            <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}>
+              Pulsa para entrar
+            </span>
+            {/* Barra de avance de la propia intro */}
+            <span className="relative overflow-hidden" style={{ width: 96, height: 1, background: t.borderSoft }}>
+              <span
+                className="absolute inset-y-0 left-0"
+                style={{
+                  background: t.accent,
+                  width: paso >= 6 ? "100%" : `${Math.min((capsVisibles / capacidades.length) * 100, 100)}%`,
+                  transition: "width 420ms cubic-bezier(0.22,0.61,0.36,1)",
+                }}
+              />
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-/* Animaciones de la intro. Mismas reglas que el sitio:
-   una sola curva, duraciones cortas, desplazamientos pequeños. */
+/* Animaciones de la intro. Una sola curva, duraciones cortas. */
 function EstilosBienvenida() {
   return (
     <style>{`
-      .entrada-fade { animation: entradaFade 0.5s cubic-bezier(0.22,0.61,0.36,1) both; }
-      @keyframes entradaFade { from { opacity: 0; } to { opacity: 1; } }
+      .bienvenida { cursor: pointer; }
 
-      .tarjeta-intro { animation: subirTarjeta 0.55s cubic-bezier(0.22,0.61,0.36,1) both; }
-      @keyframes subirTarjeta {
-        from { opacity: 0; transform: translateY(12px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-
-      .linea-cap { animation: aparecerLinea 0.3s cubic-bezier(0.22,0.61,0.36,1) both; }
-      @keyframes aparecerLinea {
-        from { opacity: 0; transform: translateX(-6px); }
-        to   { opacity: 1; transform: translateX(0); }
-      }
-
-      .revelar-nombre { animation: revelarNombre 1.1s cubic-bezier(0.22,0.61,0.36,1) both; }
-      @keyframes revelarNombre {
-        from { opacity: 0; transform: translateY(10px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-
-      .punto-online { animation: pulsoPunto 2s ease-in-out infinite; }
-      @keyframes pulsoPunto { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
-
-      .boton-entrar {
-        transition: transform 160ms cubic-bezier(0.22,0.61,0.36,1),
-                    box-shadow 240ms cubic-bezier(0.22,0.61,0.36,1);
-      }
-      .boton-entrar:hover { transform: translateY(-1px); box-shadow: 0 6px 20px -4px rgba(232,152,62,0.45); filter: brightness(1.05); }
-      .boton-entrar:active { transform: translateY(0); }
+      /* El monograma se dibuja trazo a trazo */
+      .trazo { transition: stroke-dashoffset 900ms cubic-bezier(0.22,0.61,0.36,1); }
+      .trazo-2 { transition-delay: 260ms; }
+      .trazo-3 { transition-delay: 140ms; }
 
       @media (prefers-reduced-motion: reduce) {
-        .entrada-fade, .tarjeta-intro, .linea-cap, .revelar-nombre,
-        .punto-online, .boton-entrar { animation: none !important; transition: none !important; }
+        .bienvenida *, .trazo { animation: none !important; transition: none !important; }
       }
     `}</style>
   );

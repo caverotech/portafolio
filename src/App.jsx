@@ -97,12 +97,60 @@ function Foto({ src, alt = "", gradiente = ["#14171C", "#1A1E24"], className = "
   );
 }
 
+/* Logos de marca como SVG inline.
+
+   Van embebidos y no por CDN a propósito: son las marcas centrales de
+   mi trabajo y no pueden depender de que un servicio externo responda.
+   `currentColor` no se usa aquí — cada marca lleva su color oficial. */
+const LOGOS_SVG = {
+  // OpenAI / GPT — nudo hexagonal oficial
+  openai: ({ size = 22, color = "#FFFFFF" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
+      <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" />
+    </svg>
+  ),
+  // Anthropic / Claude — isotipo oficial
+  claude: ({ size = 22, color = "#D97757" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
+      <path d="M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z" />
+    </svg>
+  ),
+  // n8n — isotipo oficial
+  n8n: ({ size = 22, color = "#EA4B71" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
+      <path d="M21.4737 6.3158c-1.1954 0-2.2019.8082-2.5017 1.9079h-2.9772c-1.2432 0-2.2937.9153-2.4708 2.1458l-.1263.8768c-.0886.6152-.6138 1.0729-1.2354 1.0729h-.4041c-.3-1.0997-1.3063-1.9079-2.5018-1.9079-1.1954 0-2.2018.8082-2.5017 1.9079H4.1075c-.3-1.0997-1.3063-1.9079-2.5017-1.9079C.7189 10.4113 0 11.1302 0 12.0171c0 .8868.7189 1.6058 1.6058 1.6058 1.1954 0 2.2018-.8083 2.5017-1.9079h2.6472c.2999 1.0996 1.3063 1.9079 2.5017 1.9079 1.1955 0 2.2018-.8083 2.5018-1.9079h.4041c1.2432 0 2.2937-.9153 2.4708-2.1458l.1263-.8768c.0886-.6152.6138-1.0729 1.2354-1.0729h2.9772c.2998 1.0997 1.3063 1.9079 2.5017 1.9079C22.3605 9.5273 23.0794 8.8084 23.0794 7.9216c0-.8869-.7189-1.6058-1.6057-1.6058Z" />
+    </svg>
+  ),
+};
+
+/* Logo de marca: SVG local si existe; si no, Simple Icons por CDN;
+   si tampoco, una insignia con la inicial. Nunca queda un hueco. */
+function LogoMarca({ marca, size = 22, color }) {
+  const Svg = LOGOS_SVG[marca];
+  if (!Svg) return null;
+  return <Svg size={size} color={color} />;
+}
+
 /* Logo real de cada tecnología (Simple Icons CDN).
    Si el logo no existe o no carga, muestra una insignia con la inicial. */
 function IconoTech({ t, slug, color, nombre, tam = 22, lucide: IconoLucide }) {
   const [falla, setFalla] = useState(false);
   const caja = tam + 14;
-  // Icono Lucide directo (para marcas sin logo en Simple Icons: GPT, Power BI, NotebookLM…)
+
+  // Logo local embebido: es la via fiable para las marcas centrales
+  // (GPT, Claude, n8n). No depende de que responda un CDN externo.
+  if (LOGOS_SVG[slug]) {
+    return (
+      <span
+        className="flex items-center justify-center rounded-lg shrink-0"
+        style={{ width: caja, height: caja, background: t.surface2, border: `1px solid ${t.borderSoft}` }}
+      >
+        <LogoMarca marca={slug} size={tam} color={color ? `#${color}` : undefined} />
+      </span>
+    );
+  }
+
+  // Icono Lucide directo (para marcas sin logo propio: Power BI, NotebookLM…)
   if (IconoLucide) {
     return (
       <span
@@ -439,53 +487,60 @@ function SobreMi({ t }) {
           titulo="Automatizo lo que hoy alguien hace a mano"
         />
 
-        {/* ---------- 1 · LEMA: abre la sección, no la cierra ---------- */}
-        {lema && (
-          <Reveal>
-            <figure className="mb-14 md:mb-20">
-              <blockquote
-                style={{
-                  fontFamily: DISPLAY,
-                  fontWeight: 400,
-                  fontSize: "clamp(1.9rem, 5.5vw, 4rem)",
-                  lineHeight: 1.04,
-                  letterSpacing: "-0.035em",
-                  color: t.text,
-                  maxWidth: "16ch",
-                  textWrap: "balance",
-                }}
-              >
-                Planifica como <span style={{ fontStyle: "italic", color: t.accentText }}>Monje</span>,
-                ejecuta como <span style={{ fontStyle: "italic", color: t.accentText }}>Ninja</span>.
-              </blockquote>
-              {lemaTexto && (
-                <figcaption className="mt-7 flex items-start gap-4" style={{ maxWidth: "44rem" }}>
-                  <span className="h-px w-10 shrink-0 mt-3" style={{ background: t.accent }} />
-                  <span style={{ color: t.muted, fontSize: "1.05rem", lineHeight: 1.6, textWrap: "pretty" }}>
-                    {lemaTexto}
-                  </span>
-                </figcaption>
-              )}
-            </figure>
-          </Reveal>
-        )}
-
-        {/* ---------- 2 · RELATO: dos columnas de lectura ---------- */}
+        {/* ---------- RELATO CON EL LEMA INTERCALADO ----------
+            El lema no abre ni cierra: vive dentro del relato, entre lo
+            que hago y por que lo hago. Es una nota al margen, no un
+            titular; su peso tipografico es menor que el de la seccion. */}
         <Reveal delay={60}>
-          <div
-            className="grid md:grid-cols-2 gap-x-14 gap-y-6 pt-10 pb-14 md:pb-16"
-            style={{ borderTop: `1px solid ${t.border}` }}
-          >
-            <p className="leading-relaxed" style={{ color: t.text, fontSize: "1.08rem", textWrap: "pretty" }}>
-              {intro}
-            </p>
-            {motivacion && (
-              <p className="leading-relaxed" style={{ color: t.muted, fontSize: "1.08rem", textWrap: "pretty" }}>
-                {motivacion}
+          <div className="pt-10" style={{ borderTop: `1px solid ${t.border}` }}>
+            <div className="grid md:grid-cols-2 gap-x-14 gap-y-8">
+              <p className="leading-relaxed" style={{ color: t.text, fontSize: "1.08rem", textWrap: "pretty" }}>
+                {intro}
               </p>
-            )}
+
+              <div className="flex flex-col gap-8">
+                {/* El lema, al margen del relato */}
+                {lema && (
+                  <figure
+                    className="pl-5"
+                    style={{ borderLeft: `2px solid ${t.accent}` }}
+                  >
+                    <blockquote
+                      style={{
+                        fontFamily: DISPLAY,
+                        fontWeight: 400,
+                        fontSize: "clamp(1.15rem, 2.1vw, 1.5rem)",
+                        lineHeight: 1.25,
+                        letterSpacing: "-0.02em",
+                        color: t.text,
+                        textWrap: "balance",
+                      }}
+                    >
+                      Planifica como <span style={{ fontStyle: "italic", color: t.accentText }}>Monje</span>,
+                      ejecuta como <span style={{ fontStyle: "italic", color: t.accentText }}>Ninja</span>.
+                    </blockquote>
+                    {lemaTexto && (
+                      <figcaption
+                        className="mt-2.5 leading-relaxed"
+                        style={{ color: t.muted, fontSize: "0.95rem", textWrap: "pretty" }}
+                      >
+                        {lemaTexto}
+                      </figcaption>
+                    )}
+                  </figure>
+                )}
+
+                {motivacion && (
+                  <p className="leading-relaxed" style={{ color: t.muted, fontSize: "1.08rem", textWrap: "pretty" }}>
+                    {motivacion}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         </Reveal>
+
+        <div className="pb-14 md:pb-16" />
 
         {/* ---------- 3 · MÉTODO: línea de tiempo horizontal ----------
             Los cuatro pasos avanzan de izquierda a derecha sobre una
@@ -511,10 +566,10 @@ function SobreMi({ t }) {
 
           <ol className="grid md:grid-cols-4 gap-x-8 gap-y-9">
             {[
-              { n: "01", t: "Entender el proceso", d: "Qué se hace hoy a mano, cuántas horas cuesta y dónde se rompe." },
-              { n: "02", t: "Decidir si la IA aplica", d: "A veces la respuesta es un script, no un modelo. Lo digo con franqueza." },
-              { n: "03", t: "Construir el flujo", d: "Agente o automatización, con límites claros y control humano donde importa." },
-              { n: "04", t: "Dejarlo usable", d: "Interfaz simple para quien no es técnico, y medición de lo que ahorró." },
+              { n: "01", t: "Escuchar el problema", d: "Me siento con quien hace el trabajo hoy: qué hace a mano, cuánto le toma y dónde se le complica." },
+              { n: "02", t: "Elegir la herramienta correcta", d: "No todo necesita inteligencia artificial. Si se resuelve con algo más simple, te lo digo y lo hacemos así." },
+              { n: "03", t: "Construir el flujo", d: "Agente o automatización, con límites claros y una persona decidiendo donde de verdad importa." },
+              { n: "04", t: "Entregarlo funcionando", d: "Una interfaz que se entienda sin manual, y números que muestren el tiempo que se ganó." },
             ].map((paso, i) => (
               <Reveal key={paso.n} delay={i * 80}>
                 <li className="paso-metodo relative pt-7">
@@ -619,6 +674,181 @@ function SobreMi({ t }) {
 
 const ICONOS_CAT = { monitor: Code2, layers: Server, database: Database, wrench: Settings2, sparkles: BrainCircuit, settings: Workflow };
 
+/* Rama del árbol de Claude — Skills, MCP o Agentes.
+   Cada rama abre sus propios ejemplos. El conector en L a la
+   izquierda deja claro que cuelga de la raíz, como un árbol de
+   archivos: la jerarquía se ve, no hay que explicarla. */
+function RamaClaude({ t, rama, abierta, onToggle, ultima }) {
+  return (
+    <div className="relative">
+      {/* Tronco vertical: llega hasta el centro de esta rama si es la
+          última, o sigue de largo si vienen más abajo. */}
+      <span
+        aria-hidden
+        className="absolute left-0 top-0"
+        style={{
+          width: 1,
+          height: ultima ? 22 : "100%",
+          background: t.border,
+        }}
+      />
+      {/* Codo horizontal hacia el nombre de la rama */}
+      <span
+        aria-hidden
+        className="absolute"
+        style={{ left: 0, top: 22, width: 18, height: 1, background: t.border }}
+      />
+
+      <div className="pl-7">
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={abierta}
+          className="rama-claude w-full text-left py-3.5 flex items-baseline gap-3"
+        >
+          <span
+            className="shrink-0"
+            style={{
+              fontFamily: MONO,
+              fontSize: 13,
+              fontWeight: 500,
+              color: abierta ? t.accentText : t.text,
+              letterSpacing: "0.02em",
+              transition: "color 240ms",
+            }}
+          >
+            {rama.nombre}
+          </span>
+          <span
+            className="shrink-0"
+            style={{ fontFamily: MONO, fontSize: 10, color: t.faint }}
+          >
+            {String(rama.hijos.length).padStart(2, "0")}
+          </span>
+          <span className="h-px flex-1" style={{ background: t.borderSoft }} />
+          {/* Indicador +/− */}
+          <span className="shrink-0 relative" style={{ width: 11, height: 11, color: t.muted }} aria-hidden>
+            <span className="absolute" style={{ top: 5, left: 0, width: 11, height: 1, background: "currentColor" }} />
+            <span
+              className="absolute"
+              style={{
+                top: 0, left: 5, width: 1, height: 11, background: "currentColor",
+                transform: abierta ? "scaleY(0)" : "scaleY(1)",
+                transition: "transform 240ms cubic-bezier(0.22,0.61,0.36,1)",
+              }}
+            />
+          </span>
+        </button>
+
+        {/* Resumen de la rama: siempre visible, explica para qué sirve */}
+        <p
+          className="pb-3 leading-relaxed"
+          style={{ color: t.muted, fontSize: 13.5, maxWidth: "64ch", textWrap: "pretty" }}
+        >
+          {rama.resumen}
+        </p>
+
+        {/* Hijos: se despliegan */}
+        <div className="grid transition-all duration-300 ease-out" style={{ gridTemplateRows: abierta ? "1fr" : "0fr" }}>
+          <div className="overflow-hidden">
+            <div className="pb-5 grid sm:grid-cols-2 gap-x-8 gap-y-3.5">
+              {rama.hijos.map((h) => (
+                <div key={h.nombre} className="flex items-start gap-2.5">
+                  <span
+                    aria-hidden
+                    className="shrink-0 mt-[0.55rem]"
+                    style={{
+                      width: 4, height: 4, borderRadius: "50%",
+                      background: h.destacado ? t.accent : t.faint,
+                    }}
+                  />
+                  <div className="min-w-0">
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <span
+                        style={{
+                          fontSize: 13.5,
+                          fontWeight: 600,
+                          color: h.destacado ? t.accentText : t.text,
+                          letterSpacing: "-0.01em",
+                        }}
+                      >
+                        {h.nombre}
+                      </span>
+                      {h.destacado && (
+                        <span
+                          style={{
+                            fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.16em",
+                            color: t.accentText, textTransform: "uppercase",
+                          }}
+                        >
+                          Principal
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-0.5 leading-snug" style={{ color: t.muted, fontSize: 13 }}>
+                      {h.detalle}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Árbol completo: Claude arriba como raíz, tres ramas debajo. */
+function ArbolClaude({ t, cat }) {
+  const [abierta, setAbierta] = useState("skills");
+  return (
+    <div className="pb-8 pl-0 md:pl-[3.9rem]">
+      {/* Raíz */}
+      <div className="flex items-start gap-3 pb-2">
+        <IconoTech t={t} slug={cat.raiz.slug} color={cat.raiz.color} nombre={cat.raiz.nombre} tam={20} />
+        <div className="min-w-0">
+          <div style={{ fontSize: 15, fontWeight: 600, color: t.text, letterSpacing: "-0.01em" }}>
+            {cat.raiz.nombre}
+          </div>
+          <div className="mt-0.5 leading-snug" style={{ color: t.muted, fontSize: 13.5, maxWidth: "60ch" }}>
+            {cat.raiz.detalle}
+          </div>
+        </div>
+      </div>
+
+      {/* Ramas */}
+      <div className="mt-2 ml-[0.6rem]">
+        {cat.ramas.map((rama, i) => (
+          <RamaClaude
+            key={rama.clave}
+            t={t}
+            rama={rama}
+            abierta={abierta === rama.clave}
+            onToggle={() => setAbierta(abierta === rama.clave ? null : rama.clave)}
+            ultima={i === cat.ramas.length - 1}
+          />
+        ))}
+      </div>
+
+      {/* Tecnologías sueltas de la categoría, bajo el árbol */}
+      {cat.items?.length > 0 && (
+        <div className="mt-7 pt-5 grid sm:grid-cols-2 gap-x-10 gap-y-5" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+          {cat.items.map((item) => (
+            <div key={item.nombre} className="flex items-start gap-3">
+              <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={18} />
+              <div className="min-w-0">
+                <div className="font-semibold text-sm" style={{ color: t.text }}>{item.nombre}</div>
+                <div className="text-sm leading-snug mt-0.5" style={{ color: t.muted }}>{item.detalle}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* Fila de categoría — estructura de tabla editorial, no tarjeta.
    Cerrada: número, nombre y los logos alineados a la derecha.
    Abierta: el detalle de cada tecnología en dos columnas.
@@ -661,7 +891,7 @@ function TarjetaCategoria({ t, cat, abierta, onToggle, delay }) {
                 {cat.categoria}
               </span>
               <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint }}>
-                {String(cat.items.length).padStart(2, "0")}
+                {String(cat.arbol ? cat.ramas.length : cat.items.length).padStart(2, "0")}
               </span>
             </span>
             <span className="block mt-1.5" style={{ fontSize: 14, color: t.muted }}>
@@ -673,7 +903,7 @@ function TarjetaCategoria({ t, cat, abierta, onToggle, delay }) {
           <span
             className={`hidden md:flex items-center gap-1.5 shrink-0 transition-opacity duration-200 ${abierta ? "opacity-0" : "opacity-100"}`}
           >
-            {cat.items.slice(0, 5).map((item) => (
+            {(cat.arbol ? [cat.raiz] : cat.items.slice(0, 5)).map((item) => (
               <IconoTech key={item.nombre} t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={14} />
             ))}
           </span>
@@ -699,17 +929,21 @@ function TarjetaCategoria({ t, cat, abierta, onToggle, delay }) {
         {/* Detalle expandible */}
         <div className="grid transition-all duration-300 ease-out" style={{ gridTemplateRows: abierta ? "1fr" : "0fr" }}>
           <div className="overflow-hidden">
-            <div className="pb-8 pl-0 md:pl-[3.9rem] grid sm:grid-cols-2 gap-x-10 gap-y-5">
-              {cat.items.map((item) => (
-                <div key={item.nombre} className="flex items-start gap-3">
-                  <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={18} />
-                  <div className="min-w-0">
-                    <div className="font-semibold text-sm" style={{ color: t.text }}>{item.nombre}</div>
-                    <div className="text-sm leading-snug mt-0.5" style={{ color: t.muted }}>{item.detalle}</div>
+            {cat.arbol ? (
+              <ArbolClaude t={t} cat={cat} />
+            ) : (
+              <div className="pb-8 pl-0 md:pl-[3.9rem] grid sm:grid-cols-2 gap-x-10 gap-y-5">
+                {cat.items.map((item) => (
+                  <div key={item.nombre} className="flex items-start gap-3">
+                    <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={18} />
+                    <div className="min-w-0">
+                      <div className="font-semibold text-sm" style={{ color: t.text }}>{item.nombre}</div>
+                      <div className="text-sm leading-snug mt-0.5" style={{ color: t.muted }}>{item.detalle}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -1161,109 +1395,83 @@ function MiniaturaProyecto({ t, p, alta = false, color = false }) {
 /* Fila de proyecto — tabla editorial sobre fondo oscuro.
    El contenido manda: número, nombre, problema resuelto y stack.
    La imagen aparece sólo como miniatura a la derecha, sin dominar. */
-/* Tarjeta de proyecto — la captura manda.
-   `destacado` la hace ocupar el doble de ancho y crecer en alto:
-   el mosaico deja de ser una rejilla uniforme y adquiere jerarquía. */
-function TarjetaProyecto({ t, p, abrir, indice, destacado = false }) {
-  const etiqueta =
-    p.categoria === "implementado" ? "Cliente real" : p.categoria === "negocio" ? "Para terceros" : "Personal";
-
+function FilaProyecto({ t, p, abrir, delay, indice }) {
   return (
     <button
       type="button"
       onClick={() => abrir(p.id)}
       data-cursor="ABRIR"
-      className={`tarjeta-proyecto group relative w-full text-left overflow-hidden ${destacado ? "md:col-span-2" : ""}`}
+      className="fila-proyecto fila-entra w-full text-left py-7 md:py-9 flex items-start gap-5 md:gap-9"
       style={{
-        borderRadius: 16,
-        border: `1px solid ${t.borderSoft}`,
-        background: t.card,
-        animationDelay: `${Math.min(indice, 6) * 70}ms`,
+        borderTop: `1px solid ${t.borderSoft}`,
+        animationDelay: `${delay}ms`,
       }}
     >
-      {/* Captura a color, a sangre dentro de la tarjeta */}
+      {/* Índice */}
       <span
-        className="block relative overflow-hidden"
-        style={{ aspectRatio: destacado ? "16 / 9" : "4 / 3", background: t.bgAlt }}
+        className="shrink-0 pt-1"
+        style={{ fontFamily: MONO, fontSize: 11.5, color: t.faint, letterSpacing: "0.06em" }}
+      >
+        {String(indice).padStart(2, "0")}
+      </span>
+
+      {/* Cuerpo */}
+      <span className="min-w-0 flex-1">
+        <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span
+            className="titulo-proyecto"
+            style={{
+              fontFamily: DISPLAY,
+              fontWeight: 400,
+              fontSize: "clamp(1.5rem, 3.4vw, 2.6rem)",
+              letterSpacing: "-0.025em",
+              color: t.text,
+              lineHeight: 1.05,
+            }}
+          >
+            {p.nombre}
+          </span>
+          <span
+            className="px-2 py-0.5 rounded-full shrink-0"
+            style={{
+              fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.12em",
+              color: t.muted, border: `1px solid ${t.border}`, textTransform: "uppercase",
+            }}
+          >
+            {p.categoria === "implementado" ? "Cliente real" : p.categoria === "negocio" ? "Para terceros" : "Personal"}
+          </span>
+        </span>
+
+        <span className="block mt-3 leading-relaxed" style={{ color: t.muted, fontSize: "clamp(0.94rem, 1.2vw, 1.05rem)", maxWidth: "62ch" }}>
+          {p.corto}
+        </span>
+
+        {/* Stack en texto, sin chips */}
+        <span className="block mt-4" style={{ fontFamily: MONO, fontSize: 11, color: t.faint, letterSpacing: "0.04em" }}>
+          {p.stack.join("  ·  ")}
+        </span>
+
+        <span
+          className="cta-proyecto inline-flex items-center gap-2 mt-5"
+          style={{ fontSize: 13.5, fontWeight: 600, color: t.accent }}
+        >
+          Ver caso completo
+          <span aria-hidden className="flecha-cta" style={{ display: "inline-block" }}>→</span>
+        </span>
+      </span>
+
+      {/* Miniatura: contenida, en escala de grises hasta el hover */}
+      <span
+        className="mini-proyecto hidden md:block shrink-0 overflow-hidden rounded-lg"
+        style={{ width: 190, height: 124, background: t.surface, border: `1px solid ${t.borderSoft}` }}
       >
         <img
           src={p.imagen}
           alt=""
           loading="lazy"
-          className="lienzo-proyecto absolute inset-0 w-full h-full object-cover"
+          className="w-full h-full object-cover"
+          style={{ transition: "transform 400ms cubic-bezier(0.22,0.61,0.36,1)" }}
         />
-        {/* Degradado inferior: sostiene el texto sin apagar la imagen */}
-        <span
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(to top, ${t.card} 0%, rgba(10,11,13,0.80) 26%, rgba(10,11,13,0.20) 58%, transparent 80%)`,
-          }}
-        />
-
-        {/* Índice y categoría, arriba */}
-        <span className="absolute top-3.5 left-4 right-4 flex items-center justify-between gap-3">
-          <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.text, letterSpacing: "0.1em", opacity: 0.85 }}>
-            {String(indice).padStart(2, "0")}
-          </span>
-          <span
-            className="px-2 py-1"
-            style={{
-              fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase",
-              color: t.text, background: "rgba(10,11,13,0.62)",
-              border: `1px solid ${t.border}`, borderRadius: 6, backdropFilter: "blur(6px)",
-            }}
-          >
-            {etiqueta}
-          </span>
-        </span>
-
-        {/* Nombre del proyecto, sobre la imagen */}
-        <span className="absolute left-4 right-4 bottom-3.5">
-          <span
-            className="block"
-            style={{
-              fontFamily: DISPLAY,
-              fontWeight: 500,
-              fontSize: destacado ? "clamp(1.5rem, 3.2vw, 2.4rem)" : "clamp(1.2rem, 2.2vw, 1.55rem)",
-              letterSpacing: "-0.03em",
-              lineHeight: 1.05,
-              color: t.text,
-              textWrap: "balance",
-            }}
-          >
-            {p.nombre}
-          </span>
-        </span>
-      </span>
-
-      {/* Pie: descripción, stack y llamada */}
-      <span className="block p-4 md:p-5">
-        <span
-          className="block leading-relaxed"
-          style={{ color: t.muted, fontSize: destacado ? "1rem" : "0.9rem", maxWidth: "58ch", textWrap: "pretty" }}
-        >
-          {p.corto}
-        </span>
-
-        <span
-          className="mt-4 pt-3.5 flex items-center justify-between gap-4"
-          style={{ borderTop: `1px solid ${t.borderSoft}` }}
-        >
-          <span
-            className="min-w-0 truncate"
-            style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint, letterSpacing: "0.04em" }}
-          >
-            {p.stack.join("  ·  ")}
-          </span>
-          <span
-            className="cta-proyecto inline-flex items-center gap-1.5 shrink-0"
-            style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 500, color: t.accentText, letterSpacing: "0.1em", textTransform: "uppercase" }}
-          >
-            Ver caso
-            <span aria-hidden className="flecha-cta" style={{ display: "inline-block" }}>→</span>
-          </span>
-        </span>
       </span>
     </button>
   );
@@ -1285,8 +1493,12 @@ function Proyectos({ t, abrir }) {
   const nota = CATEGORIAS.find((c) => c.id === filtro)?.nota;
 
   return (
-    <section id="proyectos" className="relative" style={{ background: t.bg, color: t.text }}>
-      {/* Retícula tenue sobre el oscuro */}
+    <section
+      id="proyectos"
+      className="relative"
+      style={{ background: t.bg, color: t.text }}
+    >
+      {/* Retícula tenue sobre el oscuro: misma estructura, invertida */}
       <div
         aria-hidden
         className="absolute inset-0 pointer-events-none"
@@ -1298,6 +1510,7 @@ function Proyectos({ t, abrir }) {
       />
 
       <div className="relative max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-20 md:py-28">
+        {/* Cabecera propia (en inverso) */}
         <Reveal>
           <div className="flex items-center gap-3 mb-6">
             <span style={{ fontFamily: MONO, fontSize: 11.5, color: t.accent, letterSpacing: "0.08em" }}>04</span>
@@ -1347,22 +1560,21 @@ function Proyectos({ t, abrir }) {
               );
             })}
           </div>
-          <p className="text-sm mb-8" style={{ color: t.faint, minHeight: 20 }}>
+          <p className="text-sm mb-4" style={{ color: t.faint, minHeight: 20 }}>
             {nota || "Todo mi trabajo: clientes reales, proyectos aplicados y personales."}
           </p>
         </Reveal>
 
-        {/* Mosaico: el primero de cada vista ocupa el doble de ancho.
-            La rejilla deja de ser uniforme y gana jerarquía visual. */}
-        <div key={filtro} className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        {/* Tabla de proyectos */}
+        <div key={filtro} style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
           {lista.map((p, i) => (
-            <TarjetaProyecto
+            <FilaProyecto
               key={p.id}
               t={t}
               p={p}
               abrir={abrir}
               indice={i + 1}
-              destacado={i === 0}
+              delay={Math.min(i, 6) * 60}
             />
           ))}
         </div>
@@ -2113,8 +2325,8 @@ function Contacto({ t }) {
               </h2>
               <p className="mt-7 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "52ch" }}>
                 Estoy abierto a oportunidades como Ingeniero de IA y Automatización,
-                presenciales o remotas. Cuéntame qué necesitas resolver y te digo con
-                franqueza si la IA es la respuesta.
+                presenciales o remotas. Cuéntame qué necesitas resolver y vemos juntos
+                si la IA es el camino.
               </p>
               <div className="mt-9">
                 <a

@@ -155,35 +155,34 @@ export default function EstilosGlobales({ t = TEMA }) {
       /* ---------- FILAS DE TABLA ----------
          Estructura editorial: el hover tiñe apenas la fila y desplaza
          el contenido 4px. Nada de elevación ni sombras. */
-      .fila-tabla, .fila-canal {
+      .fila-tabla, .fila-proyecto, .fila-canal {
         transition: background-color var(--t-ui) var(--ease);
       }
       .fila-tabla:hover, .fila-canal:hover { background: rgba(255,255,255,0.022); }
+      .fila-proyecto:hover { background: rgba(232,152,62,0.035); }
 
       .cuerpo-fila { transition: transform var(--t-ui) var(--ease); }
+      .fila-proyecto:hover .cuerpo-fila { transform: translateX(5px); }
+
+      /* El titulo del proyecto se subraya al pasar el mouse */
+      .titulo-proyecto { position: relative; display: inline-block; }
+      .titulo-proyecto::after {
+        content: ""; position: absolute; left: 0; right: 0; bottom: 0.02em; height: 1px;
+        background: ${t.accent};
+        transform: scaleX(0); transform-origin: left;
+        transition: transform var(--t-seccion) var(--ease);
+      }
+      .fila-proyecto:hover .titulo-proyecto::after { transform: scaleX(1); }
 
       .flecha-cta { transition: transform var(--t-ui) var(--ease); }
+      .fila-proyecto:hover .flecha-cta,
       .fila-canal:hover .flecha-cta { transform: translateX(5px); }
 
-      /* ---------- MOSAICO DE PROYECTOS ----------
-         La captura manda. Al pasar el cursor la tarjeta se eleva apenas
-         y la imagen escala: el movimiento confirma que es pulsable. */
-      .tarjeta-proyecto {
-        animation: subirEntrada var(--t-seccion) var(--ease) both;
-        transition: border-color var(--t-ui) var(--ease),
-                    transform var(--t-ui) var(--ease),
-                    box-shadow var(--t-ui) var(--ease);
+      /* Miniatura: a color siempre, escala ligeramente al pasar el cursor */
+      .mini-proyecto img {
+        transition: filter var(--t-seccion) var(--ease), transform var(--t-seccion) var(--ease);
       }
-      .tarjeta-proyecto:hover {
-        border-color: ${t.accentBorder};
-        transform: translateY(-4px);
-        box-shadow: ${t.shadowMd};
-      }
-      .lienzo-proyecto {
-        transition: transform 700ms var(--ease), filter var(--t-seccion) var(--ease);
-      }
-      .tarjeta-proyecto:hover .lienzo-proyecto { transform: scale(1.045); }
-      .tarjeta-proyecto:hover .flecha-cta { transform: translateX(4px); }
+      .fila-proyecto:hover .mini-proyecto img { transform: scale(1.04); }
 
       /* ---------- SOBRE MI: pasos del metodo ----------
          El nodo del paso se tine de cobre y crece al entrar en pantalla. */
@@ -275,9 +274,8 @@ export default function EstilosGlobales({ t = TEMA }) {
       /* ---------- TÁCTIL ----------
          Sin hover obligatorio y con objetivo mínimo de 44px. */
       @media (hover: none) and (pointer: coarse) {
-        .tarjeta-proyecto:hover { transform: none; box-shadow: none; }
-        .tarjeta-proyecto:active { border-color: ${t.accentBorder}; }
-        .tarjeta-proyecto:hover .lienzo-proyecto { transform: none; }
+        .fila-proyecto:hover .cuerpo-fila { transform: none; }
+        .fila-proyecto:active { background: rgba(232,152,62,0.06); }
         .nav-link, .filtro-texto { min-height: 44px; display: inline-flex; align-items: center; }
       }
 
