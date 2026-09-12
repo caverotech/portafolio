@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import {
   Github, Linkedin, Mail, Download, ArrowRight, ArrowLeft,
-  Menu, X, MapPin, Layers, Database, Wrench,
+  Menu, X, MapPin, Layers, Database, Wrench, Maximize2,
   Sparkles, ExternalLink, FolderGit2, ArrowUp,
   Code2, Server, Settings2, BrainCircuit,
   BarChart3, BookOpen, MessageSquare, Bot, Workflow,
@@ -193,34 +193,6 @@ function VolverArriba({ t }) {
     >
       <ArrowUp size={18} />
     </button>
-  );
-}
-
-// Marquesina infinita de tecnologías, ahora con logos reales
-function Marquesina({ t }) {
-  const items = DATOS.tecnologias.flatMap((c) => c.items);
-  const doble = [...items, ...items];
-  const mascara = "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)";
-  return (
-    <Reveal>
-      <div
-        className="marquesina relative overflow-hidden py-4 mb-10 rounded-2xl"
-        style={{ border: `1px solid ${t.borderSoft}`, background: t.card, maskImage: mascara, WebkitMaskImage: mascara }}
-      >
-        <div className="pista flex items-center gap-3 w-max" style={{ animation: movReducido() ? "none" : "marquesina 45s linear infinite" }}>
-          {doble.map((item, i) => (
-            <span
-              key={i}
-              className="flex items-center gap-2.5 shrink-0 px-4 py-2 rounded-xl"
-              style={{ background: t.surface, border: `1px solid ${t.borderSoft}` }}
-            >
-              <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={16} />
-              <span style={{ fontFamily: MONO, fontSize: 12.5, color: t.text, fontWeight: 500, whiteSpace: "nowrap" }}>{item.nombre}</span>
-            </span>
-          ))}
-        </div>
-      </div>
-    </Reveal>
   );
 }
 
@@ -696,8 +668,6 @@ function Tecnologias({ t }) {
           descripcion="Cada tecnología de esta lista está en uso real en mis proyectos. No es una colección de logos: es el stack con el que diseño, integro y sostengo sistemas de IA."
         />
 
-        <Marquesina t={t} />
-
         {/* Tabla de categorías: filas separadas por línea, sin tarjetas.
             La última línea cierra la tabla por abajo. */}
         <div style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
@@ -718,213 +688,308 @@ function Tecnologias({ t }) {
 }
 
 /* ============================================================
-   CERTIFICADOS — SECCIÓN EN CONSTRUCCIÓN (temporal)
-   La sección sigue visible y en la navegación, pero muestra un
-   estado "En construcción" mientras se suben los certificados
-   reales. El carrusel original (con DATOS.certificados y su modal)
-   está en el historial de git, listo para reactivar.
+   CERTIFICADOS — muro de fichas + visor a pantalla completa.
+
+   Cada certificado se muestra como una ficha con su imagen real
+   (a color, sin tintes), institución y año. Al pulsar se abre un
+   visor con el detalle completo y el enlace al documento original.
+
+   Los datos viven en DATOS.certificados (src/data/portafolio.js).
+   Cuando un certificado no tenga `imagen`, la ficha muestra un
+   marco tipográfico con sus iniciales en lugar de una foto de stock.
    ============================================================ */
 
-// Para reactivar: cuando los certificados estén listos, recupera el
-// carrusel original desde el historial de git (commit anterior a
-// "Certificados en construcción") y reemplaza este componente.
+// Marco de respaldo cuando el certificado aún no tiene imagen
+function MarcoCertificado({ t, cert }) {
+  const iniciales = cert.nombre
+    .split(" ")
+    .filter((w) => w.length > 3)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("");
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+      style={{ background: `linear-gradient(150deg, ${t.surface2}, ${t.bg})` }}
+    >
+      <span
+        style={{ fontFamily: DISPLAY, fontSize: "2.75rem", fontWeight: 500, color: t.border, letterSpacing: "-0.03em", lineHeight: 1 }}
+      >
+        {iniciales || "AC"}
+      </span>
+      <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.2em", color: t.faint, textTransform: "uppercase" }}>
+        Documento
+      </span>
+    </div>
+  );
+}
+
+// Una ficha del muro
+function FichaCertificado({ t, cert, indice, onAbrir }) {
+  return (
+    <Reveal delay={indice * 60}>
+      <button
+        type="button"
+        onClick={() => onAbrir(indice)}
+        data-cursor="VER"
+        className="ficha-cert group w-full text-left h-full flex flex-col"
+        style={{ background: t.card, border: `1px solid ${t.borderSoft}`, borderRadius: 14, overflow: "hidden" }}
+      >
+        {/* Imagen del certificado, a color y completa (contain, no crop:
+            un diploma recortado no sirve de nada). */}
+        <div className="relative shrink-0" style={{ aspectRatio: "4 / 3", background: t.bgAlt }}>
+          {cert.imagen ? (
+            <img
+              src={cert.imagen}
+              alt={`Certificado: ${cert.nombre}`}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full lienzo-cert"
+              style={{ objectFit: "cover" }}
+            />
+          ) : (
+            <MarcoCertificado t={t} cert={cert} />
+          )}
+          {/* Código, arriba a la izquierda */}
+          <span
+            className="absolute top-2.5 left-2.5 px-2 py-1"
+            style={{
+              fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em",
+              color: t.text, background: "rgba(10,11,13,0.78)",
+              border: `1px solid ${t.border}`, borderRadius: 6,
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            {cert.codigo}
+          </span>
+          {/* Lupa al pasar el cursor */}
+          <span
+            className="lupa-cert absolute bottom-2.5 right-2.5 w-9 h-9 flex items-center justify-center"
+            style={{
+              background: "rgba(10,11,13,0.78)", border: `1px solid ${t.border}`,
+              borderRadius: 8, color: t.text, backdropFilter: "blur(6px)",
+            }}
+            aria-hidden
+          >
+            <Maximize2 size={14} />
+          </span>
+        </div>
+
+        {/* Datos */}
+        <div className="p-4 md:p-5 flex-1 flex flex-col">
+          <h3
+            className="mb-1.5"
+            style={{ fontFamily: DISPLAY, color: t.text, fontSize: "1.0625rem", fontWeight: 500, letterSpacing: "-0.015em", lineHeight: 1.25, textWrap: "balance" }}
+          >
+            {cert.nombre}
+          </h3>
+          <p className="mb-3" style={{ color: t.muted, fontSize: 13.5, lineHeight: 1.45 }}>
+            {cert.institucion}
+          </p>
+          <div
+            className="mt-auto pt-3 flex items-center justify-between gap-3"
+            style={{ borderTop: `1px solid ${t.borderSoft}` }}
+          >
+            <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.12em", color: t.faint }}>
+              {cert.fecha}
+            </span>
+            <span
+              className="flecha-cert inline-flex items-center gap-1.5"
+              style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.1em", color: t.accentText, textTransform: "uppercase" }}
+            >
+              Ver ficha
+              <ArrowRight size={12} />
+            </span>
+          </div>
+        </div>
+      </button>
+    </Reveal>
+  );
+}
+
+/* Visor: imagen grande a la izquierda, ficha a la derecha.
+   Cierra con Escape, con el fondo o con el botón. */
+function VisorCertificado({ t, cert, indice, total, onCerrar, onMover }) {
+  useEffect(() => {
+    const alTecla = (e) => {
+      if (e.key === "Escape") onCerrar();
+      if (e.key === "ArrowRight") onMover(1);
+      if (e.key === "ArrowLeft") onMover(-1);
+    };
+    window.addEventListener("keydown", alTecla);
+    const previo = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", alTecla);
+      document.body.style.overflow = previo;
+    };
+  }, [onCerrar, onMover]);
+
+  if (!cert) return null;
+
+  return (
+    <div
+      className="visor-cert fixed inset-0 flex items-center justify-center p-4 md:p-8"
+      style={{ zIndex: CAPA.modal, background: "rgba(6,7,9,0.90)", backdropFilter: "blur(10px)" }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Certificado: ${cert.nombre}`}
+      onClick={onCerrar}
+    >
+      <div
+        className="visor-cert-caja relative w-full max-w-5xl max-h-full overflow-y-auto"
+        style={{ background: t.bgAlt, border: `1px solid ${t.border}`, borderRadius: 16 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Cerrar */}
+        <button
+          type="button"
+          onClick={onCerrar}
+          aria-label="Cerrar"
+          className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center z-10"
+          style={{ background: t.surface2, border: `1px solid ${t.border}`, borderRadius: 8, color: t.text }}
+        >
+          <X size={16} />
+        </button>
+
+        <div className="grid md:grid-cols-[1.15fr_1fr]">
+          {/* Imagen grande: completa, sin recortar */}
+          <div
+            className="relative flex items-center justify-center p-4 md:p-6"
+            style={{ background: t.bg, minHeight: "16rem", borderRight: `1px solid ${t.borderSoft}` }}
+          >
+            {cert.imagen ? (
+              <img
+                src={cert.imagen}
+                alt={`Certificado: ${cert.nombre}`}
+                className="max-w-full"
+                style={{ maxHeight: "62vh", objectFit: "contain", borderRadius: 8, border: `1px solid ${t.borderSoft}` }}
+              />
+            ) : (
+              <div className="relative w-full" style={{ aspectRatio: "4 / 3" }}>
+                <MarcoCertificado t={t} cert={cert} />
+              </div>
+            )}
+          </div>
+
+          {/* Ficha del certificado */}
+          <div className="p-5 md:p-7">
+            <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.accentText, textTransform: "uppercase" }}>
+              {cert.codigo} · {cert.fecha}
+            </span>
+            <h3
+              className="mt-3 mb-2"
+              style={{ fontFamily: DISPLAY, color: t.text, fontSize: "clamp(1.3rem, 3vw, 1.75rem)", fontWeight: 500, letterSpacing: "-0.025em", lineHeight: 1.15, textWrap: "balance" }}
+            >
+              {cert.nombre}
+            </h3>
+            <p className="mb-6" style={{ color: t.muted, fontSize: 14.5 }}>{cert.institucion}</p>
+
+            <div className="space-y-5">
+              {[
+                ["Contenido", cert.descripcion],
+                ["Temas", cert.temas],
+                ["Por qué lo hice", cert.porque],
+                ["Sector", cert.sector],
+              ].map(([k, v]) =>
+                v ? (
+                  <div key={k}>
+                    <div
+                      className="mb-1.5"
+                      style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}
+                    >
+                      {k}
+                    </div>
+                    <p className="leading-relaxed" style={{ color: t.muted, fontSize: 14, textWrap: "pretty" }}>{v}</p>
+                  </div>
+                ) : null
+              )}
+            </div>
+
+            {cert.enlace && (
+              <div className="mt-7">
+                <Boton t={t} primario icono={ExternalLink} href={cert.enlace}>Ver documento original</Boton>
+              </div>
+            )}
+
+            {/* Navegación entre certificados */}
+            <div
+              className="mt-7 pt-5 flex items-center justify-between gap-3"
+              style={{ borderTop: `1px solid ${t.borderSoft}` }}
+            >
+              <button
+                type="button"
+                onClick={() => onMover(-1)}
+                className="inline-flex items-center gap-2 transition-transform duration-200 hover:-translate-x-1"
+                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.muted, textTransform: "uppercase" }}
+              >
+                <ArrowLeft size={13} /> Anterior
+              </button>
+              <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint }}>
+                {String(indice + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+              </span>
+              <button
+                type="button"
+                onClick={() => onMover(1)}
+                className="inline-flex items-center gap-2 transition-transform duration-200 hover:translate-x-1"
+                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.muted, textTransform: "uppercase" }}
+              >
+                Siguiente <ArrowRight size={13} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Certificados({ t }) {
+  const lista = DATOS.certificados || [];
+  const [abierto, setAbierto] = useState(null);
+
+  const mover = (paso) =>
+    setAbierto((i) => (i === null ? null : (i + paso + lista.length) % lista.length));
+
   return (
     <section id="certificados" className="relative py-20 md:py-28 px-5 md:px-8">
       <SepSeccion t={t} />
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <CabeceraSeccion
           t={t}
           num="03"
           eyebrow="Certificados"
           titulo="Formación que respalda la práctica"
+          descripcion="Cada certificado incluye qué cubrió, por qué lo hice y el documento original verificable."
         />
 
+        {/* Muro de fichas */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+          {lista.map((cert, i) => (
+            <FichaCertificado key={cert.codigo} t={t} cert={cert} indice={i} onAbrir={setAbierto} />
+          ))}
+        </div>
+
+        {/* Nota de contenido pendiente: honesta, sin bloquear la sección */}
         <Reveal>
-          <div
-            className="relative overflow-hidden rounded-3xl"
-            style={{
-              background: `linear-gradient(160deg, ${t.surface} 0%, ${t.bg} 100%)`,
-              border: `1px solid ${t.borderSoft}`,
-              boxShadow: t.shadowMd,
-            }}
+          <p
+            className="mt-7"
+            style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.06em", color: t.faint }}
           >
-            {/* Resplandores de marca (cobre + cian) */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -top-32 -left-20 w-96 h-96 rounded-full opacity-40 blur-3xl"
-              style={{ background: `radial-gradient(circle, ${t.accentSoft}, transparent 70%)` }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -bottom-32 -right-16 w-96 h-96 rounded-full opacity-30 blur-3xl"
-              style={{ background: `radial-gradient(circle, ${t.accent2Soft}, transparent 70%)` }}
-            />
-            {/* Cuadrícula técnica muy sutil de fondo */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.04]"
-              style={{
-                backgroundImage:
-                  `linear-gradient(${t.text} 1px, transparent 1px), linear-gradient(90deg, ${t.text} 1px, transparent 1px)`,
-                backgroundSize: "38px 38px",
-              }}
-            />
-
-            <div className="relative grid md:grid-cols-2 gap-8 items-center p-8 md:p-12">
-              {/* Columna izquierda: mensaje */}
-              <div className="text-center md:text-left order-2 md:order-1">
-                <span
-                  className="estado-vivo inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5"
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: 10.5,
-                    letterSpacing: "0.16em",
-                    color: t.accentText,
-                    background: t.accentSoft,
-                    border: `1px solid ${t.border}`,
-                  }}
-                >
-                  <span
-                    className="punto-vivo w-1.5 h-1.5 rounded-full"
-                    style={{ background: t.accent }}
-                  />
-                  EN CONSTRUCCIÓN
-                </span>
-
-                <h3
-                  className="text-2xl md:text-[2rem] leading-tight font-bold mb-3"
-                  style={{ fontFamily: DISPLAY, color: t.text }}
-                >
-                  Estoy preparando esta sección
-                </h3>
-                <p
-                  className="text-sm md:text-base leading-relaxed mb-7 mx-auto md:mx-0 max-w-md"
-                  style={{ color: t.muted }}
-                >
-                  Pronto verás aquí mis certificados y formación verificada.
-                  Los estoy organizando para mostrarlos como se merecen.
-                </p>
-
-                {/* Chips de lo que viene (da contenido, no se ve vacío) */}
-                <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                  {["Frontend", "React", "IA aplicada", "Automatización", "Datos"].map((tema) => (
-                    <span
-                      key={tema}
-                      className="px-3 py-1.5 rounded-lg text-xs"
-                      style={{
-                        fontFamily: MONO,
-                        color: t.muted,
-                        background: t.surface2,
-                        border: `1px solid ${t.borderSoft}`,
-                      }}
-                    >
-                      {tema}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Barra de progreso decorativa */}
-                <div
-                  className="mt-8 h-1.5 w-full max-w-xs mx-auto md:mx-0 rounded-full overflow-hidden"
-                  style={{ background: t.borderSoft }}
-                >
-                  <div
-                    className="barra-construccion h-full rounded-full"
-                    style={{ background: t.accent }}
-                  />
-                </div>
-              </div>
-
-              {/* Columna derecha: ilustración de constructor (CSS ligero, sin lag) */}
-              <div className="order-1 md:order-2 flex justify-center">
-                <div className="relative" style={{ width: 240, height: 220 }}>
-                  {/* Halo detrás */}
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 m-auto w-48 h-48 rounded-full opacity-50 blur-2xl"
-                    style={{ background: `radial-gradient(circle, ${t.accent2Soft}, transparent 70%)` }}
-                  />
-
-                  {/* Señal de obra balanceándose (cobre, rayada) */}
-                  <div
-                    className="senal-mece absolute left-1/2 -translate-x-1/2 z-10"
-                    style={{ top: 0 }}
-                  >
-                    {/* Cuerda de la que cuelga */}
-                    <div className="mx-auto w-px h-6" style={{ background: t.border }} />
-                    <div
-                      className="px-3 py-2 rounded-lg text-center"
-                      style={{
-                        background: t.accent,
-                        color: "#14100A",
-                        fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em",
-                        boxShadow: t.shadowMd,
-                        backgroundImage: "repeating-linear-gradient(45deg, rgba(0,0,0,0.15) 0 8px, transparent 8px 16px)",
-                      }}
-                    >
-                      EN OBRA
-                    </div>
-                  </div>
-
-                  {/* Casco de constructor */}
-                  <div className="absolute left-1/2 -translate-x-1/2" style={{ bottom: 36 }}>
-                    <div className="relative" style={{ width: 96, height: 60 }}>
-                      {/* Cúpula del casco */}
-                      <div
-                        className="absolute left-1/2 -translate-x-1/2 bottom-3"
-                        style={{
-                          width: 72, height: 40,
-                          borderTopLeftRadius: 40, borderTopRightRadius: 40,
-                          background: `linear-gradient(160deg, ${t.accentText}, ${t.accent})`,
-                          boxShadow: t.shadowMd,
-                        }}
-                      />
-                      {/* Cresta central del casco */}
-                      <div
-                        className="absolute left-1/2 -translate-x-1/2 bottom-3"
-                        style={{ width: 10, height: 38, borderRadius: 6, background: "rgba(0,0,0,0.18)" }}
-                      />
-                      {/* Ala / visera */}
-                      <div
-                        className="absolute left-1/2 -translate-x-1/2 bottom-1.5"
-                        style={{ width: 96, height: 12, borderRadius: 8, background: t.accent, boxShadow: t.shadowSoft }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Llave inglesa que se mece (cian) */}
-                  <div className="llave-mece absolute" style={{ bottom: 30, right: 22 }}>
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center"
-                      style={{ background: t.surface, border: `1px solid ${t.border}`, boxShadow: t.shadowSoft }}
-                    >
-                      <Wrench size={22} style={{ color: t.accent2Text }} />
-                    </div>
-                  </div>
-
-                  {/* Conos de obra en la base */}
-                  <div className="absolute left-1/2 -translate-x-1/2 flex gap-3" style={{ bottom: 0 }}>
-                    {[0, 1, 2].map((i) => (
-                      <div key={i} className="flex flex-col items-center">
-                        <div
-                          style={{
-                            width: 0, height: 0,
-                            borderLeft: "9px solid transparent",
-                            borderRight: "9px solid transparent",
-                            borderBottom: `20px solid ${t.accent}`,
-                          }}
-                        />
-                        <div className="w-6 h-1.5 rounded-sm -mt-px" style={{ background: t.accentText }} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            Estoy subiendo los documentos originales de cada certificado.
+          </p>
         </Reveal>
       </div>
+
+      {abierto !== null && (
+        <VisorCertificado
+          t={t}
+          cert={lista[abierto]}
+          indice={abierto}
+          total={lista.length}
+          onCerrar={() => setAbierto(null)}
+          onMover={mover}
+        />
+      )}
     </section>
   );
 }
@@ -962,7 +1027,7 @@ function EtiquetaCategoria({ t, categoria, codigo }) {
 // barra superior con semáforo + URL falsa, y debajo la captura.
 // Esto hace que cada proyecto se lea como un producto real desplegado.
 //   alta = versión grande para la portada de la página individual.
-function MiniaturaProyecto({ t, p, alta = false }) {
+function MiniaturaProyecto({ t, p, alta = false, color = false }) {
   // URL de muestra para la barra del navegador (decorativa)
   const urlFalsa = `caverotech.com/${p.id}`;
   return (
@@ -997,14 +1062,20 @@ function MiniaturaProyecto({ t, p, alta = false }) {
 
         {/* Captura del proyecto */}
         <Foto src={p.imagen} alt={p.nombre} gradiente={p.gradiente} tinte={false} className={alta ? "h-56 md:h-80" : "h-40 md:h-44"}>
-          {/* Velo de marca del proyecto */}
+          {/* Velo de marca del proyecto. Con `color` sólo queda una
+              sombra inferior para asentar la etiqueta: la captura se ve
+              tal cual, en su color real. */}
           <div
             className="absolute inset-0"
-            style={{ background: `linear-gradient(155deg, ${p.gradiente[0]}CC 0%, ${p.gradiente[1]}55 55%, rgba(7,9,13,0.45) 100%)` }}
+            style={{
+              background: color
+                ? "linear-gradient(to top, rgba(7,9,13,0.72) 0%, rgba(7,9,13,0.12) 34%, transparent 62%)"
+                : `linear-gradient(155deg, ${p.gradiente[0]}CC 0%, ${p.gradiente[1]}55 55%, rgba(7,9,13,0.45) 100%)`,
+            }}
           />
-          {/* Rejilla técnica sutil */}
+          {/* Rejilla técnica sutil (sólo en la vista de tabla) */}
           <div
-            className="absolute inset-0 opacity-20"
+            className={color ? "hidden" : "absolute inset-0 opacity-20"}
             style={{
               backgroundImage: "linear-gradient(rgba(255,255,255,0.25) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.25) 1px, transparent 1px)",
               backgroundSize: "26px 26px",
@@ -1255,7 +1326,7 @@ function PaginaHistoria({ t, proyecto: p, volver }) {
 
         <Reveal delay={60}>
           <div className="rounded-2xl overflow-hidden mb-8 relative" style={{ border: `1px solid ${t.borderSoft}`, boxShadow: t.shadowLg }}>
-            <MiniaturaProyecto t={t} p={p} alta />
+            <MiniaturaProyecto t={t} p={p} alta color />
           </div>
         </Reveal>
 
@@ -1329,100 +1400,290 @@ function PaginaHistoria({ t, proyecto: p, volver }) {
   );
 }
 
+/* Bloque de contenido del detalle: etiqueta a la izquierda,
+   texto a la derecha. Rejilla editorial, no muro de párrafos. */
+function BloqueDetalle({ t, etiqueta, titulo, children, ultimo = false }) {
+  return (
+    <Reveal>
+      <div
+        className="grid md:grid-cols-[10rem_1fr] gap-3 md:gap-10 py-9 md:py-11"
+        style={{ borderBottom: ultimo ? "none" : `1px solid ${t.borderSoft}` }}
+      >
+        <div className="md:pt-1">
+          <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.18em", color: t.accentText, textTransform: "uppercase" }}>
+            {etiqueta}
+          </span>
+        </div>
+        <div className="min-w-0">
+          {titulo && (
+            <h2
+              className="mb-3"
+              style={{ fontFamily: DISPLAY, color: t.text, fontSize: "clamp(1.3rem, 2.4vw, 1.75rem)", fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.2, textWrap: "balance" }}
+            >
+              {titulo}
+            </h2>
+          )}
+          {children}
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+// Párrafo de lectura del detalle
+function Parrafo({ t, children }) {
+  return (
+    <p className="leading-relaxed" style={{ color: t.muted, fontSize: "1.0625rem", maxWidth: "62ch", textWrap: "pretty" }}>
+      {children}
+    </p>
+  );
+}
+
+/* Vídeo del responsable del proyecto. Sólo se renderiza si
+   `detalle.video.url` existe: no dejamos un hueco vacío en producción.
+   Acepta cualquier URL de embed (YouTube, Vimeo, Drive). */
+function VideoProyecto({ t, video }) {
+  if (!video?.url) return null;
+  return (
+    <div>
+      <div
+        className="relative overflow-hidden"
+        style={{ borderRadius: 14, border: `1px solid ${t.border}`, aspectRatio: "16 / 9", background: t.surface }}
+      >
+        <iframe
+          src={video.url}
+          title={video.titulo || `Vídeo de ${video.autor || "el proyecto"}`}
+          className="absolute inset-0 w-full h-full"
+          style={{ border: "none" }}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+      {(video.autor || video.rol) && (
+        <p className="mt-3" style={{ fontFamily: MONO, fontSize: 11.5, color: t.faint, letterSpacing: "0.06em" }}>
+          {video.autor}
+          {video.autor && video.rol ? " · " : ""}
+          {video.rol}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function PaginaProyecto({ t, proyecto: p, volver }) {
   const d = p.detalle;
   if (p.tipo === "historia") return <PaginaHistoria t={t} proyecto={p} volver={volver} />;
+
+  const grupos = GRUPOS_STACK.filter(([clave]) => d.stackDetalle?.[clave]?.length);
+  const demoOk = d.demo && d.demo !== "#";
+  const repoOk = d.repo && d.repo !== "#";
+  const hayEnlaces = demoOk || repoOk;
+  const tipo = (CATEGORIAS.find((c) => c.id === p.categoria) || {}).label || p.categoria;
+
   return (
-    <main className="pt-24 pb-20 px-5 md:px-8">
-      <div className="max-w-3xl mx-auto">
+    <main className="pb-24">
+      {/* ---------- PORTADA A SANGRE ----------
+          La captura ocupa el ancho completo, a color, y el titular se
+          apoya sobre ella. Es lo primero que se ve del proyecto. */}
+      <header className="relative overflow-hidden" style={{ minHeight: "64svh" }}>
+        <Foto
+          src={p.imagen}
+          alt={`Captura de ${p.nombre}`}
+          gradiente={p.gradiente}
+          tinte={false}
+          className="absolute inset-0 w-full h-full"
+        />
+        {/* Único velo: degradado desde abajo para que el texto se lea.
+            Sin tintes de color encima de la captura. */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{ background: `linear-gradient(to top, ${t.bg} 1%, rgba(10,11,13,0.88) 24%, rgba(10,11,13,0.30) 64%, rgba(10,11,13,0.50) 100%)` }}
+        />
+
+        <div
+          className="relative w-full max-w-[1200px] mx-auto px-5 md:px-8 flex flex-col justify-end"
+          style={{ minHeight: "64svh", paddingTop: "6.5rem", paddingBottom: "2.75rem" }}
+        >
+          <Reveal>
+            <button
+              type="button"
+              onClick={() => volver("proyectos")}
+              data-cursor=""
+              className="inline-flex items-center gap-2 text-sm font-medium mb-7 transition-transform duration-200 hover:-translate-x-1"
+              style={{ color: t.muted }}
+            >
+              <ArrowLeft size={15} /> Volver a proyectos
+            </button>
+          </Reveal>
+
+          <Reveal delay={60}>
+            <div className="mb-4">
+              <EtiquetaCategoria t={t} categoria={p.categoria} codigo={p.codigo} />
+            </div>
+            <h1
+              className="mb-4"
+              style={{ fontFamily: DISPLAY, color: t.text, fontSize: "clamp(2.1rem, 6.5vw, 4.5rem)", fontWeight: 500, letterSpacing: "-0.04em", lineHeight: 0.98, textWrap: "balance" }}
+            >
+              {p.nombre}
+            </h1>
+            <p
+              className="leading-relaxed"
+              style={{ color: t.muted, fontSize: "clamp(1rem, 1.6vw, 1.2rem)", maxWidth: "56ch", textWrap: "pretty" }}
+            >
+              {p.corto}
+            </p>
+          </Reveal>
+        </div>
+      </header>
+
+      <div className="w-full max-w-[1200px] mx-auto px-5 md:px-8">
+
+        {/* ---------- FICHA: datos duros de un vistazo ---------- */}
         <Reveal>
-          <button
-            type="button"
-            onClick={() => volver("proyectos")}
-            className="inline-flex items-center gap-2 text-sm font-medium mb-8 transition-transform duration-200 hover:-translate-x-1"
-            style={{ color: t.muted }}
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-y-7 gap-x-6 py-9"
+            style={{ borderTop: `1px solid ${t.border}`, borderBottom: `1px solid ${t.border}` }}
           >
-            <ArrowLeft size={15} /> Volver a proyectos
-          </button>
-        </Reveal>
-
-        <Reveal delay={60}>
-          <div className="rounded-xl overflow-hidden mb-8" style={{ border: `1px solid ${t.borderSoft}`, boxShadow: "0 20px 50px rgba(0,0,0,0.35)" }}>
-            <MiniaturaProyecto t={t} p={p} alta />
-          </div>
-        </Reveal>
-
-        <Reveal delay={100}>
-          <h1 className="mb-3" style={{ color: t.text, fontSize: "clamp(2rem, 5vw, 3rem)", fontWeight: 700, letterSpacing: "-0.03em", lineHeight: 1.05 }}>
-            {p.nombre}
-          </h1>
-          <div className="flex flex-wrap gap-1.5 mb-6">
-            {p.stack.map((s) => <Chip key={s} t={t}>{s}</Chip>)}
-          </div>
-          <div className="flex flex-wrap gap-3 mb-12">
-            <Boton t={t} primario icono={ExternalLink} href={d.demo}>Ver demo</Boton>
-            <Boton t={t} icono={FolderGit2} href={d.repo}>Código en GitHub</Boton>
-          </div>
-        </Reveal>
-
-        <SeccionDetalle t={t} etiqueta="Resumen ejecutivo">
-          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.resumen}</p>
-        </SeccionDetalle>
-
-        <SeccionDetalle t={t} etiqueta="Problema" titulo="¿Qué necesidad existía?">
-          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.problemaLargo}</p>
-        </SeccionDetalle>
-
-        <SeccionDetalle t={t} etiqueta="Solución" titulo="¿Cómo se resolvió?">
-          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.solucion}</p>
-        </SeccionDetalle>
-
-        <SeccionDetalle t={t} etiqueta="Arquitectura" titulo="Enfoque técnico">
-          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.arquitectura}</p>
-        </SeccionDetalle>
-
-        <SeccionDetalle t={t} etiqueta="Stack tecnológico">
-          <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${t.borderSoft}` }}>
-            {GRUPOS_STACK.map(([clave, titulo], i) =>
-              d.stackDetalle[clave]?.length ? (
-                <div
-                  key={clave}
-                  className="p-4 md:p-5 grid md:grid-cols-3 gap-1 md:gap-4"
-                  style={{ background: i % 2 ? t.surface2 : t.surface, borderTop: i ? `1px solid ${t.borderSoft}` : "none" }}
-                >
-                  <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.accentText }} className="uppercase pt-0.5">
-                    {titulo}
-                  </span>
-                  <ul className="space-y-1.5 md:col-span-2">
-                    {d.stackDetalle[clave].map((item) => (
-                      <li key={item} className="text-sm leading-snug" style={{ color: t.muted }}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null
-            )}
-          </div>
-        </SeccionDetalle>
-
-        <SeccionDetalle t={t} etiqueta="Decisiones técnicas" titulo="Criterio detrás del código">
-          <div className="space-y-4">
-            {d.decisiones.map((dec) => (
-              <div key={dec.titulo} className="tarjeta-suave p-5 rounded-2xl" style={{ background: t.card, border: `1px solid ${t.borderSoft}` }}>
-                <h3 className="font-semibold text-sm mb-1.5" style={{ color: t.text }}>{dec.titulo}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: t.muted }}>{dec.texto}</p>
+            {[
+              ["Proyecto", p.codigo],
+              ["Tipo", tipo],
+              ["Rol", "Diseño y desarrollo"],
+              ["Estado", p.categoria === "implementado" ? "En uso real" : "Entregado"],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}>{k}</div>
+                <div className="mt-1.5" style={{ color: t.text, fontSize: 14.5, fontWeight: 500 }}>{v}</div>
               </div>
             ))}
           </div>
-        </SeccionDetalle>
+        </Reveal>
 
-        <SeccionDetalle t={t} etiqueta="Resultado" titulo="Impacto del proyecto">
-          <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15 }}>{d.impacto}</p>
-        </SeccionDetalle>
+        {/* ---------- ENLACES ---------- */}
+        {hayEnlaces && (
+          <Reveal>
+            <div className="flex flex-wrap gap-3 pt-8">
+              {demoOk && <Boton t={t} primario icono={ExternalLink} href={d.demo}>Ver el proyecto en vivo</Boton>}
+              {repoOk && <Boton t={t} icono={FolderGit2} href={d.repo}>Código en GitHub</Boton>}
+            </div>
+          </Reveal>
+        )}
 
+        {/* ---------- CUERPO EDITORIAL ---------- */}
+        <div className={hayEnlaces ? "mt-6" : "mt-2"}>
+          <BloqueDetalle t={t} etiqueta="Resumen">
+            <Parrafo t={t}>{d.resumen}</Parrafo>
+          </BloqueDetalle>
+
+          {/* Problema y solución enfrentados: se leen como par, no como lista */}
+          <BloqueDetalle t={t} etiqueta="El caso">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-10">
+              <div>
+                <h2 className="mb-2.5" style={{ fontFamily: DISPLAY, color: t.text, fontSize: "1.25rem", fontWeight: 500, letterSpacing: "-0.02em" }}>
+                  El problema
+                </h2>
+                <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15.5, textWrap: "pretty" }}>{d.problemaLargo}</p>
+              </div>
+              <div className="md:pl-10" style={{ borderLeft: `1px solid ${t.borderSoft}` }}>
+                <h2 className="mb-2.5" style={{ fontFamily: DISPLAY, color: t.text, fontSize: "1.25rem", fontWeight: 500, letterSpacing: "-0.02em" }}>
+                  La solución
+                </h2>
+                <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15.5, textWrap: "pretty" }}>{d.solucion}</p>
+              </div>
+            </div>
+          </BloqueDetalle>
+
+          {/* Captura secundaria: rompe el texto a media página */}
+          {d.imagenSecundaria && (
+            <BloqueDetalle t={t} etiqueta="En pantalla">
+              <div className="overflow-hidden" style={{ borderRadius: 14, border: `1px solid ${t.border}` }}>
+                <Foto src={d.imagenSecundaria} alt={`${p.nombre} en uso`} gradiente={p.gradiente} tinte={false} className="h-64 md:h-[26rem]" />
+              </div>
+              {d.imagenSecundariaPie && (
+                <p className="mt-3" style={{ fontFamily: MONO, fontSize: 11.5, color: t.faint }}>{d.imagenSecundariaPie}</p>
+              )}
+            </BloqueDetalle>
+          )}
+
+          <BloqueDetalle t={t} etiqueta="Arquitectura" titulo="Enfoque técnico">
+            <Parrafo t={t}>{d.arquitectura}</Parrafo>
+          </BloqueDetalle>
+
+          {/* Stack como ficha técnica, no como tarjetas */}
+          {grupos.length > 0 && (
+            <BloqueDetalle t={t} etiqueta="Stack">
+              <div>
+                {grupos.map(([clave, titulo], i) => (
+                  <div
+                    key={clave}
+                    className="grid md:grid-cols-[9rem_1fr] gap-1.5 md:gap-6 py-4"
+                    style={{ borderTop: i ? `1px solid ${t.borderSoft}` : "none" }}
+                  >
+                    <span
+                      className="md:pt-1"
+                      style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.14em", color: t.accent2Text, textTransform: "uppercase" }}
+                    >
+                      {titulo}
+                    </span>
+                    <ul className="space-y-1.5">
+                      {d.stackDetalle[clave].map((item) => (
+                        <li key={item} className="leading-snug" style={{ color: t.muted, fontSize: 14.5 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </BloqueDetalle>
+          )}
+
+          {/* Decisiones: numeradas, dos columnas */}
+          {d.decisiones?.length > 0 && (
+            <BloqueDetalle t={t} etiqueta="Decisiones" titulo="El criterio detrás del código">
+              <div className="grid md:grid-cols-2 gap-x-10 gap-y-8 mt-2">
+                {d.decisiones.map((dec, i) => (
+                  <div key={dec.titulo}>
+                    <div className="flex items-baseline gap-3 mb-2">
+                      <span style={{ fontFamily: MONO, fontSize: 11, color: t.accentText, letterSpacing: "0.06em" }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="font-semibold" style={{ color: t.text, fontSize: 15.5, letterSpacing: "-0.01em" }}>{dec.titulo}</h3>
+                    </div>
+                    <p className="leading-relaxed md:pl-[1.9rem]" style={{ color: t.muted, fontSize: 14.5, textWrap: "pretty" }}>{dec.texto}</p>
+                  </div>
+                ))}
+              </div>
+            </BloqueDetalle>
+          )}
+
+          {/* Vídeo del responsable, si existe */}
+          {d.video?.url && (
+            <BloqueDetalle t={t} etiqueta="En voz del responsable" titulo={d.video.titulo}>
+              <VideoProyecto t={t} video={d.video} />
+            </BloqueDetalle>
+          )}
+
+          {/* Impacto: cierre destacado */}
+          <BloqueDetalle t={t} etiqueta="Resultado" ultimo>
+            <div
+              className="p-6 md:p-8"
+              style={{ background: t.surface, border: `1px solid ${t.border}`, borderLeft: `2px solid ${t.accent}`, borderRadius: "0 12px 12px 0" }}
+            >
+              <p
+                className="leading-relaxed"
+                style={{ fontFamily: DISPLAY, color: t.text, fontSize: "clamp(1.05rem, 2vw, 1.35rem)", fontWeight: 400, letterSpacing: "-0.015em", textWrap: "pretty" }}
+              >
+                {d.impacto}
+              </p>
+            </div>
+          </BloqueDetalle>
+        </div>
+
+        {/* ---------- PIE DE NAVEGACIÓN ---------- */}
         <Reveal>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <Boton t={t} primario icono={ExternalLink} href={d.demo}>Ver demo</Boton>
-            <Boton t={t} icono={FolderGit2} href={d.repo}>Código en GitHub</Boton>
+          <div className="flex flex-wrap gap-3 pt-10" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+            {demoOk && <Boton t={t} primario icono={ExternalLink} href={d.demo}>Ver el proyecto</Boton>}
+            {repoOk && <Boton t={t} icono={FolderGit2} href={d.repo}>Código en GitHub</Boton>}
             <Boton t={t} icono={ArrowLeft} onClick={() => volver("proyectos")}>Más proyectos</Boton>
           </div>
         </Reveal>

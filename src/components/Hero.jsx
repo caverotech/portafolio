@@ -52,7 +52,7 @@ export default function Hero({ t = TEMA, irASeccion }) {
       style={{ minHeight: "100svh", paddingTop: "5.5rem", paddingBottom: "2rem" }}
     >
       <div className="relative w-full max-w-[1500px] mx-auto px-6 md:px-10 lg:px-14">
-        <div className="grid lg:grid-cols-12 gap-y-12 lg:gap-x-10 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-y-10 lg:gap-x-10 items-center">
 
           {/* ---------------- TEXTO: columnas 1–7 ---------------- */}
           <div className="lg:col-span-7 relative" style={{ zIndex: 2 }}>
@@ -202,7 +202,6 @@ export default function Hero({ t = TEMA, irASeccion }) {
             <div
               className="retrato-caja absolute lg:top-1/2 lg:-right-4 lg:-translate-y-1/2"
               style={{
-                width: "min(86vw, 30rem)",
                 opacity: paso >= 1 ? 1 : 0,
                 ["--par-x"]: `${quieto ? 0 : raton.x * -12}px`,
                 ["--par-y"]: `${quieto ? 0 : raton.y * -8}px`,
@@ -216,20 +215,18 @@ export default function Hero({ t = TEMA, irASeccion }) {
                   className="absolute inset-0 w-full h-full object-cover"
                   style={{
                     objectPosition: "50% 14%",
-                    filter: "grayscale(1) contrast(1.18) brightness(0.72)",
-                    // La máscara difumina los cuatro bordes: el retrato no
-                    // termina en una arista, se desvanece en la escena.
-                    maskImage:
-                      "radial-gradient(ellipse 70% 80% at 50% 40%, #000 30%, rgba(0,0,0,0.5) 62%, transparent 88%)",
-                    WebkitMaskImage:
-                      "radial-gradient(ellipse 70% 80% at 50% 40%, #000 30%, rgba(0,0,0,0.5) 62%, transparent 88%)",
+                    // A color. Solo un ajuste fino para que se asiente
+                    // sobre el fondo grafito, sin desaturar la piel.
+                    filter: "contrast(1.04) saturate(1.02) brightness(0.97)",
+                    maskImage: "var(--mask-retrato)",
+                    WebkitMaskImage: "var(--mask-retrato)",
                   }}
                 />
                 {/* Fundido lateral: entrega el lado izquierdo al titular */}
-                <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${t.bg} 0%, rgba(10,11,13,0.6) 26%, transparent 58%)` }} />
+                <div className="hidden lg:block absolute inset-0" style={{ background: `linear-gradient(90deg, ${t.bg} 0%, rgba(10,11,13,0.55) 24%, transparent 56%)` }} />
                 {/* Fundidos verticales, solapados y largos */}
-                <div className="absolute inset-x-0 bottom-0" style={{ height: "58%", background: `linear-gradient(transparent, rgba(10,11,13,0.85) 62%, ${t.bg})` }} />
-                <div className="absolute inset-x-0 top-0" style={{ height: "34%", background: `linear-gradient(${t.bg}, transparent)` }} />
+                <div className="absolute inset-x-0 bottom-0" style={{ height: "42%", background: `linear-gradient(transparent, rgba(10,11,13,0.55) 60%, rgba(10,11,13,0.92))` }} />
+                <div className="hidden lg:block absolute inset-x-0 top-0" style={{ height: "30%", background: `linear-gradient(${t.bg}, transparent)` }} />
               </div>
             </div>
           </div>

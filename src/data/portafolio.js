@@ -81,14 +81,13 @@ export const DATOS = {
       icono: "sparkles",
       descripcion: "El núcleo de mi trabajo: modelos conectados a procesos reales.",
       items: [
-        { nombre: "Claude", slug: "claude", color: "D97757", detalle: "Mi modelo principal: agentes, análisis de documentos y generación de código vía API." },
-        { nombre: "GPT / OpenAI", lucide: "gpt", detalle: "Integración por API para razonamiento, extracción estructurada y generación." },
+        { nombre: "Claude", slug: "claude", color: "D97757", detalle: "Mi modelo principal. Trabajo con MCP para conectarlo a sistemas, Skills para darle procedimientos propios y subagentes para repartir tareas largas." },
+        { nombre: "MCP (Model Context Protocol)", slug: "", color: "", detalle: "El estándar con el que conecto a Claude con herramientas y datos reales: bases, APIs y archivos, sin pegamento improvisado." },
+        { nombre: "Skills y subagentes", slug: "", color: "", detalle: "Procedimientos versionados que el modelo carga cuando toca, y subagentes especializados que trabajan en paralelo sobre una misma tarea." },
+        { nombre: "GPT / OpenAI", slug: "openai", color: "FFFFFF", detalle: "Integración por API para razonamiento, extraccion estructurada y generación." },
         { nombre: "Gemini", slug: "googlegemini", color: "8E75FF", detalle: "Pipelines multimodales: procesamiento de imagen y documentos a escala." },
-        { nombre: "Ingeniería de prompts", slug: "", color: "", detalle: "Instrucciones versionadas y evaluadas, no improvisadas: salidas consistentes y verificables." },
-        { nombre: "RAG", slug: "", color: "", detalle: "Bases de conocimiento consultables: el modelo responde con los datos del negocio, no con invenciones." },
-        { nombre: "Agentes con herramientas", slug: "", color: "", detalle: "Diseño de agentes que ejecutan acciones con límites claros y confirmación humana donde importa." },
-        { nombre: "NotebookLM", lucide: "notebooklm", detalle: "Síntesis e investigación sobre corpus de documentación técnica." },
         { nombre: "Perplexity", lucide: "perplexity", detalle: "Investigación con fuentes citadas y búsqueda aumentada." },
+        { nombre: "NotebookLM", lucide: "notebooklm", detalle: "Síntesis e investigación sobre corpus de documentación técnica." },
       ],
     },
     {
@@ -96,11 +95,10 @@ export const DATOS = {
       icono: "settings",
       descripcion: "Procesos que corren solos, de punta a punta.",
       items: [
-        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "Orquestación de flujos con IA: mi herramienta para conectar sistemas sin reinventar integraciones." },
-        { nombre: "Node.js", slug: "nodedotjs", color: "5FA04E", detalle: "Automatizaciones programadas, funciones serverless y scripts de proceso." },
-        { nombre: "APIs REST · Webhooks", slug: "", color: "", detalle: "El pegamento entre sistemas: integración y disparadores en tiempo real." },
+        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "Mi motor de automatización. Conecto sistemas via APIs REST y webhooks, y orquesto los flujos con Claude mediante MCP en lugar de encadenar nodos a mano." },
+        { nombre: "Orquestación con MCP", slug: "", color: "", detalle: "Claude dirige el flujo de n8n a traves de MCP: decide qué paso ejecutar según el caso, en vez de seguir una rama fija." },
+        { nombre: "Node.js", slug: "nodedotjs", color: "5FA04E", detalle: "Automatizaciónes programadas, funciones serverless y scripts de proceso." },
         { nombre: "Python", slug: "python", color: "3776AB", detalle: "Scripting de datos y automatización; lenguaje estándar del ecosistema de IA." },
-        { nombre: "Tareas programadas", slug: "", color: "", detalle: "Procesos que se ejecutan sin que nadie los recuerde: cron y disparadores por evento." },
       ],
     },
     {
@@ -122,7 +120,8 @@ export const DATOS = {
       icono: "database",
       descripcion: "Sin datos ordenados no hay IA que funcione.",
       items: [
-        { nombre: "PostgreSQL · Supabase", slug: "postgresql", color: "4169E1", detalle: "Backend-as-a-service con auth y realtime; base para productos con IA." },
+        { nombre: "Supabase", slug: "supabase", color: "3FCF8E", detalle: "Mi backend por defecto en productos nuevos: Postgres gestionado con auth, storage y realtime." },
+        { nombre: "PostgreSQL", slug: "postgresql", color: "4169E1", detalle: "El motor debajo de Supabase: consultas, índices y modelado relacional." },
         { nombre: "SQL Server", slug: "microsoftsqlserver", color: "CC2927", detalle: "Procedimientos almacenados y trazabilidad en sistemas empresariales." },
         { nombre: "MySQL", slug: "mysql", color: "4479A1", detalle: "Diseño relacional y normalización desde cero." },
         { nombre: "Power BI", lucide: "powerbi", detalle: "Modelado y dashboards para inteligencia de negocio." },
@@ -133,11 +132,12 @@ export const DATOS = {
       icono: "wrench",
       descripcion: "Llevar y mantener lo construido en producción.",
       items: [
-        { nombre: "Git · GitHub", slug: "github", color: "16181D", detalle: "Control de versiones y trabajo colaborativo." },
-        { nombre: "Vercel", slug: "vercel", color: "16181D", detalle: "Despliegue continuo y funciones serverless en el borde." },
+        { nombre: "AWS", slug: "amazonwebservices", color: "FF9900", detalle: "Cómputo y almacenamiento en la nube para cargas de trabajo e integraciones." },
+        { nombre: "Azure", slug: "microsoftazure", color: "0078D4", detalle: "Nube en formación activa: camino a la certificación AZ-900." },
+        { nombre: "Git / GitHub", slug: "github", color: "FFFFFF", detalle: "Control de versiones y trabajo colaborativo." },
+        { nombre: "Vercel", slug: "vercel", color: "FFFFFF", detalle: "Despliegue continuo y funciones serverless en el borde." },
         { nombre: "Netlify", slug: "netlify", color: "00C7B7", detalle: "CI/CD, funciones serverless y Blobs en producción." },
         { nombre: "Docker", slug: "docker", color: "2496ED", detalle: "Entornos reproducibles para desarrollo y despliegue." },
-        { nombre: "Azure", slug: "microsoftazure", color: "0078D4", detalle: "Nube en formación activa: camino a la certificación AZ-900." },
       ],
     },
   ],
@@ -244,7 +244,28 @@ export const DATOS = {
   /* PROYECTOS
      categoria: "implementado" | "negocio" | "personal"
      orden: (opcional) controla el orden de aparición dentro de su categoría
-     Los enlaces demo/repo son placeholders. */
+
+     ENLACES
+       detalle.demo  → URL del proyecto en vivo. Si vale "#" el botón no se muestra.
+       detalle.repo  → URL del repositorio. Si vale "#" el botón no se muestra.
+
+     IMÁGENES
+       imagen                    → captura de portada (se ve a sangre y a color)
+       detalle.imagenSecundaria  → (opcional) segunda captura a media página
+       detalle.imagenSecundariaPie → (opcional) pie de foto de la anterior
+
+     VÍDEO DEL RESPONSABLE (opcional)
+       Cuando tengas el vídeo de la persona a cargo del proyecto, añade:
+
+         video: {
+           url:    "https://www.youtube.com/embed/ID",  // URL de EMBED, no la de compartir
+           titulo: "Cómo usamos la app en ruta",
+           autor:  "Nombre de la persona",
+           rol:    "Jefe de ventas · Vistony",
+         }
+
+       Sin el campo `video` el bloque simplemente no aparece: la página
+       no queda con un hueco vacío. */
   proyectos: [
     {
       id: "vistony-ruta-nazca",

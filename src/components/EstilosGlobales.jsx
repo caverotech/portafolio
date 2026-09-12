@@ -103,20 +103,36 @@ export default function EstilosGlobales({ t = TEMA }) {
       /* ---------- RETRATO DEL HERO ----------
          Móvil: capa de fondo atenuada, detrás del texto (el texto manda).
          Escritorio: pieza editorial a la derecha, con paralaje del puntero. */
-      .retrato-col { position: static; }
+      /* Mascara del retrato. En movil casi no recorta (la foto es un
+         bloque propio); en desktop se disuelve en la escena. */
       .retrato-caja {
-        top: 50%;
-        right: -12%;
-        transform: translate3d(0, -50%, 0);
-        opacity: 0.22;
-        z-index: 0;
-        pointer-events: none;
+        --mask-retrato: radial-gradient(ellipse 82% 88% at 50% 42%, #000 62%, rgba(0,0,0,0.75) 84%, transparent 100%);
       }
       @media (min-width: 1024px) {
-        .retrato-col { position: relative; }
         .retrato-caja {
+          --mask-retrato: radial-gradient(ellipse 70% 80% at 50% 40%, #000 30%, rgba(0,0,0,0.5) 62%, transparent 88%);
+        }
+      }
+
+      /* Movil: el retrato NO va detras del texto. Ocupa su propio
+         bloque encima del titular, en flujo normal y a color. */
+      .retrato-col { position: static; order: -1; }
+      .retrato-caja {
+        position: relative;
+        top: auto; right: auto; left: auto;
+        transform: none;
+        opacity: 1;
+        width: min(72vw, 17rem) !important;
+        margin: 0 auto;
+      }
+      @media (min-width: 1024px) {
+        .retrato-col { position: relative; order: 0; }
+        .retrato-caja {
+          position: absolute;
+          top: 50%;
           right: -1rem;
-          opacity: 1;
+          width: min(86vw, 30rem) !important;
+          margin: 0;
           transform: translate3d(var(--par-x, 0), calc(-50% + var(--par-y, 0px)), 0);
         }
       }
@@ -206,18 +222,36 @@ export default function EstilosGlobales({ t = TEMA }) {
       /* ---------- ELEMENTOS VIVOS ---------- */
       @keyframes latido { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
       .punto-vivo { animation: latido 2.2s var(--ease-suave) infinite; }
-      .senal-mece { animation: latido 3s var(--ease-suave) infinite; }
-      .llave-mece { animation: latido 2.4s var(--ease-suave) infinite; }
       @keyframes flotarAvatar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
       .avatar-saluda { animation: flotarAvatar 5s var(--ease-suave) infinite; }
-      .barra-construccion { width: 40%; animation: progresoVaiven 2.6s var(--ease-suave) infinite; }
-      @keyframes progresoVaiven {
-        0%   { margin-left: 0;   width: 25%; }
-        50%  { margin-left: 60%; width: 40%; }
-        100% { margin-left: 0;   width: 25%; }
+
+      /* ---------- FICHAS DE CERTIFICADO ---------- */
+      .ficha-cert {
+        transition: border-color var(--t-ui) var(--ease),
+                    transform var(--t-ui) var(--ease),
+                    background var(--t-ui) var(--ease);
       }
-      @keyframes marquesina { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-      .marquesina:hover .pista { animation-play-state: paused; }
+      .ficha-cert:hover {
+        border-color: ${t.accentBorder};
+        background: ${t.cardHover};
+        transform: translateY(-3px);
+      }
+      .lienzo-cert { transition: transform var(--t-seccion) var(--ease), filter var(--t-ui) var(--ease); }
+      .ficha-cert:hover .lienzo-cert { transform: scale(1.035); }
+      /* La lupa solo aparece cuando hay intencion de mirar */
+      .lupa-cert { opacity: 0; transition: opacity var(--t-ui) var(--ease); }
+      .ficha-cert:hover .lupa-cert, .ficha-cert:focus-visible .lupa-cert { opacity: 1; }
+      .flecha-cert svg { transition: transform var(--t-ui) var(--ease); }
+      .ficha-cert:hover .flecha-cert svg { transform: translateX(3px); }
+
+      /* ---------- VISOR DE CERTIFICADO ---------- */
+      .visor-cert { animation: aparecerVelo var(--t-ui) ease both; }
+      .visor-cert-caja { animation: subirVisor var(--t-ui) var(--ease) both; }
+      @keyframes aparecerVelo { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes subirVisor {
+        from { opacity: 0; transform: translateY(14px) scale(0.985); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
 
       .sin-scroll { scrollbar-width: none; -ms-overflow-style: none; }
       .sin-scroll::-webkit-scrollbar { display: none; }
