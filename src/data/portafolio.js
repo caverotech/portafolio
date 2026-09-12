@@ -38,11 +38,11 @@ export const DATOS = {
      Se muestran en el hero como prueba concreta de qué sabes hacer. */
   capacidadesIA: [
     "Agentes de IA",
-    "Integración de LLMs",
-    "Automatización de procesos",
-    "RAG y bases de conocimiento",
-    "Ingeniería de prompts",
+    "MCP y Skills",
     "Orquestación con n8n",
+    "Automatización de procesos",
+    "Integración de LLMs",
+    "Subagentes en paralelo",
   ],
 
   sobreMi: {
@@ -62,11 +62,11 @@ export const DATOS = {
       },
       {
         titulo: "Automatización de procesos",
-        texto: "Identifico el trabajo repetitivo de un negocio y lo convierto en un flujo que corre solo: orquestación con n8n y Node, tareas programadas e integración entre sistemas que antes no se hablaban.",
+        texto: "Identifico el trabajo repetitivo de un negocio y lo convierto en un flujo que corre solo: Claude dirige y n8n ejecuta, conectados por MCP contra los sistemas que antes no se hablaban entre sí.",
       },
       {
         titulo: "Integración de LLMs",
-        texto: "Conecto Claude, GPT y Gemini a datos reales vía API: extracción de información de documentos, generación de contenido y bases de conocimiento consultables. Con criterio sobre costo, latencia y cuándo el modelo NO es la respuesta.",
+        texto: "Claude es mi centro de mando y desde ahí opero el resto por MCP: GPT o Gemini entran cuando la tarea lo pide. Extracción de información de documentos, generación de contenido y bases de conocimiento consultables, con criterio sobre costo, latencia y cuándo el modelo NO es la respuesta.",
       },
       {
         titulo: "La interfaz que lo hace usable",
@@ -79,15 +79,17 @@ export const DATOS = {
     {
       categoria: "IA y Agentes",
       icono: "sparkles",
-      descripcion: "El núcleo de mi trabajo: modelos conectados a procesos reales.",
+      descripcion: "Claude como centro de mando: desde ahí opero el resto vía MCP.",
       items: [
-        { nombre: "Claude", slug: "claude", color: "D97757", detalle: "Mi modelo principal. Trabajo con MCP para conectarlo a sistemas, Skills para darle procedimientos propios y subagentes para repartir tareas largas." },
-        { nombre: "MCP (Model Context Protocol)", slug: "", color: "", detalle: "El estándar con el que conecto a Claude con herramientas y datos reales: bases, APIs y archivos, sin pegamento improvisado." },
+        { nombre: "Claude", slug: "claude", color: "D97757", detalle: "Mi centro de trabajo. Desde aquí opero el resto de herramientas mediante MCP, con Skills que le dan procedimientos propios y subagentes que reparten las tareas largas." },
+        { nombre: "MCP (Model Context Protocol)", slug: "", color: "", detalle: "El estándar con el que conecto a Claude con todo lo demás: n8n, bases de datos, APIs, archivos y otros modelos. Es lo que convierte al modelo en un operador real y no en un chat." },
         { nombre: "Skills y subagentes", slug: "", color: "", detalle: "Procedimientos versionados que el modelo carga cuando toca, y subagentes especializados que trabajan en paralelo sobre una misma tarea." },
-        { nombre: "GPT / OpenAI", slug: "openai", color: "FFFFFF", detalle: "Integración por API para razonamiento, extraccion estructurada y generación." },
-        { nombre: "Gemini", slug: "googlegemini", color: "8E75FF", detalle: "Pipelines multimodales: procesamiento de imagen y documentos a escala." },
-        { nombre: "Perplexity", lucide: "perplexity", detalle: "Investigación con fuentes citadas y búsqueda aumentada." },
+        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "El brazo ejecutor: Claude dirige los flujos de n8n por MCP y n8n los ejecuta contra los sistemas reales. Juntos son el núcleo de todo lo que automatizo." },
+        { nombre: "GPT / OpenAI", slug: "openai", color: "FFFFFF", detalle: "Lo uso conectado desde Claude por MCP cuando conviene su razonamiento o su extracción estructurada para una tarea concreta." },
+        { nombre: "Gemini", slug: "googlegemini", color: "8E75FF", detalle: "Conectado por MCP para lo multimodal: procesamiento de imagen y documentos a escala dentro de un flujo mayor." },
+        { nombre: "Perplexity", lucide: "perplexity", detalle: "Investigación con fuentes citadas, invocada desde el mismo flujo en lugar de abrir otra pestaña." },
         { nombre: "NotebookLM", lucide: "notebooklm", detalle: "Síntesis e investigación sobre corpus de documentación técnica." },
+        { nombre: "Higgsfield", slug: "", color: "", detalle: "Generación de vídeo con IA para piezas audiovisuales, integrada en el mismo flujo de trabajo." },
       ],
     },
     {
@@ -95,9 +97,9 @@ export const DATOS = {
       icono: "settings",
       descripcion: "Procesos que corren solos, de punta a punta.",
       items: [
-        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "Mi motor de automatización. Conecto sistemas via APIs REST y webhooks, y orquesto los flujos con Claude mediante MCP en lugar de encadenar nodos a mano." },
-        { nombre: "Orquestación con MCP", slug: "", color: "", detalle: "Claude dirige el flujo de n8n a traves de MCP: decide qué paso ejecutar según el caso, en vez de seguir una rama fija." },
-        { nombre: "Node.js", slug: "nodedotjs", color: "5FA04E", detalle: "Automatizaciónes programadas, funciones serverless y scripts de proceso." },
+        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "Mi motor de automatización. Conecto sistemas mediante APIs REST y webhooks, y orquesto los flujos con Claude por MCP en lugar de encadenar nodos a mano." },
+        { nombre: "Orquestación con MCP", slug: "", color: "", detalle: "Claude dirige el flujo de n8n a través de MCP: decide qué paso ejecutar según el caso, en vez de seguir una rama fija." },
+        { nombre: "Node.js", slug: "nodedotjs", color: "5FA04E", detalle: "Automatizaciones programadas, funciones serverless y scripts de proceso." },
         { nombre: "Python", slug: "python", color: "3776AB", detalle: "Scripting de datos y automatización; lenguaje estándar del ecosistema de IA." },
       ],
     },
@@ -120,10 +122,8 @@ export const DATOS = {
       icono: "database",
       descripcion: "Sin datos ordenados no hay IA que funcione.",
       items: [
-        { nombre: "Supabase", slug: "supabase", color: "3FCF8E", detalle: "Mi backend por defecto en productos nuevos: Postgres gestionado con auth, storage y realtime." },
-        { nombre: "PostgreSQL", slug: "postgresql", color: "4169E1", detalle: "El motor debajo de Supabase: consultas, índices y modelado relacional." },
+        { nombre: "Supabase", slug: "supabase", color: "3FCF8E", detalle: "Mi backend por defecto en productos nuevos: Postgres gestionado con autenticación, storage y realtime." },
         { nombre: "SQL Server", slug: "microsoftsqlserver", color: "CC2927", detalle: "Procedimientos almacenados y trazabilidad en sistemas empresariales." },
-        { nombre: "MySQL", slug: "mysql", color: "4479A1", detalle: "Diseño relacional y normalización desde cero." },
         { nombre: "Power BI", lucide: "powerbi", detalle: "Modelado y dashboards para inteligencia de negocio." },
       ],
     },
