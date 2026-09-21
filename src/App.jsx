@@ -1475,7 +1475,7 @@ function MiniaturaProyecto({ t, p, alta = false, color = false }) {
         </div>
 
         {/* Captura del proyecto */}
-        <Foto src={p.imagen} alt={p.nombre} gradiente={p.gradiente} tinte={false} className={alta ? "h-56 md:h-80" : "h-40 md:h-44"}>
+        <Foto src={p.imagen} alt={`${p.nombre} — proyecto desarrollado por Alexys Cavero`} gradiente={p.gradiente} tinte={false} className={alta ? "h-56 md:h-80" : "h-40 md:h-44"}>
           {/* Velo de marca del proyecto. Con `color` sólo queda una
               sombra inferior para asentar la etiqueta: la captura se ve
               tal cual, en su color real. */}
@@ -1582,7 +1582,7 @@ function FilaProyecto({ t, p, abrir, delay, indice }) {
       >
         <img
           src={p.imagen}
-          alt=""
+          alt={`${p.nombre} — proyecto de ${p.stack.slice(0, 2).join(" y ")} desarrollado por Alexys Cavero`}
           loading="lazy"
           className="w-full h-full object-cover"
           style={{ transition: "transform 400ms cubic-bezier(0.22,0.61,0.36,1)" }}
@@ -1906,7 +1906,7 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
             el visitante acaba de pulsar crece y llena la pantalla. */}
         <Foto
           src={p.imagen}
-          alt={`Captura de ${p.nombre}`}
+          alt={`${p.nombre} — ${p.corto}`}
           gradiente={p.gradiente}
           tinte={false}
           className="portada-detalle absolute inset-0 w-full h-full"
@@ -2015,7 +2015,7 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
           {d.imagenSecundaria && (
             <BloqueDetalle t={t} etiqueta="En pantalla">
               <div className="overflow-hidden" style={{ borderRadius: 14, border: `1px solid ${t.border}` }}>
-                <Foto src={d.imagenSecundaria} alt={`${p.nombre} en uso`} gradiente={p.gradiente} tinte={false} className="h-64 md:h-[26rem]" />
+                <Foto src={d.imagenSecundaria} alt={d.imagenSecundariaPie || `${p.nombre} en uso — proyecto de Alexys Cavero`} gradiente={p.gradiente} tinte={false} className="h-64 md:h-[26rem]" />
               </div>
               {d.imagenSecundariaPie && (
                 <p className="mt-3" style={{ fontFamily: MONO, fontSize: 11.5, color: t.faint }}>{d.imagenSecundariaPie}</p>
@@ -2159,7 +2159,7 @@ function MomentoPolaroid({ t, m, idx, onAbrir }) {
         {/* Foto o placeholder */}
         <div className={`relative rounded-md overflow-hidden ${alturas[m.alto] || alturas.medio}`}>
           {tieneFoto ? (
-            <Foto src={m.portada} alt={m.titulo} tinte={false} className="w-full h-full">
+            <Foto src={m.portada} alt={`${m.titulo} — ${m.lugar}, ${m.fecha}. Alexys Cavero`} tinte={false} className="w-full h-full">
               <span
                 className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{ background: "rgba(7,9,13,0.55)", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", backdropFilter: "blur(4px)" }}
@@ -2456,7 +2456,7 @@ function VisorAlbum({ t, momento, onCerrar }) {
             <img
               key={idx}
               src={actual.foto}
-              alt={actual.pie || momento.titulo}
+              alt={`${actual.pie || momento.titulo} — ${momento.lugar}, ${momento.fecha}`}
               className="foto-album max-w-full"
               style={{ maxHeight: "60vh", objectFit: "contain" }}
             />
@@ -2555,7 +2555,7 @@ function VisorAlbum({ t, momento, onCerrar }) {
                     opacity: i === idx ? 1 : 0.55,
                   }}
                 >
-                  <img src={f.foto} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  <img src={f.foto} alt={f.pie || `${momento.titulo} — foto ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
                 </button>
               ))}
             </div>
@@ -2743,8 +2743,10 @@ function Contacto({ t }) {
                 <span style={{ fontStyle: "italic", color: t.accent }}>automatizado</span>?
               </h2>
               <p className="mt-7 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "52ch" }}>
-                Estoy abierto a oportunidades como Ingeniero de IA y Automatización,
-                presenciales o remotas. Cuéntame qué necesitas resolver y vemos juntos
+                Estoy abierto a oportunidades como Ingeniero de IA y Automatización.
+                Trabajo desde <strong style={{ color: t.text, fontWeight: 500 }}>Ica</strong> con
+                negocios de <strong style={{ color: t.text, fontWeight: 500 }}>Lima y todo el Perú</strong>,
+                presencial o en remoto. Cuéntame qué necesitas resolver y vemos juntos
                 si la IA es el camino.
               </p>
               <div className="mt-9">

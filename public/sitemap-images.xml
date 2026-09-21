@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap de imágenes de caverotech.com
+
+  Le dice a Google Imágenes qué fotos hay y de qué son. Sin esto, las
+  imágenes de una SPA rara vez se indexan: el rastreador no las
+  encuentra porque se cargan con JavaScript.
+
+  ══════════════════════════════════════════════════════════════
+  CÓMO AÑADIR UNA FOTO NUEVA
+
+  1. Pon el archivo en public/galeria/ con un nombre descriptivo
+     en minúsculas y con guiones. El nombre del archivo es una
+     señal de posicionamiento real:
+
+       ✅ alexys-cavero-charla-ia-colegio-ica.jpg
+       ❌ IMG_20231105_094512.jpg
+
+  2. Copia un bloque <image:image> de los de abajo y cambia:
+       image:loc     → la ruta del archivo
+       image:title   → qué es, con las palabras que alguien buscaría
+       image:caption → una frase describiendo la escena
+
+  3. Actualiza <lastmod> arriba a la fecha de hoy.
+
+  4. Sube los cambios y vuelve a enviar el sitemap en Google Search
+     Console (Sitemaps → escribir sitemap-images.xml → Enviar).
+  ══════════════════════════════════════════════════════════════
+-->
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <url>
+    <loc>https://www.caverotech.com/</loc>
+
+    <!-- ══ RETRATO ══ -->
+    <image:image>
+      <image:loc>https://www.caverotech.com/Foto-2026.jpeg</image:loc>
+      <image:title>Alexys Cavero, Ingeniero de IA y Automatización en Ica, Perú</image:title>
+      <image:caption>Retrato profesional de Alexys Cavero, especialista en agentes de IA y automatización de procesos con n8n y Claude.</image:caption>
+    </image:image>
+
+    <!-- ══ MOMENTOS · KIDSAPIENS ══
+         Estas seis fotos están en public/galeria/ pero NO subidas al
+         repositorio: muestran rostros de menores sin difuminar. Cuando
+         estén difuminadas y subidas, descomenta este bloque. -->
+    <!--
+    <image:image>
+      <image:loc>https://www.caverotech.com/galeria/kidsapiens-taller-ia-ninos-ica.jpg</image:loc>
+      <image:title>Taller de Inteligencia Artificial para niños, Kidsapiens · Ica</image:title>
+      <image:caption>Alexys Cavero enseñando inteligencia artificial y robótica básica a estudiantes de primaria en el colegio José Carlos Mariátegui, Ica.</image:caption>
+    </image:image>
+    -->
+
+    <!-- ══ MOMENTOS · UTP TECH SUMMIT ══
+         Pendiente de subir las fotos. Cuando las pongas en
+         public/galeria/ con estos nombres, descomenta el bloque. -->
+    <!--
+    <image:image>
+      <image:loc>https://www.caverotech.com/galeria/utp-tech-summit-ica-2026.jpg</image:loc>
+      <image:title>UTP Tech Summit 2026 · Conferencia de tecnología en Ica</image:title>
+      <image:caption>Alexys Cavero en el UTP Tech Summit, conferencia con ingenieros de Google, Microsoft y Tata Consultancy Services en la Universidad Tecnológica del Perú.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.caverotech.com/galeria/utp-tech-summit-ponentes-google-microsoft.jpg</image:loc>
+      <image:title>Ponentes de Google y Microsoft en el UTP Tech Summit</image:title>
+      <image:caption>Ingenieros de Google, Microsoft y Tata Consultancy Services durante las charlas del UTP Tech Summit en Ica, Perú.</image:caption>
+    </image:image>
+    -->
+
+    <!-- ══ PROYECTOS ══
+         Las capturas de los proyectos son hoy imágenes de stock de
+         Unsplash, alojadas fuera del dominio: no aportan nada indexado
+         a tu nombre. Cuando sustituyas cada `imagen` de
+         src/data/portafolio.js por una captura real en
+         public/proyectos/, añade aquí su bloque. Ejemplo listo:
+
+    <image:image>
+      <image:loc>https://www.caverotech.com/proyectos/vistony-ruta-nazca-app-ventas-gps.jpg</image:loc>
+      <image:title>Vistony Ruta Nazca · App de ventas en campo con ruta GPS</image:title>
+      <image:caption>Aplicación móvil de ventas en campo con 286 clientes geocodificados y ruta optimizada por GPS, desarrollada por Alexys Cavero.</image:caption>
+    </image:image>
+    -->
+
+  </url>
+</urlset>

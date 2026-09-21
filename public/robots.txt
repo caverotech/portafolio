@@ -1,0 +1,16 @@
+# robots.txt — caverotech.com
+# Portafolio de Alexys Cavero · Ingeniero de IA y Automatización
+
+User-agent: *
+Allow: /
+
+# Rastreadores de imágenes: acceso explícito para que las fotos
+# de proyectos y momentos puedan aparecer en Google Imágenes.
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://www.caverotech.com/sitemap.xml
+Sitemap: https://www.caverotech.com/sitemap-images.xml

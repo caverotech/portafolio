@@ -221,7 +221,11 @@ export default function Hero({ t = TEMA, irASeccion }) {
               <div className="relative" style={{ aspectRatio: "4 / 5" }}>
                 <img
                   src={DATOS.fotos.perfil}
-                  alt={`Retrato de ${DATOS.nombre}`}
+                  alt={`${DATOS.nombre}, ${DATOS.titulo} en ${DATOS.ubicacion}`}
+                  width="1000"
+                  height="1250"
+                  fetchPriority="high"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover"
                   style={{
                     objectPosition: "50% 14%",

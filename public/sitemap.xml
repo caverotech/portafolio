@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap de caverotech.com
+
+  El sitio es una SPA de una sola URL, así que aquí va la raíz.
+  Las secciones son anclas de la misma página: no se listan como URLs
+  propias porque Google no las trata como documentos independientes.
+
+  Si más adelante cada proyecto tiene su propia ruta (/proyecto/vistony),
+  añádela aquí como <url> separada.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.caverotech.com/</loc>
+    <lastmod>2026-09-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

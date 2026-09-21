@@ -1,19 +1,61 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-PE">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alexys Cavero · Ingeniero de IA y Automatización</title>
-    <meta name="description" content="Ingeniero de IA y Automatización. Diseño y construyo agentes de IA, flujos automatizados e integraciones con LLMs que reemplazan trabajo manual en negocios reales — y la interfaz que los hace usables." />
-    <link rel="canonical" href="https://www.caverotech.com/" />
 
+    <!-- ══════════════════════════════════════════════════════════
+         SEO — BÚSQUEDA
+         El título y la descripción son lo que se lee en Google.
+         Llevan los términos con los que alguien busca este trabajo
+         ("ingeniero de IA", "automatización", "agentes") y el lugar
+         ("Ica", "Perú"), porque la búsqueda local es donde hay menos
+         competencia y más intención de contratar.
+         ══════════════════════════════════════════════════════════ -->
+    <title>Alexys Cavero · Ingeniero de IA y Automatización en Perú</title>
+    <meta
+      name="description"
+      content="Ingeniero de IA y Automatización en Ica, Perú. Construyo agentes de IA, automatizo procesos con n8n y Claude, e integro LLMs en sistemas reales — con la interfaz que los hace usables. Trabajo remoto en todo Perú."
+    />
+    <meta name="author" content="Alexys Cavero" />
+    <link rel="canonical" href="https://www.caverotech.com/" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="googlebot" content="index, follow" />
+
+    <!-- Cobertura geográfica: refuerza las búsquedas locales -->
+    <meta name="geo.region" content="PE-ICA" />
+    <meta name="geo.placename" content="Ica, Perú" />
+
+    <!-- ══════════════════════════════════════════════════════════
+         REDES SOCIALES
+         og:image es la tarjeta que aparece al compartir el enlace en
+         WhatsApp, LinkedIn o Twitter. Sin ella el enlace se ve como
+         texto plano y nadie lo abre.
+         ══════════════════════════════════════════════════════════ -->
+    <meta property="og:site_name" content="Alexys Cavero · caverotech.com" />
     <meta property="og:title" content="Alexys Cavero · Ingeniero de IA y Automatización" />
-    <meta property="og:description" content="Agentes de IA, automatización de procesos e integración de LLMs en sistemas que funcionan en producción." />
-    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="Agentes de IA, automatización de procesos con n8n e integración de LLMs en sistemas que funcionan en producción. Ica, Perú."
+    />
+    <meta property="og:type" content="profile" />
     <meta property="og:url" content="https://www.caverotech.com/" />
     <meta property="og:locale" content="es_PE" />
+    <meta property="og:image" content="https://www.caverotech.com/Foto-2026.jpeg" />
+    <meta property="og:image:alt" content="Alexys Cavero, Ingeniero de IA y Automatización" />
+    <meta property="profile:first_name" content="Alexys" />
+    <meta property="profile:last_name" content="Cavero" />
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Alexys Cavero · Ingeniero de IA y Automatización" />
+    <meta
+      name="twitter:description"
+      content="Agentes de IA, automatización con n8n e integración de LLMs. Ica, Perú."
+    />
+    <meta name="twitter:image" content="https://www.caverotech.com/Foto-2026.jpeg" />
+    <meta name="twitter:image:alt" content="Alexys Cavero, Ingeniero de IA y Automatización" />
+
     <meta name="theme-color" content="#0A0B0D" />
 
     <!-- Fondo oscuro desde el primer instante: evita el destello blanco
@@ -32,32 +74,130 @@
       rel="stylesheet"
     />
 
-    <!-- Datos estructurados: ayuda a Google a entender el rol real -->
+    <!-- ══════════════════════════════════════════════════════════
+         DATOS ESTRUCTURADOS
+         Le dicen a Google QUÉ es esto, no solo qué palabras tiene.
+         Son tres objetos enlazados:
+           Person       → quién soy, dónde estoy, qué sé hacer
+           ProfilePage  → esta página ES el perfil de esa persona
+           Service      → el servicio que ofrezco y dónde lo ofrezco
+         `areaServed` es la pieza que conecta con "en Ica", "en Lima",
+         "en Perú": sin ella Google no sabe tu cobertura.
+         ══════════════════════════════════════════════════════════ -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Alexys Cavero",
-        "url": "https://www.caverotech.com/",
-        "jobTitle": "Ingeniero de IA y Automatización",
-        "description": "Ingeniero de IA y Automatización: agentes de IA, automatización de procesos e integración de LLMs en producción.",
-        "knowsAbout": [
-          "Inteligencia Artificial",
-          "Agentes de IA",
-          "Modelos de Lenguaje (LLMs)",
-          "Automatización de procesos",
-          "n8n",
-          "React"
-        ],
-        "address": { "@type": "PostalAddress", "addressLocality": "Ica", "addressCountry": "PE" },
-        "sameAs": [
-          "https://github.com/ingalexyscavero-design",
-          "https://www.linkedin.com/in/alexyscavero/"
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://www.caverotech.com/#alexys",
+            "name": "Alexys Cavero",
+            "givenName": "Alexys",
+            "familyName": "Cavero",
+            "url": "https://www.caverotech.com/",
+            "image": {
+              "@type": "ImageObject",
+              "url": "https://www.caverotech.com/Foto-2026.jpeg",
+              "caption": "Alexys Cavero, Ingeniero de IA y Automatización"
+            },
+            "jobTitle": "Ingeniero de IA y Automatización",
+            "description": "Ingeniero de IA y Automatización en Ica, Perú. Construyo agentes de IA, automatizo procesos con n8n y Claude, e integro modelos de lenguaje en sistemas de producción.",
+            "email": "mailto:ing.alexyscavero@gmail.com",
+            "knowsLanguage": ["es", "en"],
+            "knowsAbout": [
+              "Inteligencia Artificial",
+              "Agentes de IA",
+              "Modelos de Lenguaje (LLMs)",
+              "Automatización de procesos",
+              "Model Context Protocol (MCP)",
+              "n8n",
+              "Claude",
+              "OpenAI GPT",
+              "Integración de APIs",
+              "React",
+              "Supabase",
+              "SQL Server",
+              "Desarrollo web"
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Ica",
+              "addressRegion": "Ica",
+              "addressCountry": "PE"
+            },
+            "worksFor": {
+              "@type": "Organization",
+              "name": "Conecta Systems",
+              "description": "Automatización de procesos y desarrollo de software a medida para negocios."
+            },
+            "alumniOf": {
+              "@type": "CollegeOrUniversity",
+              "name": "Universidad Tecnológica del Perú"
+            },
+            "sameAs": [
+              "https://github.com/ingalexyscavero-design",
+              "https://www.linkedin.com/in/alexyscavero/"
+            ]
+          },
+          {
+            "@type": "ProfilePage",
+            "@id": "https://www.caverotech.com/#pagina",
+            "url": "https://www.caverotech.com/",
+            "name": "Alexys Cavero · Ingeniero de IA y Automatización",
+            "inLanguage": "es-PE",
+            "mainEntity": { "@id": "https://www.caverotech.com/#alexys" },
+            "about": { "@id": "https://www.caverotech.com/#alexys" }
+          },
+          {
+            "@type": "Service",
+            "@id": "https://www.caverotech.com/#servicio",
+            "name": "Automatización de procesos y agentes de IA",
+            "serviceType": "Ingeniería de IA y automatización de procesos",
+            "description": "Diseño e implementación de agentes de IA, flujos automatizados con n8n e integración de modelos de lenguaje en los sistemas de un negocio, con la interfaz que los hace usables.",
+            "provider": { "@id": "https://www.caverotech.com/#alexys" },
+            "areaServed": [
+              { "@type": "City", "name": "Ica" },
+              { "@type": "City", "name": "Lima" },
+              { "@type": "Country", "name": "Perú" }
+            ],
+            "availableChannel": {
+              "@type": "ServiceChannel",
+              "serviceUrl": "https://www.caverotech.com/#contacto",
+              "availableLanguage": { "@type": "Language", "name": "Español" }
+            }
+          }
         ]
       }
     </script>
   </head>
   <body>
+    <!-- Contenido para rastreadores y lectores de pantalla.
+         La web es una SPA: sin JavaScript el <div id="root"> está vacío
+         y un rastreador que no ejecute JS no vería absolutamente nada.
+         Google sí ejecuta JS, pero otros (y las vistas previas de
+         WhatsApp o LinkedIn) no siempre. Este bloque garantiza que
+         siempre haya un H1 y un texto que describa el sitio. -->
+    <noscript>
+      <div style="max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem; color: #EDEFF2; font-family: system-ui, sans-serif; line-height: 1.6;">
+        <h1 style="font-size: 2rem; letter-spacing: -0.03em;">Alexys Cavero</h1>
+        <p style="color: #E8983E; font-weight: 600;">Ingeniero de IA y Automatización · Ica, Perú</p>
+        <p>
+          Construyo agentes de IA y flujos automatizados que reemplazan trabajo
+          manual, y la interfaz que los vuelve usables. Trabajo con Claude, MCP,
+          n8n, React y Supabase, para negocios de Ica, Lima y todo Perú.
+        </p>
+        <p>
+          Esta web necesita JavaScript para mostrarse completa. Puedes
+          escribirme a
+          <a href="mailto:ing.alexyscavero@gmail.com" style="color: #E8983E;">ing.alexyscavero@gmail.com</a>
+          o ver mi trabajo en
+          <a href="https://github.com/ingalexyscavero-design" style="color: #E8983E;">GitHub</a>
+          y
+          <a href="https://www.linkedin.com/in/alexyscavero/" style="color: #E8983E;">LinkedIn</a>.
+        </p>
+      </div>
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
