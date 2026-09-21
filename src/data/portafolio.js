@@ -478,8 +478,11 @@ export const DATOS = {
 
      estado: "construyendo" | "estudiando" | "explorando"
        construyendo → ya tiene código o avance real
-       estudiando   → formación en curso o por empezar
+       estudiando   → formación o investigación en curso
        explorando   → idea con criterio, todavía sin empezar
+
+     Nota: las certificaciones NO van aquí, tienen su propia sección.
+     Esto es para proyectos e intereses técnicos.
 
      Añade, quita o reordena libremente: la sección se adapta. */
   enProceso: [
@@ -492,28 +495,20 @@ export const DATOS = {
       pila: ["Alexa Skills", "API de LLM", "Síntesis de voz", "n8n"],
     },
     {
-      titulo: "Certificación AWS",
-      estado: "estudiando",
-      etiqueta: "Formación",
-      texto:
-        "Vengo desplegando en Vercel y quiero bajar un nivel: cómputo, almacenamiento y redes en AWS, para sostener cargas de IA que no caben en una función serverless. La certificación es la excusa para estudiarlo en orden, no el objetivo.",
-      pila: ["AWS", "Infraestructura", "Despliegue"],
-    },
-    {
-      titulo: "Tesis: predicción de morosidad",
-      estado: "construyendo",
-      etiqueta: "Investigación",
-      texto:
-        "Mi trabajo de investigación en Ingeniería de Sistemas: una plataforma web de separación y venta de lotes con un algoritmo que anticipa qué clientes van a caer en mora. Es el proyecto donde el modelo predictivo tiene que convivir con un sistema real de gestión.",
-      pila: ["React", "Supabase", "Modelo predictivo"],
-    },
-    {
       titulo: "Biblioteca de Skills propias",
       estado: "construyendo",
       etiqueta: "Automatización",
       texto:
         "Cada procedimiento que repito acaba siendo una Skill de Claude. Estoy convirtiendo mi forma de trabajar en una biblioteca versionada: diseño, revisión de código y propuestas comerciales ya están dentro, y la lista crece con cada proyecto.",
       pila: ["Claude Skills", "MCP", "Documentación"],
+    },
+    {
+      titulo: "GPT-6 Astra para agentes",
+      estado: "estudiando",
+      etiqueta: "Modelos",
+      texto:
+        "El nuevo modelo de OpenAI está pensado para operar un ordenador y resolver tareas de varios pasos sin que alguien apruebe cada uno. Eso toca de lleno lo que construyo: quiero medir hasta dónde llega de verdad y en qué casos conviene sobre lo que ya uso con Claude.",
+      pila: ["GPT-6 Astra", "API de OpenAI", "Agentes"],
     },
   ],
 

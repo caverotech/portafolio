@@ -211,12 +211,28 @@ export default function EstilosGlobales({ t = TEMA }) {
         transform: translateY(-3px);
       }
 
-      /* ---------- VISOR DE ALBUM DE MOMENTOS ---------- */
+      /* ---------- VISOR DE ALBUM: CARRUSEL ---------- */
       .visor-album { animation: aparecerVelo var(--t-ui) ease both; }
       .visor-album-caja { animation: subirVisor var(--t-ui) var(--ease) both; }
-      .foto-album { animation: aparecerVelo 420ms ease both; }
-      .mini-album { transition: opacity var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease); }
-      .mini-album:hover { opacity: 1 !important; }
+
+      /* La tira se arrastra con el dedo. Se oculta la barra: el gesto
+         y los puntos de abajo ya dicen que hay mas fotos. */
+      .pista-album {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+      }
+      .pista-album::-webkit-scrollbar { display: none; }
+
+      .flecha-album { transition: background var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease); }
+      .flecha-album:hover { border-color: ${t.accentBorder}; }
+
+      .punto-album {
+        cursor: pointer;
+        transition: width var(--t-ui) var(--ease), background var(--t-ui) var(--ease);
+      }
+      .punto-album:hover { background: ${t.accent} !important; }
 
       /* ---------- ARBOL DE CLAUDE: SKILLS Y MCP ---------- */
       .rama-claude { transition: opacity var(--t-ui) var(--ease); }

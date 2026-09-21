@@ -27,6 +27,51 @@ const LUCIDE_TECH = { powerbi: BarChart3, gpt: MessageSquare, notebooklm: BookOp
    (hooks reutilizables están en src/hooks/useReveal.js)
    ============================================================ */
 
+/* Bloqueo del scroll de fondo para ventanas modales.
+
+   Lleva un contador en lugar de guardar y restaurar el valor anterior:
+   si dos modales se solapan, el segundo no "hereda" el hidden del
+   primero y al cerrarse no deja la pagina congelada. Solo el ultimo en
+   liberarse devuelve el scroll.
+
+   En iOS, `overflow: hidden` en el body no basta: hay que fijar la
+   posicion, o el fondo sigue arrastrandose bajo el modal. Se guarda el
+   scroll actual y se restaura al cerrar, para no perder el sitio. */
+let modalesAbiertos = 0;
+let scrollGuardado = 0;
+
+function bloquearScroll() {
+  if (modalesAbiertos === 0) {
+    scrollGuardado = window.scrollY || window.pageYOffset || 0;
+    const b = document.body;
+    b.style.position = "fixed";
+    b.style.top = `-${scrollGuardado}px`;
+    b.style.left = "0";
+    b.style.right = "0";
+    b.style.width = "100%";
+    b.style.overflow = "hidden";
+  }
+  modalesAbiertos += 1;
+
+  let liberado = false;
+  return function liberar() {
+    if (liberado) return;          // no descontar dos veces
+    liberado = true;
+    modalesAbiertos = Math.max(0, modalesAbiertos - 1);
+    if (modalesAbiertos === 0) {
+      const b = document.body;
+      b.style.position = "";
+      b.style.top = "";
+      b.style.left = "";
+      b.style.right = "";
+      b.style.width = "";
+      b.style.overflow = "";
+      // Volver exactamente donde estaba, sin animacion
+      window.scrollTo({ top: scrollGuardado, behavior: "instant" });
+    }
+  };
+}
+
 function Reveal({ children, delay = 0, className = "", style = {} }) {
   const [ref, visible] = useReveal();
   return (
@@ -104,6 +149,33 @@ function Foto({ src, alt = "", gradiente = ["#14171C", "#1A1E24"], className = "
    Las que no existen en Simple Icons (Higgsfield, NotebookLM, Power BI)
    se dibujan aquí con su forma e identidad propias. */
 const LOGOS_SVG = {
+  // AWS — dibujado aqui: Simple Icons retiro el logo (404). La
+  // sonrisa-flecha naranja es la parte reconocible de la marca.
+  amazonwebservices: ({ size = 22, color = "#FF9900" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden focusable="false">
+      <text
+        x="12" y="10.6" textAnchor="middle"
+        fill={color} fontSize="7.6" fontWeight="700"
+        fontFamily="Arial, Helvetica, sans-serif" letterSpacing="-0.3"
+      >
+        aws
+      </text>
+      <path
+        d="M4 15.6c3.4 2.1 7.3 3.2 11.2 3.2 1.6 0 3.2-.2 4.8-.6"
+        fill="none" stroke={color} strokeWidth="1.9" strokeLinecap="round"
+      />
+      <path d="M18.4 16.5l2.5 1.6-2.2 1.9z" fill={color} />
+    </svg>
+  ),
+  // SQL Server — dibujado aqui por el mismo motivo (404).
+  // Los tres discos apilados: la forma universal de "base de datos".
+  microsoftsqlserver: ({ size = 22, color = "#CC2927" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden focusable="false">
+      <ellipse cx="12" cy="5.6" rx="7.4" ry="2.9" fill="none" stroke={color} strokeWidth="1.6" />
+      <path d="M4.6 5.6v5.4c0 1.6 3.3 2.9 7.4 2.9s7.4-1.3 7.4-2.9V5.6" fill="none" stroke={color} strokeWidth="1.6" />
+      <path d="M4.6 11v5.4c0 1.6 3.3 2.9 7.4 2.9s7.4-1.3 7.4-2.9V11" fill="none" stroke={color} strokeWidth="1.6" />
+    </svg>
+  ),
   // OpenAI / GPT — nudo hexagonal oficial
   openai: ({ size = 22, color = "#FFFFFF" }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
@@ -407,12 +479,11 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva, oscuro }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Al abrir el menú móvil bloqueamos el scroll del fondo
+  // Al abrir el menu movil bloqueamos el scroll del fondo.
+  // Usa el mismo contador que los visores: asi nunca se pisan.
   useEffect(() => {
     if (!abierto) return;
-    const previo = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = previo; };
+    return bloquearScroll();
   }, [abierto]);
 
   const click = (id) => { setAbierto(false); enDetalle ? volver(id) : irASeccion(id); };
@@ -2220,14 +2291,15 @@ function Galeria({ t }) {
   const [filtro, setFiltro] = useState("todos");
   const [pagina, setPagina] = useState(1);
 
-  // Cerrar el visor con Escape y bloquear el scroll del fondo
+  // Cerrar el visor con Escape. El bloqueo del scroll NO se hace aqui:
+  // lo gobierna el propio visor (ver bloquearScroll). Si ambos lo
+  // tocaran, el segundo guardaria como valor previo el "hidden" del
+  // primero y al cerrar la pagina se quedaria congelada.
   useEffect(() => {
     if (!activa) return;
     const onKey = (e) => { if (e.key === "Escape") setActiva(null); };
     window.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { window.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
+    return () => window.removeEventListener("keydown", onKey);
   }, [activa]);
 
   // Al cambiar de filtro, volver siempre a la página 1
@@ -2388,23 +2460,51 @@ function Galeria({ t }) {
   );
 }
 
-/* Visor de álbum. Navega entre las fotos del momento con las flechas
-   del teclado y cierra con Escape. Si el momento aún no tiene álbum
-   cargado, muestra la portada y lo dice sin rodeos. */
+/* Visor de álbum — carrusel tipo Instagram.
+
+   Las fotos van en una tira horizontal que se desliza con el dedo
+   (scroll nativo + scroll-snap, que es lo que hace que el gesto se
+   sienta bien en móvil), con puntos de posición debajo. En escritorio
+   además hay flechas y navegación con teclado.
+
+   El scroll vertical del fondo se bloquea con `bloquearScroll`, que
+   lleva un contador: si otro modal ya lo bloqueó, este no hereda su
+   estado ni lo rompe al cerrarse. */
 function VisorAlbum({ t, momento, onCerrar }) {
-  // La portada es la primera foto del álbum; el resto va detrás.
+  // La portada es la primera foto; el resto del álbum va detrás.
   const fotos = [
     ...(momento.portada ? [{ foto: momento.portada, pie: momento.titulo }] : []),
     ...(momento.album || []).filter((f) => f.foto),
   ];
   const pendientes = (momento.album || []).filter((f) => !f.foto).length;
-  const [idx, setIdx] = useState(0);
   const total = fotos.length;
 
-  const mover = React.useCallback(
-    (paso) => setIdx((i) => (total ? (i + paso + total) % total : 0)),
-    [total]
-  );
+  const [idx, setIdx] = useState(0);
+  const pista = useRef(null);
+  const ignorarScroll = useRef(false);
+
+  // Lleva la tira a una foto concreta (al pulsar flecha, punto o tecla)
+  const irA = React.useCallback((i) => {
+    const n = total ? (i + total) % total : 0;
+    setIdx(n);
+    const caja = pista.current;
+    if (!caja) return;
+    // Mientras animamos, ignoramos el onScroll para que no se pelee
+    ignorarScroll.current = true;
+    caja.scrollTo({ left: caja.clientWidth * n, behavior: movReducido() ? "instant" : "smooth" });
+    setTimeout(() => { ignorarScroll.current = false; }, 420);
+  }, [total]);
+
+  const mover = React.useCallback((paso) => irA(idx + paso), [irA, idx]);
+
+  // Al deslizar con el dedo, el índice lo dicta la posición del scroll
+  const alScrollPista = () => {
+    if (ignorarScroll.current) return;
+    const caja = pista.current;
+    if (!caja || !caja.clientWidth) return;
+    const n = Math.round(caja.scrollLeft / caja.clientWidth);
+    setIdx((prev) => (n !== prev && n >= 0 && n < total ? n : prev));
+  };
 
   useEffect(() => {
     const alTecla = (e) => {
@@ -2413,11 +2513,10 @@ function VisorAlbum({ t, momento, onCerrar }) {
       if (e.key === "ArrowLeft") mover(-1);
     };
     window.addEventListener("keydown", alTecla);
-    const previo = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const liberar = bloquearScroll();
     return () => {
       window.removeEventListener("keydown", alTecla);
-      document.body.style.overflow = previo;
+      liberar();
     };
   }, [onCerrar, mover]);
 
@@ -2433,7 +2532,7 @@ function VisorAlbum({ t, momento, onCerrar }) {
       onClick={onCerrar}
     >
       <div
-        className="visor-album-caja relative w-full max-w-5xl max-h-full overflow-y-auto"
+        className="visor-album-caja relative w-full max-w-4xl max-h-full overflow-y-auto"
         style={{ background: t.bgAlt, border: `1px solid ${t.border}`, borderRadius: 16 }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -2441,28 +2540,92 @@ function VisorAlbum({ t, momento, onCerrar }) {
           type="button"
           onClick={onCerrar}
           aria-label="Cerrar"
-          className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center z-10"
-          style={{ background: t.surface2, border: `1px solid ${t.border}`, borderRadius: 8, color: t.text }}
+          className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center z-20"
+          style={{
+            background: "rgba(10,11,13,0.78)", border: `1px solid ${t.border}`,
+            borderRadius: 8, color: t.text, backdropFilter: "blur(6px)",
+          }}
         >
           <X size={16} />
         </button>
 
-        {/* Foto grande */}
-        <div
-          className="relative flex items-center justify-center"
-          style={{ background: t.bg, minHeight: "18rem", borderBottom: `1px solid ${t.borderSoft}` }}
-        >
-          {actual ? (
-            <img
-              key={idx}
-              src={actual.foto}
-              alt={`${actual.pie || momento.titulo} — ${momento.lugar}, ${momento.fecha}`}
-              className="foto-album max-w-full"
-              style={{ maxHeight: "60vh", objectFit: "contain" }}
-            />
+        {/* ---------- CARRUSEL ---------- */}
+        <div className="relative" style={{ background: t.bg, borderBottom: `1px solid ${t.borderSoft}` }}>
+          {total > 0 ? (
+            <>
+              {/* Tira deslizable. En móvil se arrastra con el dedo;
+                  scroll-snap hace que encaje foto a foto. */}
+              <div
+                ref={pista}
+                onScroll={alScrollPista}
+                className="pista-album flex overflow-x-auto"
+                style={{ scrollSnapType: "x mandatory" }}
+              >
+                {fotos.map((f, i) => (
+                  <div
+                    key={i}
+                    className="shrink-0 w-full flex items-center justify-center"
+                    style={{ scrollSnapAlign: "center", minHeight: "min(58vh, 26rem)" }}
+                  >
+                    <img
+                      src={f.foto}
+                      alt={`${f.pie || momento.titulo} — ${momento.lugar}, ${momento.fecha}`}
+                      className="max-w-full"
+                      style={{ maxHeight: "58vh", objectFit: "contain" }}
+                      loading={i === 0 ? "eager" : "lazy"}
+                      draggable={false}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* Flechas: solo con más de una foto y en pantalla grande */}
+              {total > 1 && (
+                <>
+                  <button
+                    type="button"
+                    aria-label="Foto anterior"
+                    onClick={() => mover(-1)}
+                    className="flecha-album hidden sm:flex absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center"
+                    style={{
+                      background: "rgba(10,11,13,0.72)", border: `1px solid ${t.border}`,
+                      borderRadius: 10, color: t.text, backdropFilter: "blur(6px)",
+                    }}
+                  >
+                    <ArrowLeft size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Foto siguiente"
+                    onClick={() => mover(1)}
+                    className="flecha-album hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 items-center justify-center"
+                    style={{
+                      background: "rgba(10,11,13,0.72)", border: `1px solid ${t.border}`,
+                      borderRadius: 10, color: t.text, backdropFilter: "blur(6px)",
+                    }}
+                  >
+                    <ArrowRight size={16} />
+                  </button>
+                </>
+              )}
+
+              {/* Contador, arriba a la izquierda */}
+              {total > 1 && (
+                <span
+                  className="absolute top-3 left-3 px-2.5 py-1"
+                  style={{
+                    background: "rgba(10,11,13,0.78)", border: `1px solid ${t.border}`,
+                    borderRadius: 999, color: t.text, backdropFilter: "blur(6px)",
+                    fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.08em",
+                  }}
+                >
+                  {idx + 1} / {total}
+                </span>
+              )}
+            </>
           ) : (
             /* Sin fotos todavía: marco honesto, no un hueco roto */
-            <div className="flex flex-col items-center gap-3 py-16">
+            <div className="flex flex-col items-center gap-3 py-20">
               <span
                 className="flex items-center justify-center"
                 style={{ width: 54, height: 54, borderRadius: 14, background: t.surface, border: `1px solid ${t.border}`, color: t.faint }}
@@ -2474,51 +2637,47 @@ function VisorAlbum({ t, momento, onCerrar }) {
               </span>
             </div>
           )}
-
-          {/* Flechas sobre la foto */}
-          {total > 1 && (
-            <>
-              <button
-                type="button"
-                aria-label="Foto anterior"
-                onClick={() => mover(-1)}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center"
-                style={{ background: "rgba(10,11,13,0.72)", border: `1px solid ${t.border}`, borderRadius: 10, color: t.text, backdropFilter: "blur(6px)" }}
-              >
-                <ArrowLeft size={16} />
-              </button>
-              <button
-                type="button"
-                aria-label="Foto siguiente"
-                onClick={() => mover(1)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center"
-                style={{ background: "rgba(10,11,13,0.72)", border: `1px solid ${t.border}`, borderRadius: 10, color: t.text, backdropFilter: "blur(6px)" }}
-              >
-                <ArrowRight size={16} />
-              </button>
-            </>
-          )}
         </div>
 
-        {/* Ficha del momento */}
-        <div className="p-5 md:p-7">
-          <div className="flex items-start justify-between gap-5 flex-wrap">
-            <div className="min-w-0">
-              <h3
-                style={{ fontFamily: DISPLAY, color: t.text, fontSize: "clamp(1.3rem, 3vw, 1.85rem)", fontWeight: 500, letterSpacing: "-0.025em", lineHeight: 1.15, textWrap: "balance" }}
-              >
-                {momento.titulo}
-              </h3>
-              <p className="mt-1.5" style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.08em", color: t.accentText }}>
-                {momento.lugar} · {momento.fecha}
-              </p>
-            </div>
-            {total > 0 && (
-              <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint, letterSpacing: "0.1em" }}>
-                {String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-              </span>
-            )}
+        {/* Puntos de posición, como en Instagram */}
+        {total > 1 && (
+          <div className="flex items-center justify-center gap-2 py-4" style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
+            {fotos.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => irA(i)}
+                aria-label={`Ver foto ${i + 1} de ${total}`}
+                aria-current={i === idx}
+                className="punto-album"
+                style={{
+                  width: i === idx ? 18 : 6,
+                  height: 6,
+                  borderRadius: 999,
+                  background: i === idx ? t.accent : t.border,
+                  padding: 0,
+                  border: "none",
+                }}
+              />
+            ))}
           </div>
+        )}
+
+        {/* ---------- FICHA DEL MOMENTO ---------- */}
+        <div className="p-5 md:p-7">
+          <h3
+            style={{
+              fontFamily: DISPLAY, color: t.text,
+              fontSize: "clamp(1.3rem, 3vw, 1.85rem)",
+              fontWeight: 500, letterSpacing: "-0.025em", lineHeight: 1.15,
+              textWrap: "balance",
+            }}
+          >
+            {momento.titulo}
+          </h3>
+          <p className="mt-1.5" style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.08em", color: t.accentText }}>
+            {momento.lugar} · {momento.fecha}
+          </p>
 
           {momento.relato && (
             <p
@@ -2529,36 +2688,14 @@ function VisorAlbum({ t, momento, onCerrar }) {
             </p>
           )}
 
-          {/* Pie de la foto actual */}
-          {actual?.pie && (
+          {/* Pie de la foto que se está viendo */}
+          {actual?.pie && actual.pie !== momento.titulo && (
             <p
               className="mt-5 pl-4"
               style={{ borderLeft: `2px solid ${t.accent}`, color: t.text, fontSize: 14 }}
             >
               {actual.pie}
             </p>
-          )}
-
-          {/* Tiras de miniaturas para saltar entre fotos */}
-          {total > 1 && (
-            <div className="mt-6 flex gap-2.5 flex-wrap">
-              {fotos.map((f, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setIdx(i)}
-                  aria-label={`Ver foto ${i + 1}`}
-                  className="mini-album overflow-hidden shrink-0"
-                  style={{
-                    width: 66, height: 46, borderRadius: 7,
-                    border: `1px solid ${i === idx ? t.accent : t.borderSoft}`,
-                    opacity: i === idx ? 1 : 0.55,
-                  }}
-                >
-                  <img src={f.foto} alt={f.pie || `${momento.titulo} — foto ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
-                </button>
-              ))}
-            </div>
           )}
 
           {/* Fotos declaradas sin ruta: se avisa, no se esconde */}
@@ -2673,7 +2810,7 @@ function EnProceso({ t }) {
           descripcion="Una pizarra abierta: proyectos en marcha, formación en curso e ideas que todavía no empiezan. Sin fechas prometidas."
         />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {lista.map((item, i) => (
             <TarjetaProceso key={item.titulo} t={t} item={item} indice={i} />
           ))}
