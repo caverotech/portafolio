@@ -14,10 +14,14 @@ import { movReducido } from "../hooks/useReveal";
      0. TELÓN      el negro se abre y aparece la retícula
      1. MARCA      el monograma se dibuja trazo a trazo
      2. LUGAR      coordenadas y año, al margen
-     3. NOMBRE     clip reveal por línea, a tamaño de cartel
-     4. ROL        la línea que debe recordarse
+     3. MARCA      el monograma se dibuja a gran escala
+     4. INTENCIÓN  la frase que resume el trabajo, por líneas
      5. CAPACIDADES  se escriben una a una en el pie
      6. SALIDA     el telón sube y entrega el portafolio
+
+   No muestra el nombre ni el rol a propósito: es exactamente lo que
+   el visitante ve en el hero un segundo después. La intro abre; el
+   hero presenta. Si ambas dicen lo mismo, la intro sobra.
 
    El sonido es opcional y secundario: los navegadores bloquean el
    audio sin interacción, así que la intro funciona en silencio y
@@ -124,21 +128,21 @@ export default function Bienvenida({ onTerminar }) {
     const en = (ms, fn) => timers.push(setTimeout(fn, ms));
 
     en(120, () => setPaso(1));                       // telón + retícula
-    en(420, () => { setPaso(2); audio.current?.tic(520); });  // marca
+    en(480, () => { setPaso(2); audio.current?.tic(520); });  // dominio
     en(760, () => setPaso(3));                       // coordenadas
-    en(1000, () => { setPaso(4); audio.current?.acorde(); }); // nombre
-    en(1750, () => setPaso(5));                      // rol
+    en(1000, () => { setPaso(4); audio.current?.acorde(); }); // monograma
+    en(2050, () => setPaso(5));                      // frase + nodo cobre
 
     // Capacidades, una a una
     capacidades.forEach((_, i) => {
-      en(2150 + i * 190, () => {
+      en(2900 + i * 170, () => {
         setCapsVisibles(i + 1);
         audio.current?.tic(560 + i * 60);
       });
     });
 
-    en(3900, () => setPaso(6));
-    en(4250, cerrar);
+    en(4150, () => setPaso(6));
+    en(4600, cerrar);
 
     return () => timers.forEach(clearTimeout);
   }, [cerrar, onTerminar]);
@@ -218,31 +222,14 @@ export default function Bienvenida({ onTerminar }) {
 
         {/* Cabecera: marca y coordenadas */}
         <div className="flex items-start justify-between gap-6 pt-8 md:pt-10">
-          {/* Monograma que se dibuja */}
+          {/* Dominio, sin monograma: el grande lo sustituye */}
           <div
-            className="flex items-center gap-3"
             style={{
               opacity: paso >= 2 ? 1 : 0,
               transform: paso >= 2 ? "translateY(0)" : "translateY(-8px)",
               transition: "opacity 700ms ease, transform 700ms cubic-bezier(0.22,0.61,0.36,1)",
             }}
           >
-            <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden>
-              <g fill="none" stroke={t.text} strokeWidth="4.2" strokeLinecap="round" strokeLinejoin="round">
-                <path className={paso >= 2 ? "trazo trazo-1" : ""} d="M14 45 L23.5 20 L33 45" style={{ strokeDasharray: 62, strokeDashoffset: paso >= 2 ? 0 : 62 }} />
-                <path className={paso >= 2 ? "trazo trazo-2" : ""} d="M18.2 36.5 H28.8" style={{ strokeDasharray: 11, strokeDashoffset: paso >= 2 ? 0 : 11 }} />
-                <path className={paso >= 2 ? "trazo trazo-3" : ""} d="M53 26.5 A11.5 11.5 0 1 0 53 38.5" style={{ strokeDasharray: 58, strokeDashoffset: paso >= 2 ? 0 : 58 }} />
-              </g>
-              <circle
-                cx="23.5" cy="20" r="3.6" fill={t.accent}
-                style={{
-                  opacity: paso >= 3 ? 1 : 0,
-                  transformOrigin: "23.5px 20px",
-                  transform: paso >= 3 ? "scale(1)" : "scale(0)",
-                  transition: "opacity 400ms ease 260ms, transform 500ms cubic-bezier(0.34,1.56,0.64,1) 260ms",
-                }}
-              />
-            </svg>
             <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em", color: t.faint }}>
               CAVEROTECH.COM
             </span>
@@ -266,45 +253,59 @@ export default function Bienvenida({ onTerminar }) {
           </div>
         </div>
 
-        {/* Nombre a tamaño de cartel */}
-        <div className="flex-1 flex flex-col justify-center py-8">
-          <h1
+        {/* Apertura de marca. A proposito NO repite el nombre ni el
+            rol: eso es lo que el visitante va a ver en el hero un
+            segundo despues. Aqui va el monograma en grande y la frase
+            que resume el trabajo. */}
+        <div className="flex-1 flex flex-col justify-center items-start py-8">
+          {/* Monograma a gran escala, dibujandose */}
+          <div
+            style={{
+              opacity: paso >= 4 ? 1 : 0,
+              transform: paso >= 4 ? "scale(1)" : "scale(0.94)",
+              transition: "opacity 900ms ease, transform 1400ms cubic-bezier(0.22,0.61,0.36,1)",
+            }}
+          >
+            <svg
+              viewBox="0 0 64 64"
+              aria-hidden
+              style={{ width: "clamp(6rem, 17vw, 13rem)", height: "auto", display: "block" }}
+            >
+              <g fill="none" stroke={t.text} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 45 L23.5 20 L33 45" style={{ strokeDasharray: 62, strokeDashoffset: paso >= 4 ? 0 : 62, transition: "stroke-dashoffset 1200ms cubic-bezier(0.22,0.61,0.36,1)" }} />
+                <path d="M18.2 36.5 H28.8" style={{ strokeDasharray: 11, strokeDashoffset: paso >= 4 ? 0 : 11, transition: "stroke-dashoffset 700ms cubic-bezier(0.22,0.61,0.36,1) 500ms" }} />
+                <path d="M53 26.5 A11.5 11.5 0 1 0 53 38.5" style={{ strokeDasharray: 58, strokeDashoffset: paso >= 4 ? 0 : 58, transition: "stroke-dashoffset 1200ms cubic-bezier(0.22,0.61,0.36,1) 260ms" }} />
+              </g>
+              <circle
+                cx="23.5" cy="20" r="3.4" fill={t.accent}
+                style={{
+                  opacity: paso >= 5 ? 1 : 0,
+                  transformOrigin: "23.5px 20px",
+                  transform: paso >= 5 ? "scale(1)" : "scale(0)",
+                  transition: "opacity 400ms ease, transform 600ms cubic-bezier(0.34,1.56,0.64,1)",
+                }}
+              />
+            </svg>
+          </div>
+
+          {/* La frase de intencion, revelada por linea */}
+          <div
+            className="mt-9"
             style={{
               fontFamily: DISPLAY,
-              fontSize: "clamp(3rem, 13vw, 11rem)",
-              fontWeight: 500,
-              lineHeight: 0.84,
-              letterSpacing: "-0.05em",
+              fontSize: "clamp(1.5rem, 4.6vw, 3.4rem)",
+              fontWeight: 400,
+              lineHeight: 1.08,
+              letterSpacing: "-0.035em",
               color: t.text,
+              maxWidth: "20ch",
             }}
           >
-            <LineaCartel activo={paso >= 4} retardo={0}>Alexys</LineaCartel>
-            <LineaCartel activo={paso >= 4} retardo={110}>
-              <span style={{ color: t.accent }}>Cavero</span>
+            <LineaCartel activo={paso >= 5} retardo={0}>Automatizo</LineaCartel>
+            <LineaCartel activo={paso >= 5} retardo={100}>lo que hoy alguien</LineaCartel>
+            <LineaCartel activo={paso >= 5} retardo={200}>
+              <span style={{ color: t.accent, fontStyle: "italic" }}>hace a mano.</span>
             </LineaCartel>
-          </h1>
-
-          {/* Rol */}
-          <div
-            className="mt-7 flex items-center gap-4"
-            style={{
-              opacity: paso >= 5 ? 1 : 0,
-              transform: paso >= 5 ? "translateY(0)" : "translateY(12px)",
-              transition: "opacity 800ms ease, transform 800ms cubic-bezier(0.22,0.61,0.36,1)",
-            }}
-          >
-            <span className="h-px shrink-0" style={{ width: 44, background: t.accent }} />
-            <span
-              style={{
-                fontFamily: MONO,
-                fontSize: "clamp(0.7rem, 1.5vw, 0.9rem)",
-                letterSpacing: "0.24em",
-                color: t.muted,
-                textTransform: "uppercase",
-              }}
-            >
-              Ingeniero de IA &amp; Automatización
-            </span>
           </div>
         </div>
 

@@ -184,6 +184,52 @@ export default function EstilosGlobales({ t = TEMA }) {
       }
       .fila-proyecto:hover .mini-proyecto img { transform: scale(1.04); }
 
+      /* ---------- ENTRADA AL DETALLE DE PROYECTO ----------
+         Al abrir un proyecto la pagina entra con un fundido y la
+         portada hace un zoom lento: la transicion sostiene la
+         sensacion de "entrar" en el caso, no de saltar a otra pagina. */
+      .detalle-entra { animation: detalleEntra 620ms var(--ease) both; }
+      @keyframes detalleEntra {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .portada-detalle img { animation: portadaZoom 2600ms var(--ease-suave) both; }
+      @keyframes portadaZoom {
+        from { transform: scale(1.07); }
+        to   { transform: scale(1); }
+      }
+
+      /* ---------- TARJETAS DE "EN PROCESO" ---------- */
+      .tarjeta-proceso {
+        transition: border-color var(--t-ui) var(--ease),
+                    transform var(--t-ui) var(--ease),
+                    background var(--t-ui) var(--ease);
+      }
+      .tarjeta-proceso:hover {
+        border-color: ${t.border};
+        background: ${t.cardHover};
+        transform: translateY(-3px);
+      }
+
+      /* ---------- VISOR DE ALBUM DE MOMENTOS ---------- */
+      .visor-album { animation: aparecerVelo var(--t-ui) ease both; }
+      .visor-album-caja { animation: subirVisor var(--t-ui) var(--ease) both; }
+      .foto-album { animation: aparecerVelo 420ms ease both; }
+      .mini-album { transition: opacity var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease); }
+      .mini-album:hover { opacity: 1 !important; }
+
+      /* ---------- ARBOL DE CLAUDE: SKILLS Y MCP ---------- */
+      .rama-claude { transition: opacity var(--t-ui) var(--ease); }
+      .rama-claude:hover { opacity: 0.82; }
+      .tarjeta-skill {
+        transition: border-color var(--t-ui) var(--ease), transform var(--t-ui) var(--ease);
+      }
+      .tarjeta-skill:hover { border-color: ${t.border}; transform: translateY(-2px); }
+      .tarjeta-mcp {
+        transition: border-color var(--t-ui) var(--ease), background var(--t-ui) var(--ease);
+      }
+      .tarjeta-mcp:hover { border-color: ${t.border}; background: ${t.cardHover}; }
+
       /* ---------- SOBRE MI: pasos del metodo ----------
          El nodo del paso se tine de cobre y crece al entrar en pantalla. */
       .paso-metodo .nodo-paso { transition: transform var(--t-ui) var(--ease); }

@@ -5,7 +5,7 @@ import {
   Menu, X, MapPin, Layers, Database, Wrench, Maximize2,
   Sparkles, ExternalLink, FolderGit2, ArrowUp,
   Code2, Server, Settings2, BrainCircuit,
-  BarChart3, BookOpen, MessageSquare, Bot, Workflow,
+  BarChart3, BookOpen, MessageSquare, Bot, Workflow, Camera, Images, Hammer, Lightbulb,
   Mic, Heart,
 } from "lucide-react";
 
@@ -101,7 +101,8 @@ function Foto({ src, alt = "", gradiente = ["#14171C", "#1A1E24"], className = "
 
    Van embebidos y no por CDN a propósito: son las marcas centrales de
    mi trabajo y no pueden depender de que un servicio externo responda.
-   `currentColor` no se usa aquí — cada marca lleva su color oficial. */
+   Las que no existen en Simple Icons (Higgsfield, NotebookLM, Power BI)
+   se dibujan aquí con su forma e identidad propias. */
 const LOGOS_SVG = {
   // OpenAI / GPT — nudo hexagonal oficial
   openai: ({ size = 22, color = "#FFFFFF" }) => (
@@ -119,6 +120,50 @@ const LOGOS_SVG = {
   n8n: ({ size = 22, color = "#EA4B71" }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
       <path d="M21.4737 6.3158c-1.1954 0-2.2019.8082-2.5017 1.9079h-2.9772c-1.2432 0-2.2937.9153-2.4708 2.1458l-.1263.8768c-.0886.6152-.6138 1.0729-1.2354 1.0729h-.4041c-.3-1.0997-1.3063-1.9079-2.5018-1.9079-1.1954 0-2.2018.8082-2.5017 1.9079H4.1075c-.3-1.0997-1.3063-1.9079-2.5017-1.9079C.7189 10.4113 0 11.1302 0 12.0171c0 .8868.7189 1.6058 1.6058 1.6058 1.1954 0 2.2018-.8083 2.5017-1.9079h2.6472c.2999 1.0996 1.3063 1.9079 2.5017 1.9079 1.1955 0 2.2018-.8083 2.5018-1.9079h.4041c1.2432 0 2.2937-.9153 2.4708-2.1458l.1263-.8768c.0886-.6152.6138-1.0729 1.2354-1.0729h2.9772c.2998 1.0997 1.3063 1.9079 2.5017 1.9079C22.3605 9.5273 23.0794 8.8084 23.0794 7.9216c0-.8869-.7189-1.6058-1.6057-1.6058Z" />
+    </svg>
+  ),
+  // Higgsfield — dibujado aquí: no existe en Simple Icons.
+  // Un campo de partículas convergiendo a un núcleo: la idea de
+  // "campo" del nombre, legible a 16px.
+  higgsfield: ({ size = 22, color = "#22D3EE" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden focusable="false">
+      <g stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round">
+        <ellipse cx="12" cy="12" rx="10" ry="4.6" />
+        <ellipse cx="12" cy="12" rx="10" ry="4.6" transform="rotate(60 12 12)" />
+        <ellipse cx="12" cy="12" rx="10" ry="4.6" transform="rotate(120 12 12)" />
+      </g>
+      <circle cx="12" cy="12" r="3" fill={color} />
+    </svg>
+  ),
+  // Perplexity — isotipo oficial
+  perplexity: ({ size = 22, color = "#1FB8CD" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
+      <path d="M22.3977 7.0896h-2.3106V.0676l-7.5094 6.3542V.1577h-1.1554v6.1966L4.4904.6104v6.4792H1.6023v10.4342h2.8882V24l6.9318-6.3982v6.2805h1.1554v-6.2374L19.4728 24v-6.4861h2.9249V7.0896zm-4.4485-4.5333v4.5333h-5.3987l5.3987-4.5333zM6.4851 3.1651l5.0674 4.2935H6.4851V3.1651zm-3.7291 5.0674H11.0464l-7.1633 6.8081-.3216.3057-.0055-7.1138zm2.8882 12.7045v-4.5333h5.3987l-5.3987 4.5333zm3.7291-5.0674l-5.0674-4.2935h5.0674v4.2935zm3.7291 0v-4.2935h5.0674l-5.0674 4.2935zm4.5837 5.0674l-5.3987-4.5333h5.3987v4.5333zm2.9249-5.6363h-.0055l-.3216-.3057-7.1633-6.8081h8.2932l-.0055 7.1138z" />
+    </svg>
+  ),
+  // NotebookLM — dibujado aquí: no existe en Simple Icons.
+  // Cuaderno con anillas y una chispa: documento + modelo.
+  googlenotebooklm: ({ size = 22, color = "#4285F4" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden focusable="false">
+      <rect x="4.5" y="3" width="15" height="18" rx="2.2" fill="none" stroke={color} strokeWidth="1.6" />
+      <path d="M8.5 3v18" stroke={color} strokeWidth="1.4" opacity="0.55" />
+      <path d="M11.6 8.2h5M11.6 11.4h5M11.6 14.6h3" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M17.4 16.2l.62 1.52 1.52.62-1.52.62-.62 1.52-.62-1.52-1.52-.62 1.52-.62z" fill={color} />
+    </svg>
+  ),
+  // Power BI — dibujado aquí: el logo oficial no está en Simple Icons.
+  // Tres barras crecientes, la lectura inmediata de "BI".
+  powerbi: ({ size = 22, color = "#F2C811" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden focusable="false">
+      <rect x="3.2" y="13.4" width="4.4" height="7.4" rx="1.1" fill={color} opacity="0.55" />
+      <rect x="9.8" y="8.6" width="4.4" height="12.2" rx="1.1" fill={color} opacity="0.8" />
+      <rect x="16.4" y="3.2" width="4.4" height="17.6" rx="1.1" fill={color} />
+    </svg>
+  ),
+  // Meta — isotipo oficial
+  meta: ({ size = 22, color = "#0467DF" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
+      <path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.848-2.122.848-3.583 0-2.558-.694-5.315-2.087-7.376-1.26-1.856-2.923-2.956-4.816-2.956-1.023 0-2.02.377-2.988 1.024-.596.398-1.14.898-1.63 1.452-.293-.331-.593-.633-.902-.904-1.28-1.122-2.68-1.719-4.123-1.719zm10.161 2.858c1.201 0 2.228.666 3.05 1.87 1.025 1.502 1.626 3.81 1.626 6.106 0 .79-.088 1.415-.253 1.887-.164.47-.404.79-.716.955a1.47 1.47 0 0 1-.69.15c-.51 0-.972-.16-1.494-.702-.4-.416-.883-1.078-1.55-2.146l-1.68-2.802c-.21-.354-.428-.72-.65-1.096.36-.55.706-1.03 1.043-1.436.727-.877 1.397-1.34 2.14-1.34l-.926-1.446zm-10.16.05c.72 0 1.463.32 2.25 1.01.4.35.81.78 1.226 1.28-.55.815-1.116 1.75-1.71 2.79l-.755 1.337c-1.3 2.3-1.66 2.87-2.22 3.615-.89 1.18-1.42 1.42-2.03 1.42-.79 0-1.31-.34-1.63-.87-.24-.4-.38-.93-.38-1.6 0-2.06.58-4.41 1.6-6.02.86-1.35 1.9-1.96 2.83-1.96l.85-.002z" />
     </svg>
   ),
 };
@@ -345,6 +390,7 @@ const SECCIONES = [
   { id: "tecnologias", label: "Tecnologías" },
   { id: "certificados", label: "Certificados" },
   { id: "proyectos", label: "Proyectos" },
+  { id: "en-proceso", label: "En proceso" },
   { id: "galeria", label: "Momentos" },
   { id: "contacto", label: "Contacto" },
 ];
@@ -672,31 +718,27 @@ function SobreMi({ t }) {
    TECNOLOGÍAS — logos reales con nombre y propósito
    ============================================================ */
 
-const ICONOS_CAT = { monitor: Code2, layers: Server, database: Database, wrench: Settings2, sparkles: BrainCircuit, settings: Workflow };
+const ICONOS_CAT = { monitor: Code2, layers: Server, database: Database, wrench: Settings2, sparkles: BrainCircuit, settings: Workflow, bot: Bot };
 
-/* Rama del árbol de Claude — Skills, MCP o Agentes.
-   Cada rama abre sus propios ejemplos. El conector en L a la
-   izquierda deja claro que cuelga de la raíz, como un árbol de
-   archivos: la jerarquía se ve, no hay que explicarla. */
+/* Rama del árbol de Claude — Skills o MCP.
+   Cada rama tiene su propia forma de mostrar los hijos: Skills usa
+   tarjetas anchas con explicación larga (son tres y cada una merece
+   espacio); MCP usa una rejilla de logos (son muchos y lo que importa
+   es reconocerlos de un vistazo). */
 function RamaClaude({ t, rama, abierta, onToggle, ultima }) {
   return (
     <div className="relative">
-      {/* Tronco vertical: llega hasta el centro de esta rama si es la
-          última, o sigue de largo si vienen más abajo. */}
+      {/* Tronco vertical del árbol */}
       <span
         aria-hidden
         className="absolute left-0 top-0"
-        style={{
-          width: 1,
-          height: ultima ? 22 : "100%",
-          background: t.border,
-        }}
+        style={{ width: 1, height: ultima ? 24 : "100%", background: t.border }}
       />
-      {/* Codo horizontal hacia el nombre de la rama */}
+      {/* Codo hacia el nombre de la rama */}
       <span
         aria-hidden
         className="absolute"
-        style={{ left: 0, top: 22, width: 18, height: 1, background: t.border }}
+        style={{ left: 0, top: 24, width: 20, height: 1, background: t.border }}
       />
 
       <div className="pl-7">
@@ -704,29 +746,22 @@ function RamaClaude({ t, rama, abierta, onToggle, ultima }) {
           type="button"
           onClick={onToggle}
           aria-expanded={abierta}
-          className="rama-claude w-full text-left py-3.5 flex items-baseline gap-3"
+          className="rama-claude w-full text-left py-4 flex items-baseline gap-3"
         >
           <span
             className="shrink-0"
             style={{
-              fontFamily: MONO,
-              fontSize: 13,
-              fontWeight: 500,
+              fontFamily: MONO, fontSize: 13.5, fontWeight: 600,
               color: abierta ? t.accentText : t.text,
-              letterSpacing: "0.02em",
-              transition: "color 240ms",
+              letterSpacing: "0.04em", transition: "color 240ms",
             }}
           >
             {rama.nombre}
           </span>
-          <span
-            className="shrink-0"
-            style={{ fontFamily: MONO, fontSize: 10, color: t.faint }}
-          >
+          <span className="shrink-0" style={{ fontFamily: MONO, fontSize: 10, color: t.faint }}>
             {String(rama.hijos.length).padStart(2, "0")}
           </span>
           <span className="h-px flex-1" style={{ background: t.borderSoft }} />
-          {/* Indicador +/− */}
           <span className="shrink-0 relative" style={{ width: 11, height: 11, color: t.muted }} aria-hidden>
             <span className="absolute" style={{ top: 5, left: 0, width: 11, height: 1, background: "currentColor" }} />
             <span
@@ -740,58 +775,117 @@ function RamaClaude({ t, rama, abierta, onToggle, ultima }) {
           </span>
         </button>
 
-        {/* Resumen de la rama: siempre visible, explica para qué sirve */}
         <p
-          className="pb-3 leading-relaxed"
-          style={{ color: t.muted, fontSize: 13.5, maxWidth: "64ch", textWrap: "pretty" }}
+          className="pb-4 leading-relaxed"
+          style={{ color: t.muted, fontSize: 14, maxWidth: "66ch", textWrap: "pretty" }}
         >
           {rama.resumen}
         </p>
 
-        {/* Hijos: se despliegan */}
         <div className="grid transition-all duration-300 ease-out" style={{ gridTemplateRows: abierta ? "1fr" : "0fr" }}>
           <div className="overflow-hidden">
-            <div className="pb-5 grid sm:grid-cols-2 gap-x-8 gap-y-3.5">
-              {rama.hijos.map((h) => (
-                <div key={h.nombre} className="flex items-start gap-2.5">
-                  <span
-                    aria-hidden
-                    className="shrink-0 mt-[0.55rem]"
+            {rama.clave === "skills" ? (
+              /* ---- SKILLS: tres tarjetas con espacio para explicarse ---- */
+              <div className="pb-6 grid md:grid-cols-3 gap-3.5">
+                {rama.hijos.map((h, i) => (
+                  <div
+                    key={h.nombre}
+                    className="tarjeta-skill p-5 flex flex-col"
                     style={{
-                      width: 4, height: 4, borderRadius: "50%",
-                      background: h.destacado ? t.accent : t.faint,
+                      background: t.surface,
+                      border: `1px solid ${t.borderSoft}`,
+                      borderRadius: 12,
+                      borderTop: `2px solid ${t.accent}`,
                     }}
-                  />
-                  <div className="min-w-0">
-                    <div className="flex items-baseline gap-2 flex-wrap">
-                      <span
-                        style={{
-                          fontSize: 13.5,
-                          fontWeight: 600,
-                          color: h.destacado ? t.accentText : t.text,
-                          letterSpacing: "-0.01em",
-                        }}
-                      >
-                        {h.nombre}
-                      </span>
-                      {h.destacado && (
-                        <span
-                          style={{
-                            fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.16em",
-                            color: t.accentText, textTransform: "uppercase",
-                          }}
-                        >
-                          Principal
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-0.5 leading-snug" style={{ color: t.muted, fontSize: 13 }}>
+                  >
+                    <span
+                      className="mb-3"
+                      style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.accentText }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h4
+                      className="mb-2.5"
+                      style={{
+                        fontFamily: DISPLAY, color: t.text, fontSize: "1.1rem",
+                        fontWeight: 500, letterSpacing: "-0.02em", lineHeight: 1.2,
+                        textWrap: "balance",
+                      }}
+                    >
+                      {h.nombre}
+                    </h4>
+                    <p
+                      className="leading-relaxed"
+                      style={{ color: t.muted, fontSize: 13.5, textWrap: "pretty" }}
+                    >
                       {h.detalle}
-                    </div>
+                    </p>
                   </div>
+                ))}
+              </div>
+            ) : (
+              /* ---- MCP: rejilla de conexiones con su logo ----
+                 Lo que importa es reconocer las aplicaciones de un
+                 vistazo, así que el logo va primero y grande. */
+              <div className="pb-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {rama.hijos.map((h) => (
+                    <div
+                      key={h.nombre}
+                      className="tarjeta-mcp p-4 flex items-start gap-3.5"
+                      style={{
+                        background: h.destacado ? t.accentSoft : t.surface,
+                        border: `1px solid ${h.destacado ? t.accentBorder : t.borderSoft}`,
+                        borderRadius: 12,
+                      }}
+                    >
+                      <span className="shrink-0 mt-0.5">
+                        <IconoTech t={t} slug={h.slug} color={h.color} nombre={h.nombre} tam={20} />
+                      </span>
+                      <div className="min-w-0">
+                        <div className="flex items-baseline gap-2 flex-wrap">
+                          <span
+                            style={{
+                              fontSize: 14, fontWeight: 600,
+                              color: h.destacado ? t.accentText : t.text,
+                              letterSpacing: "-0.01em",
+                            }}
+                          >
+                            {h.nombre}
+                          </span>
+                          {h.destacado && (
+                            <span
+                              style={{
+                                fontFamily: MONO, fontSize: 8.5, letterSpacing: "0.16em",
+                                color: t.accentText, textTransform: "uppercase",
+                              }}
+                            >
+                              Principal
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-1 leading-snug" style={{ color: t.muted, fontSize: 13 }}>
+                          {h.detalle}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+
+                {/* Nota de cierre: el protocolo es abierto */}
+                {rama.nota && (
+                  <p
+                    className="mt-4 pl-4 leading-relaxed"
+                    style={{
+                      borderLeft: `2px solid ${t.accent2Border}`,
+                      color: t.muted, fontSize: 13.5, maxWidth: "70ch", textWrap: "pretty",
+                    }}
+                  >
+                    {rama.nota}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -799,26 +893,26 @@ function RamaClaude({ t, rama, abierta, onToggle, ultima }) {
   );
 }
 
-/* Árbol completo: Claude arriba como raíz, tres ramas debajo. */
+/* Árbol completo: Claude arriba como raíz, sus ramas debajo. */
 function ArbolClaude({ t, cat }) {
   const [abierta, setAbierta] = useState("skills");
   return (
     <div className="pb-8 pl-0 md:pl-[3.9rem]">
       {/* Raíz */}
-      <div className="flex items-start gap-3 pb-2">
-        <IconoTech t={t} slug={cat.raiz.slug} color={cat.raiz.color} nombre={cat.raiz.nombre} tam={20} />
+      <div className="flex items-start gap-3.5 pb-2">
+        <IconoTech t={t} slug={cat.raiz.slug} color={cat.raiz.color} nombre={cat.raiz.nombre} tam={22} />
         <div className="min-w-0">
-          <div style={{ fontSize: 15, fontWeight: 600, color: t.text, letterSpacing: "-0.01em" }}>
+          <div style={{ fontSize: 15.5, fontWeight: 600, color: t.text, letterSpacing: "-0.01em" }}>
             {cat.raiz.nombre}
           </div>
-          <div className="mt-0.5 leading-snug" style={{ color: t.muted, fontSize: 13.5, maxWidth: "60ch" }}>
+          <div className="mt-1 leading-snug" style={{ color: t.muted, fontSize: 14, maxWidth: "62ch" }}>
             {cat.raiz.detalle}
           </div>
         </div>
       </div>
 
       {/* Ramas */}
-      <div className="mt-2 ml-[0.6rem]">
+      <div className="mt-3 ml-[0.65rem]">
         {cat.ramas.map((rama, i) => (
           <RamaClaude
             key={rama.clave}
@@ -831,18 +925,26 @@ function ArbolClaude({ t, cat }) {
         ))}
       </div>
 
-      {/* Tecnologías sueltas de la categoría, bajo el árbol */}
+      {/* Motores de ejecución, bajo el árbol */}
       {cat.items?.length > 0 && (
-        <div className="mt-7 pt-5 grid sm:grid-cols-2 gap-x-10 gap-y-5" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
-          {cat.items.map((item) => (
-            <div key={item.nombre} className="flex items-start gap-3">
-              <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={18} />
-              <div className="min-w-0">
-                <div className="font-semibold text-sm" style={{ color: t.text }}>{item.nombre}</div>
-                <div className="text-sm leading-snug mt-0.5" style={{ color: t.muted }}>{item.detalle}</div>
+        <div className="mt-8 pt-5" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+          <span
+            className="block mb-4"
+            style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.faint, textTransform: "uppercase" }}
+          >
+            Motores de ejecución
+          </span>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-5">
+            {cat.items.map((item) => (
+              <div key={item.nombre} className="flex items-start gap-3">
+                <IconoTech t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={18} />
+                <div className="min-w-0">
+                  <div className="font-semibold text-sm" style={{ color: t.text }}>{item.nombre}</div>
+                  <div className="text-sm leading-snug mt-0.5" style={{ color: t.muted }}>{item.detalle}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -1781,17 +1883,20 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
   const tipo = (CATEGORIAS.find((c) => c.id === p.categoria) || {}).label || p.categoria;
 
   return (
-    <main className="pb-24">
+    <main className="pb-24 detalle-entra">
       {/* ---------- PORTADA A SANGRE ----------
           La captura ocupa el ancho completo, a color, y el titular se
           apoya sobre ella. Es lo primero que se ve del proyecto. */}
       <header className="relative overflow-hidden" style={{ minHeight: "64svh" }}>
+        {/* La portada es OBLIGATORIA y es la misma imagen de la
+            miniatura del listado: al abrir el proyecto, la foto que
+            el visitante acaba de pulsar crece y llena la pantalla. */}
         <Foto
           src={p.imagen}
           alt={`Captura de ${p.nombre}`}
           gradiente={p.gradiente}
           tinte={false}
-          className="absolute inset-0 w-full h-full"
+          className="portada-detalle absolute inset-0 w-full h-full"
         />
         {/* Único velo: degradado desde abajo para que el texto se lea.
             Sin tintes de color encima de la captura. */}
@@ -2011,20 +2116,24 @@ const ICONO_MOMENTO = {
 function MomentoPolaroid({ t, m, idx, onAbrir }) {
   const alturas = { alto: "h-64 sm:h-72", medio: "h-52 sm:h-60", bajo: "h-40 sm:h-48" };
   const rot = (idx * 41) % 5 - 2.5;                 // rotación estable -2.5° a 2.5°
-  const tieneFoto = Boolean(m.foto);
+  const tieneFoto = Boolean(m.portada);
   const info = ICONO_MOMENTO[m.categoria] || ICONO_MOMENTO.personal;
   const colorIcono = t[info.color];
+  // Cuantas fotos tiene el album (portada incluida)
+  const nFotos = (m.portada ? 1 : 0) + (m.album || []).filter((f) => f.foto).length;
+  // Se puede abrir si hay algo que ver o que leer
+  const abrible = nFotos > 0 || Boolean(m.relato) || (m.album || []).length > 0;
 
   return (
     <div className="mb-5" style={{ breakInside: "avoid" }}>
       <button
         type="button"
-        onClick={() => tieneFoto && onAbrir(m)}
+        onClick={() => abrible && onAbrir(m)}
         className="momento-polaroid group relative w-full block text-left rounded-xl"
         style={{
           background: "#F4F1EA", padding: "10px 10px 14px",
           boxShadow: t.shadowMd, transform: `rotate(${rot}deg)`,
-          border: "1px solid rgba(0,0,0,0.08)", cursor: tieneFoto ? "pointer" : "default",
+          border: "1px solid rgba(0,0,0,0.08)", cursor: abrible ? "pointer" : "default",
         }}
       >
         {/* Chincheta */}
@@ -2037,13 +2146,27 @@ function MomentoPolaroid({ t, m, idx, onAbrir }) {
         {/* Foto o placeholder */}
         <div className={`relative rounded-md overflow-hidden ${alturas[m.alto] || alturas.medio}`}>
           {tieneFoto ? (
-            <Foto src={m.foto} alt={m.titulo} tinte={false} className="w-full h-full">
+            <Foto src={m.portada} alt={m.titulo} tinte={false} className="w-full h-full">
               <span
                 className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{ background: "rgba(7,9,13,0.55)", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", backdropFilter: "blur(4px)" }}
               >
                 <ArrowUp size={14} className="rotate-45" />
               </span>
+              {/* Cuantas fotos hay detras de la portada */}
+              {nFotos > 1 && (
+                <span
+                  className="absolute bottom-2 left-2 inline-flex items-center gap-1.5 px-2 py-1"
+                  style={{
+                    background: "rgba(7,9,13,0.68)", border: "1px solid rgba(255,255,255,0.22)",
+                    borderRadius: 6, color: "#fff", backdropFilter: "blur(4px)",
+                    fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.1em",
+                  }}
+                >
+                  <Images size={11} />
+                  {nFotos}
+                </span>
+              )}
             </Foto>
           ) : (
             // Placeholder elegante (sin foto aún)
@@ -2058,7 +2181,7 @@ function MomentoPolaroid({ t, m, idx, onAbrir }) {
                 <info.Icono size={20} />
               </span>
               <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", color: t.faint }}>
-                PRÓXIMAMENTE
+                {abrible ? "VER MOMENTO" : "PRÓXIMAMENTE"}
               </span>
             </div>
           )}
@@ -2127,7 +2250,7 @@ function Galeria({ t }) {
       <div className="max-w-5xl mx-auto">
         <CabeceraSeccion
           t={t}
-          num="05"
+          num="06"
           eyebrow="Mi panel"
           titulo="El muro de mis momentos"
           descripcion="Como programador y como persona: trabajo, formación, enseñanza, voluntariado y los momentos detrás del código. Este muro sigue creciendo."
@@ -2242,34 +2365,317 @@ function Galeria({ t }) {
         </p>
       </div>
 
-      {/* Visor de foto (lightbox) — solo para momentos con foto */}
+      {/* Visor de álbum: portada + el resto de fotos del momento.
+          Un momento no se cuenta con una sola foto: la portada lo
+          representa en el muro y aquí se abre completo. */}
       {activa && (
-        <div
-          className="fixed inset-0 flex items-center justify-center p-5"
-          style={{ zIndex: 90, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(6px)" }}
-          onClick={() => setActiva(null)}
-        >
-          <div
-            className="relative w-full max-w-3xl rounded-2xl overflow-hidden modal-entrada"
-            style={{ border: `1px solid ${t.border}`, boxShadow: t.shadowLg }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Foto src={activa.foto} alt={activa.titulo} tinte={false} className="max-h-[78vh] w-full" style={{ minHeight: 300 }}>
-              <button
-                type="button" aria-label="Cerrar" onClick={() => setActiva(null)}
-                className="absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center"
-                style={{ background: "rgba(7,9,13,0.65)", border: `1px solid ${t.border}`, color: "#fff" }}
-              >
-                <X size={16} />
-              </button>
-              <div className="absolute inset-x-0 bottom-0 p-5" style={{ background: "linear-gradient(transparent, rgba(7,9,13,0.92))" }}>
-                <h3 className="font-bold text-lg" style={{ color: "#fff" }}>{activa.titulo}</h3>
-                <p style={{ fontFamily: MONO, fontSize: 12, color: "rgba(255,255,255,0.82)" }}>{activa.lugar} · {activa.fecha}</p>
-              </div>
-            </Foto>
-          </div>
-        </div>
+        <VisorAlbum t={t} momento={activa} onCerrar={() => setActiva(null)} />
       )}
+    </section>
+  );
+}
+
+/* Visor de álbum. Navega entre las fotos del momento con las flechas
+   del teclado y cierra con Escape. Si el momento aún no tiene álbum
+   cargado, muestra la portada y lo dice sin rodeos. */
+function VisorAlbum({ t, momento, onCerrar }) {
+  // La portada es la primera foto del álbum; el resto va detrás.
+  const fotos = [
+    ...(momento.portada ? [{ foto: momento.portada, pie: momento.titulo }] : []),
+    ...(momento.album || []).filter((f) => f.foto),
+  ];
+  const pendientes = (momento.album || []).filter((f) => !f.foto).length;
+  const [idx, setIdx] = useState(0);
+  const total = fotos.length;
+
+  const mover = React.useCallback(
+    (paso) => setIdx((i) => (total ? (i + paso + total) % total : 0)),
+    [total]
+  );
+
+  useEffect(() => {
+    const alTecla = (e) => {
+      if (e.key === "Escape") onCerrar();
+      if (e.key === "ArrowRight") mover(1);
+      if (e.key === "ArrowLeft") mover(-1);
+    };
+    window.addEventListener("keydown", alTecla);
+    const previo = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", alTecla);
+      document.body.style.overflow = previo;
+    };
+  }, [onCerrar, mover]);
+
+  const actual = fotos[idx];
+
+  return (
+    <div
+      className="visor-album fixed inset-0 flex items-center justify-center p-4 md:p-8"
+      style={{ zIndex: CAPA.modal, background: "rgba(6,7,9,0.92)", backdropFilter: "blur(10px)" }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Álbum: ${momento.titulo}`}
+      onClick={onCerrar}
+    >
+      <div
+        className="visor-album-caja relative w-full max-w-5xl max-h-full overflow-y-auto"
+        style={{ background: t.bgAlt, border: `1px solid ${t.border}`, borderRadius: 16 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onCerrar}
+          aria-label="Cerrar"
+          className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center z-10"
+          style={{ background: t.surface2, border: `1px solid ${t.border}`, borderRadius: 8, color: t.text }}
+        >
+          <X size={16} />
+        </button>
+
+        {/* Foto grande */}
+        <div
+          className="relative flex items-center justify-center"
+          style={{ background: t.bg, minHeight: "18rem", borderBottom: `1px solid ${t.borderSoft}` }}
+        >
+          {actual ? (
+            <img
+              key={idx}
+              src={actual.foto}
+              alt={actual.pie || momento.titulo}
+              className="foto-album max-w-full"
+              style={{ maxHeight: "60vh", objectFit: "contain" }}
+            />
+          ) : (
+            /* Sin fotos todavía: marco honesto, no un hueco roto */
+            <div className="flex flex-col items-center gap-3 py-16">
+              <span
+                className="flex items-center justify-center"
+                style={{ width: 54, height: 54, borderRadius: 14, background: t.surface, border: `1px solid ${t.border}`, color: t.faint }}
+              >
+                <Camera size={22} />
+              </span>
+              <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}>
+                Fotos en camino
+              </span>
+            </div>
+          )}
+
+          {/* Flechas sobre la foto */}
+          {total > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label="Foto anterior"
+                onClick={() => mover(-1)}
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center"
+                style={{ background: "rgba(10,11,13,0.72)", border: `1px solid ${t.border}`, borderRadius: 10, color: t.text, backdropFilter: "blur(6px)" }}
+              >
+                <ArrowLeft size={16} />
+              </button>
+              <button
+                type="button"
+                aria-label="Foto siguiente"
+                onClick={() => mover(1)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center"
+                style={{ background: "rgba(10,11,13,0.72)", border: `1px solid ${t.border}`, borderRadius: 10, color: t.text, backdropFilter: "blur(6px)" }}
+              >
+                <ArrowRight size={16} />
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Ficha del momento */}
+        <div className="p-5 md:p-7">
+          <div className="flex items-start justify-between gap-5 flex-wrap">
+            <div className="min-w-0">
+              <h3
+                style={{ fontFamily: DISPLAY, color: t.text, fontSize: "clamp(1.3rem, 3vw, 1.85rem)", fontWeight: 500, letterSpacing: "-0.025em", lineHeight: 1.15, textWrap: "balance" }}
+              >
+                {momento.titulo}
+              </h3>
+              <p className="mt-1.5" style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.08em", color: t.accentText }}>
+                {momento.lugar} · {momento.fecha}
+              </p>
+            </div>
+            {total > 0 && (
+              <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint, letterSpacing: "0.1em" }}>
+                {String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+              </span>
+            )}
+          </div>
+
+          {momento.relato && (
+            <p
+              className="mt-5 leading-relaxed"
+              style={{ color: t.muted, fontSize: 15, maxWidth: "64ch", textWrap: "pretty" }}
+            >
+              {momento.relato}
+            </p>
+          )}
+
+          {/* Pie de la foto actual */}
+          {actual?.pie && (
+            <p
+              className="mt-5 pl-4"
+              style={{ borderLeft: `2px solid ${t.accent}`, color: t.text, fontSize: 14 }}
+            >
+              {actual.pie}
+            </p>
+          )}
+
+          {/* Tiras de miniaturas para saltar entre fotos */}
+          {total > 1 && (
+            <div className="mt-6 flex gap-2.5 flex-wrap">
+              {fotos.map((f, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setIdx(i)}
+                  aria-label={`Ver foto ${i + 1}`}
+                  className="mini-album overflow-hidden shrink-0"
+                  style={{
+                    width: 66, height: 46, borderRadius: 7,
+                    border: `1px solid ${i === idx ? t.accent : t.borderSoft}`,
+                    opacity: i === idx ? 1 : 0.55,
+                  }}
+                >
+                  <img src={f.foto} alt="" className="w-full h-full object-cover" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Fotos declaradas sin ruta: se avisa, no se esconde */}
+          {pendientes > 0 && (
+            <p className="mt-5" style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.08em", color: t.faint }}>
+              {String(pendientes).padStart(2, "0")} FOTO{pendientes > 1 ? "S" : ""} MÁS DE ESTE MOMENTO, POR SUBIR
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   EN PROCESO — la pizarra de lo que viene
+
+   Lo que estoy construyendo, estudiando o explorando. Sin fechas
+   prometidas: es una pizarra honesta, no una hoja de ruta.
+
+   El estado de cada cosa se lee de un vistazo por su color:
+     construyendo → cobre, ya hay avance real
+     estudiando   → cian, formación en curso
+     explorando   → gris, idea con criterio sin empezar
+   ============================================================ */
+
+const ESTADOS_PROCESO = {
+  construyendo: { label: "Construyendo", color: "accent", icono: Hammer },
+  estudiando: { label: "Estudiando", color: "accent2", icono: BookOpen },
+  explorando: { label: "Explorando", color: "faint", icono: Lightbulb },
+};
+
+function TarjetaProceso({ t, item, indice }) {
+  const est = ESTADOS_PROCESO[item.estado] || ESTADOS_PROCESO.explorando;
+  const color = t[`${est.color}Text`] || t[est.color] || t.muted;
+  const borde = est.color === "accent" ? t.accentBorder : est.color === "accent2" ? t.accent2Border : t.border;
+  const Icono = est.icono;
+
+  return (
+    <Reveal delay={indice * 80}>
+      <article
+        className="tarjeta-proceso h-full flex flex-col p-5 md:p-6"
+        style={{
+          background: t.card,
+          border: `1px solid ${t.borderSoft}`,
+          borderRadius: 14,
+          borderLeft: `2px solid ${borde}`,
+        }}
+      >
+        {/* Estado */}
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <span className="inline-flex items-center gap-2">
+            <Icono size={13} style={{ color }} />
+            <span
+              style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.18em", color, textTransform: "uppercase" }}
+            >
+              {est.label}
+            </span>
+          </span>
+          <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em", color: t.faint, textTransform: "uppercase" }}>
+            {item.etiqueta}
+          </span>
+        </div>
+
+        {/* Título */}
+        <h3
+          className="mb-3"
+          style={{
+            fontFamily: DISPLAY, color: t.text,
+            fontSize: "clamp(1.2rem, 2.4vw, 1.5rem)",
+            fontWeight: 500, letterSpacing: "-0.025em", lineHeight: 1.15,
+            textWrap: "balance",
+          }}
+        >
+          {item.titulo}
+        </h3>
+
+        {/* Qué es y por qué */}
+        <p
+          className="leading-relaxed flex-1"
+          style={{ color: t.muted, fontSize: 14.5, textWrap: "pretty" }}
+        >
+          {item.texto}
+        </p>
+
+        {/* Con qué */}
+        {item.pila?.length > 0 && (
+          <div className="mt-5 pt-4" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
+            <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint, letterSpacing: "0.04em" }}>
+              {item.pila.join("  ·  ")}
+            </span>
+          </div>
+        )}
+      </article>
+    </Reveal>
+  );
+}
+
+function EnProceso({ t }) {
+  const lista = DATOS.enProceso || [];
+  if (!lista.length) return null;
+
+  return (
+    <section id="en-proceso" className="relative py-20 md:py-28 px-5 md:px-8">
+      <SepSeccion t={t} />
+      <div className="max-w-6xl mx-auto">
+        <CabeceraSeccion
+          t={t}
+          num="05"
+          eyebrow="En proceso"
+          titulo="Lo que estoy construyendo ahora"
+          descripcion="Una pizarra abierta: proyectos en marcha, formación en curso e ideas que todavía no empiezan. Sin fechas prometidas."
+        />
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+          {lista.map((item, i) => (
+            <TarjetaProceso key={item.titulo} t={t} item={item} indice={i} />
+          ))}
+        </div>
+
+        <Reveal>
+          <p
+            className="mt-7 inline-flex items-center gap-2.5"
+            style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.06em", color: t.faint }}
+          >
+            <span className="punto-vivo w-1.5 h-1.5 rounded-full" style={{ background: t.ok }} />
+            ESTA PIZARRA CAMBIA. SI ALGO TE INTERESA, ESCRÍBEME.
+          </p>
+        </Reveal>
+      </div>
     </section>
   );
 }
@@ -2306,7 +2712,7 @@ function Contacto({ t }) {
           <div className="lg:col-span-7">
             <Reveal>
               <div className="flex items-center gap-3 mb-6">
-                <span style={{ fontFamily: MONO, fontSize: 11.5, color: t.accent, letterSpacing: "0.08em" }}>06</span>
+                <span style={{ fontFamily: MONO, fontSize: 11.5, color: t.accent, letterSpacing: "0.08em" }}>07</span>
                 <span className="h-px w-7" style={{ background: t.accent, opacity: 0.5 }} />
                 <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", color: t.faint, textTransform: "uppercase" }}>
                   Contacto
@@ -2474,6 +2880,7 @@ export default function App() {
     tecnologias: <Tecnologias t={t} />,
     certificados: <Certificados t={t} />,
     proyectos: <Proyectos t={t} abrir={abrirProyecto} />,
+    "en-proceso": <EnProceso t={t} />,
     galeria: <Galeria t={t} />,
     contacto: <Contacto t={t} />,
   };

@@ -47,10 +47,10 @@ export const DATOS = {
 
   sobreMi: {
     intro:
-      "Trabajo en la capa donde la inteligencia artificial deja de ser una demo y empieza a sostener un proceso real: agentes que atienden y resuelven, flujos que corren solos y modelos de lenguaje conectados a los datos del negocio. Junto a un compañero impulso Conecta Systems, marca propia bajo la que automatizamos procesos y entregamos sistemas a medida a clientes y negocios locales. Vengo del desarrollo web, y eso es una ventaja: no solo conecto el modelo, también construyo la interfaz por la que alguien lo usa sin manual.",
+      "Construyo sistemas donde la IA deja de ser una demo y sostiene un proceso real. Junto a un compañero llevo Conecta Systems, con la que automatizamos procesos y entregamos software a negocios locales.",
     // Lado humano: por qué la carrera y qué me mueve
     motivacion:
-      "Elegí Ingeniería de Sistemas porque me fascina convertir problemas reales en soluciones que funcionan. No me apasiona la tecnología por la tecnología: me apasiona ver cómo un sistema bien pensado le devuelve horas a una persona, ordena el caos de un negocio o acerca la IA a quien creía que no era para él.",
+      "Vengo del desarrollo web, y es una ventaja: no solo conecto el modelo, también construyo la interfaz por la que alguien lo usa sin manual. Lo que me mueve es ver un sistema devolverle horas a una persona.",
     // Frase/mentalidad personal
     lema: "Planifica como Monje, ejecuta como Ninja",
     lemaTexto:
@@ -83,71 +83,109 @@ export const DATOS = {
       items: [
         { nombre: "GPT / OpenAI", slug: "openai", color: "FFFFFF", detalle: "Razonamiento general y extracción estructurada: cuando necesito que un texto desordenado salga como datos limpios." },
         { nombre: "Gemini", slug: "googlegemini", color: "8E75FF", detalle: "Lo multimodal: procesamiento de imagen y documentos a escala, donde el volumen y el contexto largo mandan." },
-        { nombre: "Perplexity", lucide: "perplexity", detalle: "Investigación con fuentes citadas. Para lo que hay que verificar, no para lo que hay que redactar." },
-        { nombre: "NotebookLM", lucide: "notebooklm", detalle: "Síntesis sobre un corpus cerrado de documentación: lo uso para estudiar material técnico denso." },
-        { nombre: "Higgsfield", slug: "", color: "", detalle: "Generación de vídeo con IA para piezas audiovisuales y material de presentación." },
+        { nombre: "Perplexity", slug: "perplexity", color: "1FB8CD", detalle: "Investigación con fuentes citadas. Para lo que hay que verificar, no para lo que hay que redactar." },
+        { nombre: "NotebookLM", slug: "googlenotebooklm", color: "4285F4", detalle: "Síntesis sobre un corpus cerrado de documentación: lo uso para estudiar material técnico denso." },
+        { nombre: "Higgsfield", slug: "higgsfield", color: "22D3EE", detalle: "Generación de vídeo con IA para piezas audiovisuales y material de presentación." },
       ],
     },
     {
-      /* Esta categoría se despliega en árbol: Claude es la raíz y de
-         él salen tres ramas (Skills, MCP y Agentes), cada una con sus
-         propios ejemplos. La UI la dibuja `RamaClaude` en App.jsx. */
-      categoria: "Automatización y Agentes",
+      /* Esta categoría se despliega en árbol: Claude es la raíz y de él
+         salen dos ramas (Skills y MCP). Los Agentes tienen su propia
+         categoría porque son otra cosa: no una forma de usar Claude,
+         sino sistemas que ejecutan solos. La UI la dibuja `ArbolClaude`. */
+      categoria: "Automatizaciones y Workflows",
       icono: "settings",
-      descripcion: "Claude es la raíz. De ahí salen Skills, MCP y Agentes.",
+      descripcion: "Claude como raíz, n8n como motor de ejecución.",
       arbol: true,
       raiz: {
         nombre: "Claude",
         slug: "claude",
         color: "D97757",
-        detalle: "Mi herramienta central de trabajo. Todo lo que automatizo nace aquí y se ramifica en tres formas de usarlo.",
+        detalle: "Mi herramienta central de trabajo. Desde aquí construyo los procedimientos y las conexiones que hacen que todo lo demás se ejecute.",
       },
       ramas: [
         {
           nombre: "Skills",
           clave: "skills",
-          resumen: "Procedimientos propios que Claude carga cuando la tarea lo pide. En vez de repetir las mismas instrucciones en cada conversación, el conocimiento queda escrito una vez y se aplica solo.",
+          resumen: "Procedimientos que escribo una vez y Claude aplica siempre igual. Dejo de repetir instrucciones en cada conversación: el criterio queda documentado y versionado.",
           hijos: [
-            { nombre: "Diseño de interfaces", detalle: "Criterios de maquetación, tipografía y color aplicados igual en cada pantalla que construyo." },
-            { nombre: "Bases de datos", detalle: "Convenciones de modelado, nombres y consultas para que el esquema salga coherente desde el principio." },
-            { nombre: "Documentación técnica", detalle: "Genera manuales, READMEs y fichas de entrega con la misma estructura en todos los proyectos." },
-            { nombre: "Revisión de código", detalle: "Pasa el código por los mismos criterios de calidad antes de darlo por terminado." },
-            { nombre: "Propuestas y cotizaciones", detalle: "Arma documentos comerciales con el formato y el tono de la marca." },
+            {
+              nombre: "Diseño UI/UX",
+              detalle: "Mis criterios de maquetación, tipografía, color y espaciado escritos como reglas. Cada pantalla que construyo sale con la misma jerarquía visual, sin volver a decidir lo mismo desde cero.",
+            },
+            {
+              nombre: "Propuestas y cotizaciones",
+              detalle: "La estructura comercial de Conecta Systems: alcance, entregables, plazos y precio, con el tono de la marca. Lo que antes tomaba una tarde ahora sale listo para revisar.",
+            },
+            {
+              nombre: "Revisión de código",
+              detalle: "Una pasada de calidad antes de dar algo por terminado: errores de lógica, casos sin cubrir y simplificaciones. Es el filtro que me evita entregar deuda técnica.",
+            },
           ],
         },
         {
           nombre: "MCP",
           clave: "mcp",
-          resumen: "El protocolo que conecta a Claude con aplicaciones reales. Deja de ser un chat y pasa a operar las herramientas directamente: lee, escribe y ejecuta dentro de cada sistema.",
+          resumen: "El protocolo que conecta a Claude con aplicaciones reales. Deja de ser un chat y pasa a operar herramientas: lee, escribe y ejecuta dentro de cada sistema.",
           hijos: [
-            { nombre: "n8n", destacado: true, detalle: "La conexión principal. Claude dirige los flujos de automatización y n8n los ejecuta contra los sistemas del negocio." },
-            { nombre: "Higgsfield", detalle: "Generación de vídeo pedida desde el mismo flujo, sin salir a otra herramienta." },
-            { nombre: "Meta Ads", detalle: "Creación y seguimiento de campañas: lectura de métricas y análisis de resultados." },
-            { nombre: "Bases de datos", detalle: "Consultas directas sobre Supabase o SQL Server para responder con datos reales del negocio." },
-            { nombre: "Figma", detalle: "Lectura de diseños para pasarlos a código sin traducir a mano cada medida." },
-            { nombre: "Y lo que exponga un servidor MCP", detalle: "El protocolo es abierto: cualquier aplicación con un servidor MCP entra en el flujo, desde herramientas de diseño hasta motores de videojuego." },
+            { nombre: "n8n", slug: "n8n", color: "EA4B71", destacado: true, detalle: "La conexión principal. Claude dirige los flujos y n8n los ejecuta contra los sistemas del negocio." },
+            { nombre: "Higgsfield", slug: "higgsfield", color: "22D3EE", detalle: "Generación de vídeo pedida desde el mismo flujo, sin salir a otra herramienta." },
+            { nombre: "Meta Ads", slug: "meta", color: "0467DF", detalle: "Campañas: creación, seguimiento y lectura de métricas para analizar resultados." },
+            { nombre: "Supabase", slug: "supabase", color: "3FCF8E", detalle: "Consultas directas a la base para responder con datos reales del negocio." },
+            { nombre: "Figma", slug: "figma", color: "F24E1E", detalle: "Lectura de diseños para pasarlos a código sin traducir cada medida a mano." },
+            { nombre: "GitHub", slug: "github", color: "FFFFFF", detalle: "Repositorios, ramas y revisiones operados desde el mismo sitio donde escribo el código." },
           ],
-        },
-        {
-          nombre: "Agentes",
-          clave: "agentes",
-          resumen: "Tareas completas que se ejecutan solas, con límites definidos y confirmación humana donde importa. No responden: hacen.",
-          hijos: [
-            { nombre: "Rutinas programadas", detalle: "Trabajos que corren todos los días a una hora fija, sin que nadie los lance." },
-            { nombre: "Investigación automatizada", detalle: "Búsqueda, lectura y resumen de fuentes sobre un tema, entregado listo para decidir." },
-            { nombre: "Atención por WhatsApp", detalle: "Respuesta a mensajes con los datos del negocio, escalando a una persona cuando hace falta." },
-            { nombre: "Procesamiento de documentos", detalle: "Facturas, contratos y formularios convertidos en datos ordenados." },
-            { nombre: "Informes periódicos", detalle: "Métricas recogidas, comparadas y enviadas al canal donde se leen." },
-          ],
+          nota: "El protocolo es abierto: cualquier aplicación con un servidor MCP entra en el flujo, desde herramientas de diseño hasta motores de videojuego.",
         },
       ],
       items: [
+        { nombre: "n8n", slug: "n8n", color: "EA4B71", detalle: "Mi motor de automatización: flujos que corren solos conectando sistemas por APIs REST y webhooks. Claude los dirige mediante MCP en lugar de seguir una rama fija de nodos." },
         { nombre: "Node.js", slug: "nodedotjs", color: "5FA04E", detalle: "Automatizaciones programadas, funciones serverless y scripts de proceso." },
         { nombre: "Python", slug: "python", color: "3776AB", detalle: "Scripting de datos y automatización; lenguaje estándar del ecosistema de IA." },
       ],
     },
     {
-      categoria: "Desarrollo de producto",
+      /* AGENTES — categoría propia. Un agente no es un flujo con pasos
+         fijos: recibe un objetivo, decide qué hacer y usa herramientas
+         hasta cumplirlo. Eso es lo que se describe aquí. */
+      categoria: "Agentes de IA",
+      icono: "bot",
+      descripcion: "Sistemas que reciben un objetivo y deciden cómo cumplirlo.",
+      items: [
+        {
+          nombre: "Agentes con herramientas",
+          slug: "",
+          color: "",
+          detalle: "Le doy un objetivo y un conjunto de herramientas, y el agente decide qué usar y en qué orden. No sigue un guion: evalúa el resultado de cada paso y corrige el siguiente.",
+        },
+        {
+          nombre: "Subagentes en paralelo",
+          slug: "",
+          color: "",
+          detalle: "Una tarea grande repartida entre varios agentes que trabajan a la vez, cada uno con su especialidad, y un coordinador que junta los resultados.",
+        },
+        {
+          nombre: "Límites y confirmación humana",
+          slug: "",
+          color: "",
+          detalle: "Lo que define a un agente utilizable no es lo que puede hacer, sino lo que no puede. Defino qué ejecuta solo y qué requiere que una persona apruebe antes.",
+        },
+        {
+          nombre: "Memoria y contexto",
+          slug: "",
+          color: "",
+          detalle: "El agente recuerda lo que ya hizo y con qué datos trabaja, para que la segunda ejecución no empiece de cero.",
+        },
+        {
+          nombre: "Evaluación de resultados",
+          slug: "",
+          color: "",
+          detalle: "Un agente sin forma de medir si acertó es una apuesta. Compruebo sus salidas contra casos conocidos antes de dejarlo trabajar solo.",
+        },
+      ],
+    },
+    {
+      categoria: "Front-End",
       icono: "monitor",
       descripcion: "La interfaz que hace usable al sistema de IA.",
       items: [
@@ -157,17 +195,16 @@ export const DATOS = {
         { nombre: "Tailwind CSS", slug: "tailwindcss", color: "38BDF8", detalle: "Sistema visual consistente y rápido, sin CSS muerto." },
         { nombre: "Vite", slug: "vite", color: "9499FF", detalle: "Builds instantáneos y experiencia de desarrollo moderna." },
         { nombre: "Figma", slug: "figma", color: "F24E1E", detalle: "Diseño de interfaces antes de construir." },
-        { nombre: "UI / UX", slug: "", color: "", detalle: "Jerarquía visual y usabilidad: que la herramienta se entienda sin manual." },
       ],
     },
     {
-      categoria: "Datos",
+      categoria: "Back-End",
       icono: "database",
       descripcion: "Sin datos ordenados no hay IA que funcione.",
       items: [
         { nombre: "Supabase", slug: "supabase", color: "3FCF8E", detalle: "Mi backend por defecto en productos nuevos: Postgres gestionado con autenticación, storage y realtime." },
         { nombre: "SQL Server", slug: "microsoftsqlserver", color: "CC2927", detalle: "Procedimientos almacenados y trazabilidad en sistemas empresariales." },
-        { nombre: "Power BI", lucide: "powerbi", detalle: "Modelado y dashboards para inteligencia de negocio." },
+        { nombre: "Power BI", slug: "powerbi", color: "F2C811", detalle: "Modelado y dashboards para inteligencia de negocio." },
       ],
     },
     {
@@ -176,10 +213,8 @@ export const DATOS = {
       descripcion: "Llevar y mantener lo construido en producción.",
       items: [
         { nombre: "AWS", slug: "amazonwebservices", color: "FF9900", detalle: "Cómputo y almacenamiento en la nube para cargas de trabajo e integraciones." },
-        { nombre: "Azure", slug: "microsoftazure", color: "0078D4", detalle: "Nube en formación activa: camino a la certificación AZ-900." },
         { nombre: "Git / GitHub", slug: "github", color: "FFFFFF", detalle: "Control de versiones y trabajo colaborativo." },
         { nombre: "Vercel", slug: "vercel", color: "FFFFFF", detalle: "Despliegue continuo y funciones serverless en el borde." },
-        { nombre: "Netlify", slug: "netlify", color: "00C7B7", detalle: "CI/CD, funciones serverless y Blobs en producción." },
         { nombre: "Docker", slug: "docker", color: "2496ED", detalle: "Entornos reproducibles para desarrollo y despliegue." },
       ],
     },
@@ -238,40 +273,113 @@ export const DATOS = {
     },
   ],
 
-  /* MOMENTOS — muro de momentos como programador y como persona.
-     Mezcla lo profesional (trabajo, eventos, enseñanza) con lo humano.
+  /* MOMENTOS — álbumes. Cada momento tiene UNA foto de portada y,
+     al abrirlo, el álbum completo con el resto de fotos.
 
      Cada momento:
        titulo    → qué fue
        lugar     → dónde
        fecha     → cuándo (texto libre: "2023", "Ene 2025", etc.)
-       categoria → para el filtro de arriba. Una de las claves de
-                   `categoriasMomentos` (ver más abajo):
+       categoria → filtro de arriba. Una clave de `categoriasMomentos`:
                    "trabajo" | "formacion" | "ensenanza" | "voluntariado" | "personal"
-       foto      → ruta a la imagen en public/galeria/ (déjala "" hasta tenerla)
+       portada   → ruta de la foto que representa el momento ("" si aún no la tienes)
        alto      → tamaño en el mosaico: "alto" | "medio" | "bajo"
+       relato    → (opcional) dos o tres frases sobre el momento, se leen al abrirlo
+       album     → el resto de fotos. Cada una: { foto, pie }
+                   El `pie` describe la foto; aparece bajo ella en el visor.
 
-     👉 Para añadir la foto: pon el archivo en public/galeria/ y escribe
-        su ruta en `foto` (ej. foto: "/galeria/kidsapiens-1.jpg"). */
+     👉 Para añadir fotos: ponlas en public/galeria/ y escribe la ruta
+        (ej. portada: "/galeria/techsummit-portada.jpg"). Mientras
+        `portada` esté vacía se muestra un marco con el ícono de su
+        categoría, así la sección nunca se ve rota. */
   galeria: [
-    // 💼 Trabajo
-    { titulo: "Transformación digital", lugar: "Indra · Minsait", fecha: "2025", categoria: "trabajo", foto: "", alto: "medio" },
-    { titulo: "Trabajo con clientes", lugar: "Conecta Systems", fecha: "2024–2025", categoria: "trabajo", foto: "", alto: "alto" },
-
     // 🎓 Formación / Eventos
-    { titulo: "Ingeniería de Sistemas", lugar: "Universidad", fecha: "En curso", categoria: "formacion", foto: "", alto: "medio" },
-    { titulo: "Evento tecnológico", lugar: "Comunidad tech", fecha: "2025", categoria: "formacion", foto: "", alto: "medio" },
+    {
+      titulo: "UTP Tech Summit",
+      lugar: "Universidad Tecnológica del Perú · Ica",
+      fecha: "2026",
+      categoria: "formacion",
+      portada: "",
+      alto: "alto",
+      relato:
+        "Conferencia organizada por mi universidad con ingenieros de Google, Microsoft y Tata Consultancy Services. Escuchar a peruanos que llegaron a esas empresas cambia la escala de lo que uno cree posible desde Ica.",
+      album: [
+        { foto: "", pie: "Mi fotocheck de acreditación del evento" },
+        { foto: "", pie: "Los ponentes en escena durante una de las charlas" },
+        { foto: "", pie: "Con mi enamorada frente al letrero del Tech Summit" },
+      ],
+    },
+    {
+      titulo: "Ingeniería de Sistemas",
+      lugar: "Universidad Tecnológica del Perú",
+      fecha: "En curso",
+      categoria: "formacion",
+      portada: "",
+      alto: "medio",
+      album: [],
+    },
+
+    // 💼 Trabajo
+    {
+      titulo: "Transformación digital",
+      lugar: "Indra · Minsait",
+      fecha: "2025",
+      categoria: "trabajo",
+      portada: "",
+      alto: "medio",
+      album: [],
+    },
+    {
+      titulo: "Trabajo con clientes",
+      lugar: "Conecta Systems",
+      fecha: "2024–2025",
+      categoria: "trabajo",
+      portada: "",
+      alto: "alto",
+      album: [],
+    },
 
     // 🧑‍🏫 Enseñanza
-    { titulo: "Kidsapiens · IA para niños", lugar: "Colegio J. C. Mariátegui", fecha: "2023", categoria: "ensenanza", foto: "", alto: "alto" },
-    { titulo: "Charla de Inteligencia Artificial", lugar: "Antonia Moreno de Cáceres", fecha: "2023", categoria: "ensenanza", foto: "", alto: "medio" },
-    { titulo: "IA y robótica básica", lugar: "San Francisco College", fecha: "2023", categoria: "ensenanza", foto: "", alto: "medio" },
-
-    // 🤝 Voluntariado
-    { titulo: "Iniciativa comunitaria", lugar: "Por definir", fecha: "—", categoria: "voluntariado", foto: "", alto: "medio" },
+    {
+      titulo: "Kidsapiens · IA para niños",
+      lugar: "Colegio J. C. Mariátegui",
+      fecha: "2023",
+      categoria: "ensenanza",
+      portada: "",
+      alto: "alto",
+      relato:
+        "Llevé inteligencia artificial y robótica básica a un aula de primaria. Explicar un modelo de lenguaje a un niño de diez años obliga a entenderlo de verdad.",
+      album: [],
+    },
+    {
+      titulo: "Charla de Inteligencia Artificial",
+      lugar: "Antonia Moreno de Cáceres",
+      fecha: "2023",
+      categoria: "ensenanza",
+      portada: "",
+      alto: "medio",
+      album: [],
+    },
+    {
+      titulo: "IA y robótica básica",
+      lugar: "San Francisco College",
+      fecha: "2023",
+      categoria: "ensenanza",
+      portada: "",
+      alto: "medio",
+      album: [],
+    },
 
     // ✨ Personal
-    { titulo: "Aprendiendo, siempre", lugar: "Detrás del código", fecha: "Hoy", categoria: "personal", foto: "", alto: "medio" },
+    {
+      titulo: "Aprendiendo, siempre",
+      lugar: "Detrás del código",
+      fecha: "Hoy",
+      categoria: "personal",
+      portada: "",
+      alto: "medio",
+      album: [],
+    },
   ],
 
   /* Categorías del muro de Momentos (definen los botones de filtro).
@@ -282,6 +390,51 @@ export const DATOS = {
     { id: "ensenanza", label: "Enseñanza" },
     { id: "voluntariado", label: "Voluntariado" },
     { id: "personal", label: "Personal" },
+  ],
+
+  /* EN PROCESO — la pizarra de lo que viene.
+     Es la sección más honesta del sitio: lo que estoy construyendo,
+     estudiando o pensando, sin prometer fechas.
+
+     estado: "construyendo" | "estudiando" | "explorando"
+       construyendo → ya tiene código o avance real
+       estudiando   → formación en curso o por empezar
+       explorando   → idea con criterio, todavía sin empezar
+
+     Añade, quita o reordena libremente: la sección se adapta. */
+  enProceso: [
+    {
+      titulo: "Jarvis en mi Alexa",
+      estado: "explorando",
+      etiqueta: "Asistente de voz",
+      texto:
+        "Tengo un Echo en casa y quiero dejar de hablarle a Alexa para hablarle a algo mío: conectar un modelo de lenguaje por API y devolver la respuesta con voz sintetizada tipo Jarvis. Lo interesante no es el disfraz de voz, es el puente — que el asistente responda con mis datos y pueda disparar mis automatizaciones de n8n por voz.",
+      pila: ["Alexa Skills", "API de LLM", "Síntesis de voz", "n8n"],
+    },
+    {
+      titulo: "Certificación AWS",
+      estado: "estudiando",
+      etiqueta: "Formación",
+      texto:
+        "Vengo desplegando en Vercel y quiero bajar un nivel: cómputo, almacenamiento y redes en AWS, para sostener cargas de IA que no caben en una función serverless. La certificación es la excusa para estudiarlo en orden, no el objetivo.",
+      pila: ["AWS", "Infraestructura", "Despliegue"],
+    },
+    {
+      titulo: "Tesis: predicción de morosidad",
+      estado: "construyendo",
+      etiqueta: "Investigación",
+      texto:
+        "Mi trabajo de investigación en Ingeniería de Sistemas: una plataforma web de separación y venta de lotes con un algoritmo que anticipa qué clientes van a caer en mora. Es el proyecto donde el modelo predictivo tiene que convivir con un sistema real de gestión.",
+      pila: ["React", "Supabase", "Modelo predictivo"],
+    },
+    {
+      titulo: "Biblioteca de Skills propias",
+      estado: "construyendo",
+      etiqueta: "Automatización",
+      texto:
+        "Cada procedimiento que repito acaba siendo una Skill de Claude. Estoy convirtiendo mi forma de trabajar en una biblioteca versionada: diseño, revisión de código y propuestas comerciales ya están dentro, y la lista crece con cada proyecto.",
+      pila: ["Claude Skills", "MCP", "Documentación"],
+    },
   ],
 
   /* PROYECTOS
