@@ -220,58 +220,138 @@ export const DATOS = {
     },
   ],
 
-  /* CERTIFICADOS — contenido de ejemplo. Reemplaza cada campo con tus datos reales.
-     enlace = link de Google Drive del certificado (de ejemplo por ahora). */
+  /* CERTIFICACIONES — ruta de formación 2026.
+
+     Todas están EN CURSO. Ninguna se presenta como obtenida: cada
+     credencial se marcará como completada y con su enlace al badge
+     únicamente cuando exista el comprobante.
+
+     Para marcar una como terminada:
+       estado: "completada"
+       enlace: "URL del badge o certificado verificable"
+       fecha:  "Mes 2026"
+
+     Campos:
+       codigo      → identificador en la ficha
+       nombre      → nombre oficial del curso
+       institucion → quién lo emite
+       plataforma  → dónde se cursa
+       estado      → "en-curso" | "completada"
+       fecha       → periodo o fecha de obtención
+       web         → enlace oficial de la formación
+       enlace      → enlace al badge/certificado (sólo si completada)
+       queEs       → qué es la formación
+       paraQue     → para qué sirve en mi trabajo
+       impacto     → por qué le importa a un reclutador o cliente
+       habilidades → lista de competencias concretas */
   certificados: [
     {
       codigo: "CERT-01",
-      imagen: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?auto=format&fit=crop&w=800&q=80", // ← reemplazar con imagen real del certificado
-      nombre: "Desarrollo Web Full Stack",
-      institucion: "Institución de ejemplo",
-      fecha: "2025",
-      descripcion: "Construcción de aplicaciones web modernas de extremo a extremo con React, Node.js y bases de datos. (Ejemplo)",
-      temas: "React, Node.js, APIs REST, despliegue",
-      porque: "Para consolidar una base sólida full stack y poder entregar productos completos, no solo interfaces.",
-      sector: "Desarrollo web · Producto digital",
-      enlace: "https://drive.google.com/file/d/EJEMPLO-01/view",
+      nombre: "Claude AI",
+      institucion: "Anthropic Academy",
+      plataforma: "Anthropic Academy · Skilljar",
+      estado: "en-curso",
+      fecha: "2026",
+      web: "https://anthropic.skilljar.com/",
+      enlace: "",
+      marca: "claude",
+      color: "D97757",
+      queEs:
+        "Formación oficial de Anthropic, creadora de Claude, enfocada en uso profesional de IA generativa, prompting, agentes y desarrollo e integración con Claude.",
+      paraQue:
+        "Profundizar en el diseño de soluciones con Claude para tareas de negocio: automatizaciones, asistentes y aplicaciones con IA.",
+      impacto:
+        "Refuerza un perfil de especialista en IA aplicada y automatización. Es especialmente relevante para proyectos que usen Claude, APIs y flujos empresariales.",
+      habilidades: ["Prompt engineering", "Uso responsable de IA", "Diseño de flujos asistidos por IA", "Agentes", "Integración por API"],
     },
     {
       codigo: "CERT-02",
-      imagen: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80", // ← reemplazar con imagen real del certificado
-      nombre: "Bases de Datos con SQL Server",
-      institucion: "Institución de ejemplo",
-      fecha: "2025",
-      descripcion: "Diseño relacional, consultas avanzadas y procedimientos almacenados sobre SQL Server. (Ejemplo)",
-      temas: "Modelado relacional, T-SQL, stored procedures",
-      porque: "Porque casi todo sistema empresarial real vive sobre una base de datos bien diseñada.",
-      sector: "Datos · Sistemas empresariales",
-      enlace: "https://drive.google.com/file/d/EJEMPLO-02/view",
+      nombre: "Introduction to Generative AI & Large Language Models",
+      institucion: "Google Cloud",
+      plataforma: "Google Cloud Skills Boost",
+      estado: "en-curso",
+      fecha: "2026",
+      web: "https://www.cloudskillsboost.google/",
+      enlace: "",
+      marca: "googlecloud",
+      color: "4285F4",
+      queEs:
+        "Ruta de microcursos de Google Cloud sobre IA generativa, modelos de lenguaje grandes, modelos fundacionales y principios de IA responsable.",
+      paraQue:
+        "Comprender los criterios de implementación de LLMs y su aplicación en productos, automatizaciones y soluciones cloud.",
+      impacto:
+        "Los badges de Google Cloud aportan evidencia verificable respaldada por Google, y complementan la experiencia práctica con Claude y otras herramientas.",
+      habilidades: ["Fundamentos de IA generativa", "LLMs", "Modelos fundacionales", "IA responsable", "Evaluación de soluciones"],
     },
     {
       codigo: "CERT-03",
-      imagen: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80", // ← reemplazar con imagen real del certificado
-      nombre: "Inteligencia Artificial Aplicada",
-      institucion: "Institución de ejemplo",
-      fecha: "2024",
-      descripcion: "Integración de modelos de lenguaje (LLMs) en productos reales y automatización de flujos. (Ejemplo)",
-      temas: "LLMs, prompt engineering, automatización",
-      porque: "Para usar la IA como multiplicador real en mis proyectos, no como adorno.",
-      sector: "IA · Automatización",
-      enlace: "https://drive.google.com/file/d/EJEMPLO-03/view",
+      nombre: "N8N101 — Essentials: Your First Workflows",
+      institucion: "n8n Academy",
+      plataforma: "n8n Academy",
+      estado: "en-curso",
+      fecha: "2026",
+      web: "https://learn.n8n.io/",
+      enlace: "",
+      marca: "n8n",
+      color: "EA4B71",
+      queEs:
+        "Curso oficial de n8n para construir workflows automatizados mediante triggers, nodos, transformaciones de datos e integraciones con APIs y servicios externos.",
+      paraQue:
+        "Validar la capacidad de diseñar automatizaciones operativas para ventas, soporte y administración, conectando IA, CRM, bases de datos y mensajería.",
+      impacto:
+        "Está alineado directamente con el perfil de especialista en automatización con IA: acredita conocimiento formal de la herramienta con la que trabajo a diario.",
+      habilidades: ["Workflows end-to-end", "Webhooks y APIs", "Lógica condicional", "Transformación de datos", "Manejo de errores"],
     },
     {
       codigo: "CERT-04",
-      imagen: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=800&q=80", // ← reemplazar con imagen real del certificado
-      nombre: "Scrum Foundation",
-      institucion: "Institución de ejemplo",
-      fecha: "2024",
-      descripcion: "Fundamentos de gestión ágil de proyectos de software con marco Scrum. (Ejemplo)",
-      temas: "Scrum, roles, sprints, gestión ágil",
-      porque: "Para trabajar de forma ordenada en equipo y entregar valor por iteraciones, no de golpe.",
-      sector: "Gestión de proyectos · Metodologías ágiles",
-      enlace: "https://drive.google.com/file/d/EJEMPLO-04/view",
+      nombre: "AI Fundamentals & Generative AI",
+      institucion: "IBM",
+      plataforma: "IBM SkillsBuild",
+      estado: "en-curso",
+      fecha: "2026",
+      web: "https://skillsbuild.ibm.com/",
+      enlace: "",
+      marca: "ibm",
+      color: "FFFFFF",
+      queEs:
+        "Programa de IBM sobre fundamentos de inteligencia artificial e IA generativa, con conceptos de machine learning, deep learning, ética y aplicaciones de negocio.",
+      paraQue:
+        "Sustentar decisiones técnicas y de negocio: cuándo aplicar IA, cómo evaluar sus riesgos y cómo implementarla de forma responsable.",
+      impacto:
+        "Una credencial de IBM aporta respaldo empresarial y demuestra que el perfil combina uso práctico de herramientas con comprensión conceptual de la IA.",
+      habilidades: ["Machine learning", "Deep learning", "IA generativa", "Ética y gestión de riesgos", "Casos de uso por industria"],
+    },
+    {
+      codigo: "CERT-05",
+      nombre: "CS50: Introduction to Computer Science",
+      institucion: "HarvardX",
+      plataforma: "edX · modalidad audit",
+      estado: "en-curso",
+      fecha: "2026",
+      web: "https://cs50.harvard.edu/x/",
+      enlace: "",
+      marca: "harvard",
+      color: "A51C30",
+      queEs:
+        "Curso de Harvard sobre fundamentos de ciencias de la computación: resolución de problemas, algoritmos, estructuras de datos, programación, SQL y desarrollo web.",
+      paraQue:
+        "Fortalecer la base técnica para construir software y automatizaciones robustas, y entender la arquitectura de las aplicaciones donde integro IA.",
+      impacto:
+        "Aporta una señal académica reconocible y evidencia de formación rigurosa en fundamentos de computación.",
+      habilidades: ["Pensamiento computacional", "Algoritmos", "Estructuras de datos", "C y Python", "SQL", "Desarrollo web"],
     },
   ],
+
+  /* Cómo se complementan entre sí y la nota de honestidad.
+     Van al pie de la sección de certificaciones. */
+  certificadosCierre: {
+    objetivo:
+      "Ruta orientada a un perfil de Ingeniero de IA y Automatización: diseño de automatizaciones empresariales, flujos con IA generativa, integración de APIs y desarrollo de software para empresas.",
+    complementan:
+      "Anthropic y Google Cloud refuerzan IA generativa y LLMs. n8n acredita automatización de procesos e integraciones. IBM aporta los fundamentos aplicados al contexto empresarial. CS50 consolida la base de ingeniería de software.",
+    transparencia:
+      "Un certificado por sí solo no sustituye experiencia demostrable. Cada credencial se añadirá aquí y a LinkedIn únicamente al completarla y obtener su comprobante; lo que de verdad sostiene el perfil son los proyectos de la sección anterior.",
+  },
 
   /* MOMENTOS — álbumes. Cada momento tiene UNA foto de portada y,
      al abrirlo, el álbum completo con el resto de fotos.

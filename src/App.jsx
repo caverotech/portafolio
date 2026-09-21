@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import {
   Github, Linkedin, Mail, Download, ArrowRight, ArrowLeft,
-  Menu, X, MapPin, Layers, Database, Wrench, Maximize2,
+  Menu, X, MapPin, Layers, Database, Wrench,
   Sparkles, ExternalLink, FolderGit2, ArrowUp,
   Code2, Server, Settings2, BrainCircuit,
-  BarChart3, BookOpen, MessageSquare, Bot, Workflow, Camera, Images, Hammer, Lightbulb,
+  BarChart3, BookOpen, MessageSquare, Bot, Workflow, Camera, Images, Hammer, Lightbulb, Check,
   Mic, Heart,
 } from "lucide-react";
 
@@ -1089,253 +1089,214 @@ function Tecnologias({ t }) {
 }
 
 /* ============================================================
-   CERTIFICADOS — muro de fichas + visor a pantalla completa.
+   CERTIFICACIONES — ruta de formación, no muro de diplomas.
 
-   Cada certificado se muestra como una ficha con su imagen real
-   (a color, sin tintes), institución y año. Al pulsar se abre un
-   visor con el detalle completo y el enlace al documento original.
+   Todas están en curso, así que la sección no finge lo contrario:
+   se presenta como una ruta con su estado, y cada ficha se abre
+   para leer qué es, para qué sirve y qué habilidades desarrolla.
 
-   Los datos viven en DATOS.certificados (src/data/portafolio.js).
-   Cuando un certificado no tenga `imagen`, la ficha muestra un
-   marco tipográfico con sus iniciales en lugar de una foto de stock.
+   Cuando una se complete (estado: "completada" + enlace al badge),
+   la fila lo muestra y aparece el botón al certificado verificable.
    ============================================================ */
 
-// Marco de respaldo cuando el certificado aún no tiene imagen
-function MarcoCertificado({ t, cert }) {
-  const iniciales = cert.nombre
-    .split(" ")
-    .filter((w) => w.length > 3)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("");
-  return (
-    <div
-      className="absolute inset-0 flex flex-col items-center justify-center gap-2"
-      style={{ background: `linear-gradient(150deg, ${t.surface2}, ${t.bg})` }}
-    >
-      <span
-        style={{ fontFamily: DISPLAY, fontSize: "2.75rem", fontWeight: 500, color: t.border, letterSpacing: "-0.03em", lineHeight: 1 }}
-      >
-        {iniciales || "AC"}
-      </span>
-      <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.2em", color: t.faint, textTransform: "uppercase" }}>
-        Documento
-      </span>
-    </div>
-  );
+// Logos de las instituciones formadoras. Los que no existen en
+// Simple Icons se dibujan aquí para no depender de un CDN.
+const LOGOS_CERT = {
+  claude: LOGOS_SVG.claude,
+  n8n: LOGOS_SVG.n8n,
+  googlecloud: ({ size = 22, color = "#4285F4" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
+      <path d="M12.19 2.38a9.344 9.344 0 0 0-9.234 6.893c.053-.02-.055.013 0 0-3.875 2.128-3.9 7.845-.008 9.972h-.008a9.28 9.28 0 0 0 4.816 1.298h9.42c4.171-.046 7.6-3.512 7.6-7.694a7.68 7.68 0 0 0-3.997-6.73l-.002.002a7.833 7.833 0 0 0-1.28-2.276c-1.759-2.16-4.38-3.464-7.307-3.465zm.007 1.5a6.316 6.316 0 0 1 6.125 4.76.75.75 0 0 0 .52.542 6.18 6.18 0 0 1 4.435 5.94c0 3.36-2.75 6.14-6.116 6.177H7.764a7.78 7.78 0 0 1-4.04-1.087c-2.89-1.58-2.87-5.83.03-7.42a.75.75 0 0 0 .37-.47A7.844 7.844 0 0 1 12.197 3.88z" />
+    </svg>
+  ),
+  ibm: ({ size = 22, color = "#FFFFFF" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color} aria-hidden focusable="false">
+      <path d="M0 5.4h6.9v1.2H0V5.4zm8.1 0h8.4v1.2H8.1V5.4zm9.6 0H24v1.2h-6.3V5.4zM0 7.8h6.9V9H0V7.8zm8.1 0h8.4V9H8.1V7.8zm9.6 0H24V9h-6.3V7.8zM2.4 10.2h2.1v1.2H2.4v-1.2zm8.1 0h3.3v1.2h-3.3v-1.2zm9.3 0h2.1v1.2h-2.1v-1.2zM2.4 12.6h2.1v1.2H2.4v-1.2zm8.1 0h3.3v1.2h-3.3v-1.2zm9.3 0h2.1v1.2h-2.1v-1.2zM2.4 15h2.1v1.2H2.4V15zm8.1 0h3.3v1.2h-3.3V15zm9.3 0h2.1v1.2h-2.1V15zM0 17.4h6.9v1.2H0v-1.2zm8.1 0h8.4v1.2H8.1v-1.2zm9.6 0H24v1.2h-6.3v-1.2z" />
+    </svg>
+  ),
+  // Harvard: el escudo real no es libre. Un monograma sobrio en su
+  // carmesí resuelve la identidad sin usar marca ajena.
+  harvard: ({ size = 22, color = "#A51C30" }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden focusable="false">
+      <path d="M4 3.4h16v13.2c0 2.2-3.6 3.6-8 4-4.4-.4-8-1.8-8-4V3.4z" fill="none" stroke={color} strokeWidth="1.6" />
+      <path d="M8.4 8.2v7M15.6 8.2v7M8.4 11.6h7.2" stroke={color} strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  ),
+};
+
+function LogoCert({ marca, size = 22, color }) {
+  const Svg = LOGOS_CERT[marca];
+  if (!Svg) return null;
+  return <Svg size={size} color={color ? `#${color}` : undefined} />;
 }
 
-// Una ficha del muro
-function FichaCertificado({ t, cert, indice, onAbrir }) {
+/* Una fila de la ruta de formación. Cerrada muestra el logo, el
+   nombre y el estado; abierta despliega la ficha completa. */
+function FilaCertificacion({ t, cert, abierta, onToggle, indice, ultima }) {
+  const completada = cert.estado === "completada";
+
   return (
-    <Reveal delay={indice * 60}>
+    <div style={{ borderTop: `1px solid ${abierta ? t.border : t.borderSoft}` }}>
       <button
         type="button"
-        onClick={() => onAbrir(indice)}
-        data-cursor="VER"
-        className="ficha-cert group w-full text-left h-full flex flex-col"
-        style={{ background: t.card, border: `1px solid ${t.borderSoft}`, borderRadius: 14, overflow: "hidden" }}
+        onClick={onToggle}
+        aria-expanded={abierta}
+        data-cursor=""
+        className="fila-cert w-full text-left py-6 md:py-7 flex items-start gap-4 md:gap-6"
       >
-        {/* Imagen del certificado, a color y completa (contain, no crop:
-            un diploma recortado no sirve de nada). */}
-        <div className="relative shrink-0" style={{ aspectRatio: "4 / 3", background: t.bgAlt }}>
-          {cert.imagen ? (
-            <img
-              src={cert.imagen}
-              alt={`Certificado: ${cert.nombre}`}
-              loading="lazy"
-              className="absolute inset-0 w-full h-full lienzo-cert"
-              style={{ objectFit: "cover" }}
+        {/* Índice y línea de ruta */}
+        <span className="shrink-0 relative flex flex-col items-center" style={{ width: 26 }}>
+          <span
+            className="flex items-center justify-center"
+            style={{
+              width: 26, height: 26, borderRadius: "50%",
+              border: `1px solid ${completada ? t.ok : abierta ? t.accent : t.border}`,
+              background: completada ? t.ok : "transparent",
+              color: completada ? "#0A0B0D" : abierta ? t.accentText : t.faint,
+              fontFamily: MONO, fontSize: 10,
+              transition: "border-color 240ms, color 240ms",
+            }}
+          >
+            {completada ? <Check size={13} strokeWidth={3} /> : String(indice + 1).padStart(2, "0")}
+          </span>
+          {/* Tramo de ruta hacia la siguiente */}
+          {!ultima && (
+            <span
+              aria-hidden
+              className="absolute"
+              style={{ top: 30, bottom: -28, width: 1, background: t.borderSoft }}
             />
-          ) : (
-            <MarcoCertificado t={t} cert={cert} />
           )}
-          {/* Código, arriba a la izquierda */}
-          <span
-            className="absolute top-2.5 left-2.5 px-2 py-1"
-            style={{
-              fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.14em",
-              color: t.text, background: "rgba(10,11,13,0.78)",
-              border: `1px solid ${t.border}`, borderRadius: 6,
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            {cert.codigo}
-          </span>
-          {/* Lupa al pasar el cursor */}
-          <span
-            className="lupa-cert absolute bottom-2.5 right-2.5 w-9 h-9 flex items-center justify-center"
-            style={{
-              background: "rgba(10,11,13,0.78)", border: `1px solid ${t.border}`,
-              borderRadius: 8, color: t.text, backdropFilter: "blur(6px)",
-            }}
-            aria-hidden
-          >
-            <Maximize2 size={14} />
-          </span>
-        </div>
+        </span>
 
-        {/* Datos */}
-        <div className="p-4 md:p-5 flex-1 flex flex-col">
-          <h3
-            className="mb-1.5"
-            style={{ fontFamily: DISPLAY, color: t.text, fontSize: "1.0625rem", fontWeight: 500, letterSpacing: "-0.015em", lineHeight: 1.25, textWrap: "balance" }}
+        {/* Logo de la institución */}
+        <span
+          className="shrink-0 hidden sm:flex items-center justify-center"
+          style={{ width: 40, height: 40, borderRadius: 10, background: t.surface2, border: `1px solid ${t.borderSoft}` }}
+        >
+          <LogoCert marca={cert.marca} size={20} color={cert.color} />
+        </span>
+
+        {/* Nombre e institución */}
+        <span className="min-w-0 flex-1">
+          <span
+            className="block"
+            style={{
+              fontFamily: DISPLAY, fontWeight: 400,
+              fontSize: "clamp(1.1rem, 2.2vw, 1.55rem)",
+              letterSpacing: "-0.02em", color: t.text, lineHeight: 1.15,
+              textWrap: "balance",
+            }}
           >
             {cert.nombre}
-          </h3>
-          <p className="mb-3" style={{ color: t.muted, fontSize: 13.5, lineHeight: 1.45 }}>
-            {cert.institucion}
-          </p>
-          <div
-            className="mt-auto pt-3 flex items-center justify-between gap-3"
-            style={{ borderTop: `1px solid ${t.borderSoft}` }}
-          >
-            <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.12em", color: t.faint }}>
-              {cert.fecha}
+          </span>
+          <span className="block mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.08em", color: t.accentText, textTransform: "uppercase" }}>
+              {cert.institucion}
             </span>
+            <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint }}>
+              {cert.plataforma}
+            </span>
+          </span>
+        </span>
+
+        {/* Estado */}
+        <span className="shrink-0 flex items-center gap-3 pt-1">
+          <span
+            className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1"
+            style={{
+              borderRadius: 6,
+              border: `1px solid ${completada ? t.border : t.accentBorder}`,
+              background: completada ? "transparent" : t.accentSoft,
+              fontFamily: MONO, fontSize: 9,
+              letterSpacing: "0.16em", textTransform: "uppercase",
+              color: completada ? t.ok : t.accentText,
+            }}
+          >
+            {!completada && <span className="punto-vivo w-1 h-1 rounded-full" style={{ background: t.accent }} />}
+            {completada ? "Completada" : "En curso"}
+          </span>
+          <span className="relative" style={{ width: 11, height: 11, color: t.muted }} aria-hidden>
+            <span className="absolute" style={{ top: 5, left: 0, width: 11, height: 1, background: "currentColor" }} />
             <span
-              className="flecha-cert inline-flex items-center gap-1.5"
-              style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.1em", color: t.accentText, textTransform: "uppercase" }}
-            >
-              Ver ficha
-              <ArrowRight size={12} />
-            </span>
-          </div>
-        </div>
+              className="absolute"
+              style={{
+                top: 0, left: 5, width: 1, height: 11, background: "currentColor",
+                transform: abierta ? "scaleY(0)" : "scaleY(1)",
+                transition: "transform 240ms cubic-bezier(0.22,0.61,0.36,1)",
+              }}
+            />
+          </span>
+        </span>
       </button>
-    </Reveal>
-  );
-}
 
-/* Visor: imagen grande a la izquierda, ficha a la derecha.
-   Cierra con Escape, con el fondo o con el botón. */
-function VisorCertificado({ t, cert, indice, total, onCerrar, onMover }) {
-  useEffect(() => {
-    const alTecla = (e) => {
-      if (e.key === "Escape") onCerrar();
-      if (e.key === "ArrowRight") onMover(1);
-      if (e.key === "ArrowLeft") onMover(-1);
-    };
-    window.addEventListener("keydown", alTecla);
-    const previo = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", alTecla);
-      document.body.style.overflow = previo;
-    };
-  }, [onCerrar, onMover]);
-
-  if (!cert) return null;
-
-  return (
-    <div
-      className="visor-cert fixed inset-0 flex items-center justify-center p-4 md:p-8"
-      style={{ zIndex: CAPA.modal, background: "rgba(6,7,9,0.90)", backdropFilter: "blur(10px)" }}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Certificado: ${cert.nombre}`}
-      onClick={onCerrar}
-    >
-      <div
-        className="visor-cert-caja relative w-full max-w-5xl max-h-full overflow-y-auto"
-        style={{ background: t.bgAlt, border: `1px solid ${t.border}`, borderRadius: 16 }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Cerrar */}
-        <button
-          type="button"
-          onClick={onCerrar}
-          aria-label="Cerrar"
-          className="absolute top-3 right-3 w-9 h-9 flex items-center justify-center z-10"
-          style={{ background: t.surface2, border: `1px solid ${t.border}`, borderRadius: 8, color: t.text }}
-        >
-          <X size={16} />
-        </button>
-
-        <div className="grid md:grid-cols-[1.15fr_1fr]">
-          {/* Imagen grande: completa, sin recortar */}
-          <div
-            className="relative flex items-center justify-center p-4 md:p-6"
-            style={{ background: t.bg, minHeight: "16rem", borderRight: `1px solid ${t.borderSoft}` }}
-          >
-            {cert.imagen ? (
-              <img
-                src={cert.imagen}
-                alt={`Certificado: ${cert.nombre}`}
-                className="max-w-full"
-                style={{ maxHeight: "62vh", objectFit: "contain", borderRadius: 8, border: `1px solid ${t.borderSoft}` }}
-              />
-            ) : (
-              <div className="relative w-full" style={{ aspectRatio: "4 / 3" }}>
-                <MarcoCertificado t={t} cert={cert} />
+      {/* Ficha desplegable */}
+      <div className="grid transition-all duration-300 ease-out" style={{ gridTemplateRows: abierta ? "1fr" : "0fr" }}>
+        <div className="overflow-hidden">
+          <div className="pb-8 pl-0 sm:pl-[4.6rem] md:pl-[5.4rem] grid md:grid-cols-3 gap-x-8 gap-y-6">
+            {[
+              ["Qué es", cert.queEs],
+              ["Para qué me sirve", cert.paraQue],
+              ["Por qué importa", cert.impacto],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <div
+                  className="mb-2"
+                  style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}
+                >
+                  {k}
+                </div>
+                <p className="leading-relaxed" style={{ color: t.muted, fontSize: 14, textWrap: "pretty" }}>
+                  {v}
+                </p>
               </div>
-            )}
-          </div>
+            ))}
 
-          {/* Ficha del certificado */}
-          <div className="p-5 md:p-7">
-            <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.accentText, textTransform: "uppercase" }}>
-              {cert.codigo} · {cert.fecha}
-            </span>
-            <h3
-              className="mt-3 mb-2"
-              style={{ fontFamily: DISPLAY, color: t.text, fontSize: "clamp(1.3rem, 3vw, 1.75rem)", fontWeight: 500, letterSpacing: "-0.025em", lineHeight: 1.15, textWrap: "balance" }}
-            >
-              {cert.nombre}
-            </h3>
-            <p className="mb-6" style={{ color: t.muted, fontSize: 14.5 }}>{cert.institucion}</p>
-
-            <div className="space-y-5">
-              {[
-                ["Contenido", cert.descripcion],
-                ["Temas", cert.temas],
-                ["Por qué lo hice", cert.porque],
-                ["Sector", cert.sector],
-              ].map(([k, v]) =>
-                v ? (
-                  <div key={k}>
-                    <div
-                      className="mb-1.5"
-                      style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}
+            {/* Habilidades */}
+            {cert.habilidades?.length > 0 && (
+              <div className="md:col-span-3 pt-1">
+                <div
+                  className="mb-3"
+                  style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", color: t.accent2Text, textTransform: "uppercase" }}
+                >
+                  Habilidades que desarrollo
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {cert.habilidades.map((h) => (
+                    <span
+                      key={h}
+                      className="px-2.5 py-1.5"
+                      style={{
+                        fontFamily: MONO, fontSize: 11,
+                        color: t.text, background: t.surface,
+                        border: `1px solid ${t.borderSoft}`, borderRadius: 7,
+                      }}
                     >
-                      {k}
-                    </div>
-                    <p className="leading-relaxed" style={{ color: t.muted, fontSize: 14, textWrap: "pretty" }}>{v}</p>
-                  </div>
-                ) : null
-              )}
-            </div>
-
-            {cert.enlace && (
-              <div className="mt-7">
-                <Boton t={t} primario icono={ExternalLink} href={cert.enlace}>Ver documento original</Boton>
+                      {h}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
 
-            {/* Navegación entre certificados */}
-            <div
-              className="mt-7 pt-5 flex items-center justify-between gap-3"
-              style={{ borderTop: `1px solid ${t.borderSoft}` }}
-            >
-              <button
-                type="button"
-                onClick={() => onMover(-1)}
-                className="inline-flex items-center gap-2 transition-transform duration-200 hover:-translate-x-1"
-                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.muted, textTransform: "uppercase" }}
-              >
-                <ArrowLeft size={13} /> Anterior
-              </button>
-              <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint }}>
-                {String(indice + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-              </span>
-              <button
-                type="button"
-                onClick={() => onMover(1)}
-                className="inline-flex items-center gap-2 transition-transform duration-200 hover:translate-x-1"
-                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.muted, textTransform: "uppercase" }}
-              >
-                Siguiente <ArrowRight size={13} />
-              </button>
+            {/* Enlaces: el badge sólo si está completada */}
+            <div className="md:col-span-3 flex flex-wrap gap-3 pt-2">
+              {completada && cert.enlace && (
+                <Boton t={t} primario icono={ExternalLink} href={cert.enlace}>Ver certificado</Boton>
+              )}
+              {cert.web && (
+                <a
+                  href={cert.web}
+                  target="_blank"
+                  rel="noreferrer"
+                  data-cursor="ABRIR"
+                  className="enlace-cert inline-flex items-center gap-2"
+                  style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.1em", color: t.muted, textTransform: "uppercase" }}
+                >
+                  Ver la formación oficial
+                  <ExternalLink size={12} />
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -1346,10 +1307,10 @@ function VisorCertificado({ t, cert, indice, total, onCerrar, onMover }) {
 
 function Certificados({ t }) {
   const lista = DATOS.certificados || [];
-  const [abierto, setAbierto] = useState(null);
+  const cierre = DATOS.certificadosCierre || {};
+  const [abierta, setAbierta] = useState(0);
 
-  const mover = (paso) =>
-    setAbierto((i) => (i === null ? null : (i + paso + lista.length) % lista.length));
+  const completadas = lista.filter((c) => c.estado === "completada").length;
 
   return (
     <section id="certificados" className="relative py-20 md:py-28 px-5 md:px-8">
@@ -1358,39 +1319,91 @@ function Certificados({ t }) {
         <CabeceraSeccion
           t={t}
           num="03"
-          eyebrow="Certificados"
-          titulo="Formación que respalda la práctica"
-          descripcion="Cada certificado incluye qué cubrió, por qué lo hice y el documento original verificable."
+          eyebrow="Formación"
+          titulo="La ruta que estoy recorriendo ahora"
+          descripcion={cierre.objetivo}
         />
 
-        {/* Muro de fichas */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        {/* Avance de la ruta */}
+        <Reveal>
+          <div
+            className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-10 pb-6"
+            style={{ borderBottom: `1px solid ${t.borderSoft}` }}
+          >
+            <span className="inline-flex items-baseline gap-2">
+              <span style={{ fontFamily: DISPLAY, fontSize: "2rem", fontWeight: 500, color: t.text, letterSpacing: "-0.03em", lineHeight: 1 }}>
+                {String(lista.length).padStart(2, "0")}
+              </span>
+              <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}>
+                formaciones en curso
+              </span>
+            </span>
+            {completadas > 0 && (
+              <span className="inline-flex items-baseline gap-2">
+                <span style={{ fontFamily: DISPLAY, fontSize: "2rem", fontWeight: 500, color: t.ok, letterSpacing: "-0.03em", lineHeight: 1 }}>
+                  {String(completadas).padStart(2, "0")}
+                </span>
+                <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}>
+                  completadas
+                </span>
+              </span>
+            )}
+            <span className="h-px flex-1 min-w-[2rem]" style={{ background: t.borderSoft }} />
+            <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.12em", color: t.faint }}>
+              ANTHROPIC · GOOGLE · N8N · IBM · HARVARD
+            </span>
+          </div>
+        </Reveal>
+
+        {/* La ruta */}
+        <div style={{ borderBottom: `1px solid ${t.borderSoft}` }}>
           {lista.map((cert, i) => (
-            <FichaCertificado key={cert.codigo} t={t} cert={cert} indice={i} onAbrir={setAbierto} />
+            <FilaCertificacion
+              key={cert.codigo}
+              t={t}
+              cert={cert}
+              indice={i}
+              abierta={abierta === i}
+              onToggle={() => setAbierta(abierta === i ? -1 : i)}
+              ultima={i === lista.length - 1}
+            />
           ))}
         </div>
 
-        {/* Nota de contenido pendiente: honesta, sin bloquear la sección */}
-        <Reveal>
-          <p
-            className="mt-7"
-            style={{ fontFamily: MONO, fontSize: 11.5, letterSpacing: "0.06em", color: t.faint }}
-          >
-            Estoy subiendo los documentos originales de cada certificado.
-          </p>
-        </Reveal>
+        {/* Cierre: cómo encajan y la nota de honestidad */}
+        <div className="mt-12 grid md:grid-cols-2 gap-8 md:gap-12">
+          {cierre.complementan && (
+            <Reveal>
+              <div>
+                <div
+                  className="mb-3"
+                  style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", color: t.accentText, textTransform: "uppercase" }}
+                >
+                  Cómo encajan entre sí
+                </div>
+                <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15, textWrap: "pretty" }}>
+                  {cierre.complementan}
+                </p>
+              </div>
+            </Reveal>
+          )}
+          {cierre.transparencia && (
+            <Reveal delay={80}>
+              <div className="pl-5" style={{ borderLeft: `2px solid ${t.accent2Border}` }}>
+                <div
+                  className="mb-3"
+                  style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: "0.16em", color: t.accent2Text, textTransform: "uppercase" }}
+                >
+                  Nota de transparencia
+                </div>
+                <p className="leading-relaxed" style={{ color: t.muted, fontSize: 15, textWrap: "pretty" }}>
+                  {cierre.transparencia}
+                </p>
+              </div>
+            </Reveal>
+          )}
+        </div>
       </div>
-
-      {abierto !== null && (
-        <VisorCertificado
-          t={t}
-          cert={lista[abierto]}
-          indice={abierto}
-          total={lista.length}
-          onCerrar={() => setAbierto(null)}
-          onMover={mover}
-        />
-      )}
     </section>
   );
 }

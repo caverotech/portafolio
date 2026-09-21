@@ -278,24 +278,118 @@ export default function EstilosGlobales({ t = TEMA }) {
       @keyframes flotarAvatar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
       .avatar-saluda { animation: flotarAvatar 5s var(--ease-suave) infinite; }
 
-      /* ---------- FICHAS DE CERTIFICADO ---------- */
-      .ficha-cert {
+      /* ---------- RUTA DE CERTIFICACIONES ---------- */
+      .fila-cert { transition: background-color var(--t-ui) var(--ease); }
+      .fila-cert:hover { background: rgba(232,152,62,0.03); }
+      .enlace-cert { transition: color var(--t-ui) var(--ease); }
+      .enlace-cert:hover { color: ${t.accentText}; }
+
+      /* Animaciones compartidas por los visores modales */
+      @keyframes aparecerVelo { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes subirVisor {
+        from { opacity: 0; transform: translateY(14px) scale(0.985); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      /* ---------- ENTRADA AL DETALLE DE PROYECTO ----------
+         Al abrir un proyecto la pagina entra con un fundido y la
+         portada hace un zoom lento: la transicion sostiene la
+         sensacion de "entrar" en el caso, no de saltar a otra pagina. */
+      .detalle-entra { animation: detalleEntra 620ms var(--ease) both; }
+      @keyframes detalleEntra {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .portada-detalle img { animation: portadaZoom 2600ms var(--ease-suave) both; }
+      @keyframes portadaZoom {
+        from { transform: scale(1.07); }
+        to   { transform: scale(1); }
+      }
+
+      /* ---------- TARJETAS DE "EN PROCESO" ---------- */
+      .tarjeta-proceso {
         transition: border-color var(--t-ui) var(--ease),
                     transform var(--t-ui) var(--ease),
                     background var(--t-ui) var(--ease);
       }
-      .ficha-cert:hover {
-        border-color: ${t.accentBorder};
+      .tarjeta-proceso:hover {
+        border-color: ${t.border};
         background: ${t.cardHover};
         transform: translateY(-3px);
       }
-      .lienzo-cert { transition: transform var(--t-seccion) var(--ease), filter var(--t-ui) var(--ease); }
-      .ficha-cert:hover .lienzo-cert { transform: scale(1.035); }
-      /* La lupa solo aparece cuando hay intencion de mirar */
-      .lupa-cert { opacity: 0; transition: opacity var(--t-ui) var(--ease); }
-      .ficha-cert:hover .lupa-cert, .ficha-cert:focus-visible .lupa-cert { opacity: 1; }
-      .flecha-cert svg { transition: transform var(--t-ui) var(--ease); }
-      .ficha-cert:hover .flecha-cert svg { transform: translateX(3px); }
+
+      /* ---------- VISOR DE ALBUM DE MOMENTOS ---------- */
+      .visor-album { animation: aparecerVelo var(--t-ui) ease both; }
+      .visor-album-caja { animation: subirVisor var(--t-ui) var(--ease) both; }
+      .foto-album { animation: aparecerVelo 420ms ease both; }
+      .mini-album { transition: opacity var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease); }
+      .mini-album:hover { opacity: 1 !important; }
+
+      /* ---------- ARBOL DE CLAUDE: SKILLS Y MCP ---------- */
+      .rama-claude { transition: opacity var(--t-ui) var(--ease); }
+      .rama-claude:hover { opacity: 0.82; }
+      .tarjeta-skill {
+        transition: border-color var(--t-ui) var(--ease), transform var(--t-ui) var(--ease);
+      }
+      .tarjeta-skill:hover { border-color: ${t.border}; transform: translateY(-2px); }
+      .tarjeta-mcp {
+        transition: border-color var(--t-ui) var(--ease), background var(--t-ui) var(--ease);
+      }
+      .tarjeta-mcp:hover { border-color: ${t.border}; background: ${t.cardHover}; }
+
+      /* ---------- SOBRE MI: pasos del metodo ----------
+         El nodo del paso se tine de cobre y crece al entrar en pantalla. */
+      .paso-metodo .nodo-paso { transition: transform var(--t-ui) var(--ease); }
+      .paso-metodo:hover .nodo-paso { transform: translateY(-3px) scale(1.5); }
+      .banda-capacidad { transition: background-color var(--t-ui) var(--ease); }
+      .banda-capacidad:hover { background: rgba(255,255,255,0.018); }
+
+      .filtro-texto { transition: color var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease); }
+      .filtro-texto:hover { color: ${t.text} !important; }
+
+      /* ---------- NAV ---------- */
+      .nav-link { position: relative; transition: color var(--t-ui) var(--ease); }
+      .nav-link::after {
+        content: ""; position: absolute; left: 10px; right: 10px; bottom: 3px; height: 1px;
+        background: ${t.accent};
+        transform: scaleX(0); transform-origin: left;
+        transition: transform var(--t-ui) var(--ease);
+      }
+      .nav-link:hover::after { transform: scaleX(1); }
+
+      /* ---------- TARJETAS Y MEDIOS (secciones aún no refactorizadas) ---------- */
+      .tarjeta-suave { transition: transform var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease), background-color var(--t-ui) var(--ease); }
+      .tarjeta-suave:hover { transform: translateY(-2px); border-color: ${t.border} !important; background: ${t.surface2} !important; }
+      .canal-contacto { transition: transform var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease); }
+      .canal-contacto:hover { transform: translateY(-2px); border-color: ${t.accentBorder} !important; }
+      .flecha-carrusel { transition: border-color var(--t-ui) var(--ease), color var(--t-ui) var(--ease), background-color var(--t-ui) var(--ease); }
+      .flecha-carrusel:hover { border-color: ${t.accentBorder} !important; color: ${t.accentText} !important; background: ${t.accentSoft} !important; }
+      .tarjeta-certificado { transition: transform var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease); }
+      .tarjeta-certificado:hover { transform: translateY(-2px); border-color: ${t.accent2Border} !important; }
+      .momento-polaroid { transition: transform var(--t-ui) var(--ease), box-shadow var(--t-ui) var(--ease); transform-origin: center; }
+      .momento-polaroid:hover { transform: rotate(0deg) scale(1.02) !important; box-shadow: ${t.shadowLg}; z-index: 5; }
+      .zoomable img { transition: transform var(--t-seccion) var(--ease); }
+      .group:hover .zoomable img, .zoomable:hover img { transform: scale(1.04); }
+      .enlace-social { transition: transform var(--t-micro) var(--ease), border-color var(--t-ui) var(--ease), color var(--t-ui) var(--ease), background-color var(--t-ui) var(--ease); }
+      .enlace-social:hover { transform: translateY(-2px); border-color: ${t.accentBorder} !important; color: ${t.accentText} !important; background: ${t.accentSoft} !important; }
+      .enlace-social-inv { transition: transform var(--t-micro) var(--ease), border-color var(--t-ui) var(--ease), color var(--t-ui) var(--ease); }
+      .enlace-social-inv:hover { transform: translateY(-2px); border-color: ${t.accentBorder} !important; color: ${t.accentText} !important; }
+      .boton-base { transition: transform var(--t-micro) var(--ease), background-color var(--t-ui) var(--ease), border-color var(--t-ui) var(--ease), color var(--t-ui) var(--ease); }
+      .boton-base:hover { transform: translateY(-1px); }
+      .boton-base:active { transform: translateY(0); }
+      .boton-sec:hover { border-color: ${t.accentBorder} !important; color: ${t.accentText} !important; background: ${t.accentSoft} !important; }
+
+      /* ---------- ELEMENTOS VIVOS ---------- */
+      @keyframes latido { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+      .punto-vivo { animation: latido 2.2s var(--ease-suave) infinite; }
+      @keyframes flotarAvatar { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+      .avatar-saluda { animation: flotarAvatar 5s var(--ease-suave) infinite; }
+
+      /* ---------- RUTA DE CERTIFICACIONES ---------- */
+      .fila-cert { transition: background-color var(--t-ui) var(--ease); }
+      .fila-cert:hover { background: rgba(232,152,62,0.03); }
+      .enlace-cert { transition: color var(--t-ui) var(--ease); }
+      .enlace-cert:hover { color: ${t.accentText}; }
 
       /* ---------- VISOR DE CERTIFICADO ---------- */
       .visor-cert { animation: aparecerVelo var(--t-ui) ease both; }
