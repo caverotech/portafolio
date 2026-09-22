@@ -145,6 +145,95 @@ export const DATOS = {
       ],
     },
     {
+      /* AGENTES — categoría propia, con su propio despliegue.
+
+         Un agente no es un flujo de pasos fijos: recibe un objetivo y
+         decide cómo cumplirlo. Aquí se explica el criterio con el que
+         los diseño y qué orquestaciones estoy montando.
+
+         Honestidad: lo que está en producción son workflows (ver
+         Automatizaciones). Los agentes están en construcción, y la
+         sección "En proceso" lo dice sin rodeos. Esto es el criterio
+         técnico, no una lista de logros. */
+      categoria: "Agentes de IA",
+      icono: "bot",
+      descripcion: "Cómo diseño un agente y qué orquestaciones estoy montando.",
+      agentes: true,
+      intro:
+        "Un workflow ejecuta pasos que yo decidí de antemano. Un agente recibe un objetivo y decide él los pasos. Esa diferencia lo cambia todo: gana flexibilidad y pierde previsibilidad, así que lo que de verdad importa no es qué puede hacer, sino dónde le pongo el freno.",
+      bloques: [
+        {
+          clave: "orquestacion",
+          titulo: "Orquestación",
+          resumen: "Cómo se reparte el trabajo entre varios agentes y quién decide qué.",
+          puntos: [
+            {
+              nombre: "Un coordinador, varios especialistas",
+              detalle: "Un agente principal recibe el objetivo y reparte el trabajo entre subagentes con una especialidad cada uno. El coordinador no ejecuta: decide quién hace qué y junta los resultados.",
+            },
+            {
+              nombre: "Trabajo en paralelo",
+              detalle: "Las tareas que no dependen entre sí se lanzan a la vez. Es la ventaja real de los subagentes: una revisión de código y una búsqueda de documentación no tienen por qué esperarse.",
+            },
+            {
+              nombre: "Herramientas acotadas por agente",
+              detalle: "Cada agente recibe solo las herramientas de su trabajo. El que redacta no puede tocar la base de datos. Limitar el alcance es lo que hace predecible un sistema que decide solo.",
+            },
+            {
+              nombre: "Claude como capa de decisión, n8n como ejecutor",
+              detalle: "El modelo decide el siguiente paso; n8n lo ejecuta contra los sistemas reales por MCP. Separar criterio de ejecución permite cambiar uno sin romper el otro.",
+            },
+          ],
+        },
+        {
+          clave: "control",
+          titulo: "Control y límites",
+          resumen: "Lo que define a un agente utilizable no es lo que puede hacer, sino lo que no puede.",
+          puntos: [
+            {
+              nombre: "Confirmación humana donde importa",
+              detalle: "Defino qué ejecuta solo y qué exige que una persona apruebe antes. Publicar, enviar, cobrar o borrar nunca van sin revisión; leer, analizar y redactar sí.",
+            },
+            {
+              nombre: "Techo de pasos y de gasto",
+              detalle: "Un agente sin límite de iteraciones puede quedarse en bucle y consumir presupuesto sin avanzar. Fijo un máximo de pasos y un tope de coste por ejecución.",
+            },
+            {
+              nombre: "Alcance escrito, no implícito",
+              detalle: "El objetivo y las fronteras van documentados en el propio agente, versionados como código. Si el comportamiento cambia, se ve en el historial.",
+            },
+            {
+              nombre: "Registro de lo que hizo",
+              detalle: "Cada decisión y cada llamada a herramienta quedan registradas. Sin trazas no hay forma de entender por qué un agente se equivocó.",
+            },
+          ],
+        },
+        {
+          clave: "medicion",
+          titulo: "Medición",
+          resumen: "Un agente sin forma de saber si acertó es una apuesta, no un sistema.",
+          puntos: [
+            {
+              nombre: "Casos de prueba conocidos",
+              detalle: "Antes de dejar trabajar a un agente, contrasto sus salidas contra un conjunto de casos con respuesta esperada. Es lo mismo que un test, aplicado a algo que no es determinista.",
+            },
+            {
+              nombre: "Tasa de acierto por tipo de tarea",
+              detalle: "No mido «funciona» o «no funciona»: mido en qué tipo de petición acierta y en cuál falla. Casi siempre el fallo está concentrado en un caso concreto, y ahí se corrige.",
+            },
+            {
+              nombre: "Coste y tiempo por ejecución",
+              detalle: "Un agente que resuelve bien pero cuesta más que hacerlo a mano no sirve. Comparo coste y tiempo contra el proceso manual que viene a reemplazar.",
+            },
+            {
+              nombre: "Cuántas veces pidió ayuda",
+              detalle: "Si un agente escala a una persona demasiado a menudo, el problema está en su diseño. Si no escala nunca, probablemente le falta un freno.",
+            },
+          ],
+        },
+      ],
+    },
+    {
       categoria: "Front-End",
       icono: "monitor",
       descripcion: "La interfaz que hace usable al sistema de IA.",

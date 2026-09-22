@@ -234,6 +234,16 @@ export default function EstilosGlobales({ t = TEMA }) {
       }
       .punto-album:hover { background: ${t.accent} !important; }
 
+      /* ---------- PANEL DE AGENTES ---------- */
+      .pestana-agente {
+        transition: background var(--t-ui) var(--ease),
+                    border-color var(--t-ui) var(--ease),
+                    color var(--t-ui) var(--ease);
+      }
+      .pestana-agente:hover { border-color: ${t.accentBorder}; color: ${t.accentText}; }
+      /* Al cambiar de pestana el bloque entra, para que el cambio se note */
+      .bloque-agente { animation: subirEntrada var(--t-ui) var(--ease) both; }
+
       /* ---------- ARBOL DE CLAUDE: SKILLS Y MCP ---------- */
       .rama-claude { transition: opacity var(--t-ui) var(--ease); }
       .rama-claude:hover { opacity: 0.82; }

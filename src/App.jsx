@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import {
   Github, Linkedin, Mail, Download, ArrowRight, ArrowLeft,
@@ -6,6 +7,7 @@ import {
   Sparkles, ExternalLink, FolderGit2, ArrowUp,
   Code2, Server, Settings2, BrainCircuit,
   BarChart3, BookOpen, MessageSquare, Bot, Workflow, Camera, Images, Hammer, Lightbulb, Check,
+  ShieldCheck, Gauge,
   Mic, Heart,
 } from "lucide-react";
 
@@ -26,6 +28,35 @@ const LUCIDE_TECH = { powerbi: BarChart3, gpt: MessageSquare, notebooklm: BookOp
    COMPONENTES Y UTILIDADES
    (hooks reutilizables están en src/hooks/useReveal.js)
    ============================================================ */
+
+/* Portal para ventanas modales.
+
+   CAUSA DEL BUG QUE HABIA AQUI: el visor se renderizaba dentro del
+   arbol de la seccion, y ese arbol esta bajo `.seccion-entra`, que usa
+   `animation` con `transform` y `fill-mode: both`. Un transform activo
+   crea un "contenedor" nuevo: cualquier hijo con `position: fixed` se
+   ancla a ESE elemento en lugar de a la ventana. Resultado: el modal
+   aparecia cortado y desplazado con el scroll de la pagina.
+
+   La unica solucion correcta es sacar el modal de ese arbol. Se monta
+   directo en <body>, donde nada lo atrapa. */
+function Portal({ children }) {
+  const [nodo] = useState(() => {
+    if (typeof document === "undefined") return null;
+    const d = document.createElement("div");
+    d.setAttribute("data-portal", "modal");
+    return d;
+  });
+
+  useEffect(() => {
+    if (!nodo) return;
+    document.body.appendChild(nodo);
+    return () => { if (nodo.parentNode) nodo.parentNode.removeChild(nodo); };
+  }, [nodo]);
+
+  if (!nodo) return null;
+  return createPortal(children, nodo);
+}
 
 /* Bloqueo del scroll de fondo para ventanas modales.
 
@@ -1023,6 +1054,135 @@ function ArbolClaude({ t, cat }) {
   );
 }
 
+/* Panel de Agentes de IA.
+
+   Tres bloques —Orquestación, Control, Medición— en pestañas. Cada
+   punto es texto explicado, no un chip con logo: aquí no hay marcas
+   que mostrar, hay criterio. Por eso se abandona la rejilla de iconos
+   del resto de categorías, que dejaba insignias con una letra suelta.
+
+   El icono va por bloque, no por punto: un solo signo que agrupa,
+   en lugar de cinco placeholders sin significado. */
+const ICONOS_BLOQUE_AGENTE = {
+  orquestacion: Workflow,
+  control: ShieldCheck,
+  medicion: Gauge,
+};
+
+function PanelAgentes({ t, cat }) {
+  const [activo, setActivo] = useState(cat.bloques?.[0]?.clave || null);
+  const bloque = (cat.bloques || []).find((b) => b.clave === activo);
+
+  return (
+    <div className="pb-8 pl-0 md:pl-[3.9rem]">
+      {/* La distinción de fondo: workflow vs agente */}
+      {cat.intro && (
+        <p
+          className="pb-6 leading-relaxed"
+          style={{ color: t.text, fontSize: 15, maxWidth: "70ch", textWrap: "pretty" }}
+        >
+          {cat.intro}
+        </p>
+      )}
+
+      {/* Pestañas de los tres bloques */}
+      <div
+        className="flex flex-wrap gap-2 pb-6"
+        role="tablist"
+        aria-label="Aspectos del diseño de agentes"
+      >
+        {(cat.bloques || []).map((b) => {
+          const on = b.clave === activo;
+          const Icono = ICONOS_BLOQUE_AGENTE[b.clave] || Bot;
+          return (
+            <button
+              key={b.clave}
+              type="button"
+              role="tab"
+              aria-selected={on}
+              onClick={() => setActivo(b.clave)}
+              className="pestana-agente inline-flex items-center gap-2 px-3.5 py-2"
+              style={{
+                borderRadius: 9,
+                background: on ? t.accentSoft : t.surface,
+                border: `1px solid ${on ? t.accentBorder : t.borderSoft}`,
+                color: on ? t.accentText : t.muted,
+                fontFamily: MONO,
+                fontSize: 11,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+              }}
+            >
+              <Icono size={13} strokeWidth={2} />
+              {b.titulo}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Contenido del bloque activo */}
+      {bloque && (
+        <div key={bloque.clave} className="bloque-agente">
+          <p
+            className="pb-5 leading-relaxed"
+            style={{ color: t.muted, fontSize: 14.5, maxWidth: "68ch", textWrap: "pretty" }}
+          >
+            {bloque.resumen}
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-x-10 gap-y-6">
+            {bloque.puntos.map((pt, i) => (
+              <div key={pt.nombre} className="flex items-start gap-3.5">
+                {/* Número en vez de logo: es un criterio, no una marca */}
+                <span
+                  className="shrink-0 flex items-center justify-center"
+                  style={{
+                    width: 22, height: 22, borderRadius: 6,
+                    background: t.surface2,
+                    border: `1px solid ${t.borderSoft}`,
+                    fontFamily: MONO, fontSize: 9.5,
+                    color: t.accentText,
+                    marginTop: 2,
+                  }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="min-w-0">
+                  <div
+                    className="font-semibold"
+                    style={{ color: t.text, fontSize: 14.5, letterSpacing: "-0.01em" }}
+                  >
+                    {pt.nombre}
+                  </div>
+                  <div
+                    className="mt-1 leading-relaxed"
+                    style={{ color: t.muted, fontSize: 13.5, textWrap: "pretty" }}
+                  >
+                    {pt.detalle}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Nota honesta: dónde está esto hoy */}
+      <div
+        className="mt-7 pt-5 flex items-start gap-3"
+        style={{ borderTop: `1px solid ${t.borderSoft}` }}
+      >
+        <span className="punto-vivo shrink-0 w-1.5 h-1.5 rounded-full mt-2" style={{ background: t.accent2 }} />
+        <p style={{ color: t.faint, fontSize: 13, maxWidth: "68ch", textWrap: "pretty" }}>
+          En producción tengo workflows, no agentes: la diferencia está arriba y la
+          respeto. Las orquestaciones que estoy montando aparecen en{" "}
+          <span style={{ color: t.accent2Text }}>En proceso</span>, con su estado real.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /* Fila de categoría — estructura de tabla editorial, no tarjeta.
    Cerrada: número, nombre y los logos alineados a la derecha.
    Abierta: el detalle de cada tecnología en dos columnas.
@@ -1065,7 +1225,7 @@ function TarjetaCategoria({ t, cat, abierta, onToggle, delay }) {
                 {cat.categoria}
               </span>
               <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint }}>
-                {String(cat.arbol ? cat.ramas.length : cat.items.length).padStart(2, "0")}
+                {String(cat.arbol ? cat.ramas.length : cat.agentes ? cat.bloques.length : cat.items.length).padStart(2, "0")}
               </span>
             </span>
             <span className="block mt-1.5" style={{ fontSize: 14, color: t.muted }}>
@@ -1077,7 +1237,7 @@ function TarjetaCategoria({ t, cat, abierta, onToggle, delay }) {
           <span
             className={`hidden md:flex items-center gap-1.5 shrink-0 transition-opacity duration-200 ${abierta ? "opacity-0" : "opacity-100"}`}
           >
-            {(cat.arbol ? [cat.raiz] : cat.items.slice(0, 5)).map((item) => (
+            {(cat.arbol ? [cat.raiz] : cat.agentes ? [] : cat.items.slice(0, 5)).map((item) => (
               <IconoTech key={item.nombre} t={t} slug={item.slug} color={item.color} nombre={item.nombre} lucide={LUCIDE_TECH[item.lucide]} tam={14} />
             ))}
           </span>
@@ -1105,6 +1265,8 @@ function TarjetaCategoria({ t, cat, abierta, onToggle, delay }) {
           <div className="overflow-hidden">
             {cat.arbol ? (
               <ArbolClaude t={t} cat={cat} />
+            ) : cat.agentes ? (
+              <PanelAgentes t={t} cat={cat} />
             ) : (
               <div className="pb-8 pl-0 md:pl-[3.9rem] grid sm:grid-cols-2 gap-x-10 gap-y-5">
                 {cat.items.map((item) => (
@@ -2569,6 +2731,7 @@ function VisorAlbum({ t, momento, onCerrar }) {
   const actual = fotos[idx];
 
   return (
+    <Portal>
     <div
       className="visor-album fixed inset-0 flex items-center justify-center p-3 sm:p-4 md:p-8"
       style={{
@@ -2767,6 +2930,7 @@ function VisorAlbum({ t, momento, onCerrar }) {
         </div>
       </div>
     </div>
+    </Portal>
   );
 }
 
