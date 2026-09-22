@@ -195,17 +195,17 @@ const LOGOS_SVG = {
       <path d="M21.4737 6.3158c-1.1954 0-2.2019.8082-2.5017 1.9079h-2.9772c-1.2432 0-2.2937.9153-2.4708 2.1458l-.1263.8768c-.0886.6152-.6138 1.0729-1.2354 1.0729h-.4041c-.3-1.0997-1.3063-1.9079-2.5018-1.9079-1.1954 0-2.2018.8082-2.5017 1.9079H4.1075c-.3-1.0997-1.3063-1.9079-2.5017-1.9079C.7189 10.4113 0 11.1302 0 12.0171c0 .8868.7189 1.6058 1.6058 1.6058 1.1954 0 2.2018-.8083 2.5017-1.9079h2.6472c.2999 1.0996 1.3063 1.9079 2.5017 1.9079 1.1955 0 2.2018-.8083 2.5018-1.9079h.4041c1.2432 0 2.2937-.9153 2.4708-2.1458l.1263-.8768c.0886-.6152.6138-1.0729 1.2354-1.0729h2.9772c.2998 1.0997 1.3063 1.9079 2.5017 1.9079C22.3605 9.5273 23.0794 8.8084 23.0794 7.9216c0-.8869-.7189-1.6058-1.6057-1.6058Z" />
     </svg>
   ),
-  // Higgsfield — dibujado aquí: no existe en Simple Icons.
-  // Un campo de partículas convergiendo a un núcleo: la idea de
-  // "campo" del nombre, legible a 16px.
-  higgsfield: ({ size = 22, color = "#22D3EE" }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden focusable="false">
-      <g stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round">
-        <ellipse cx="12" cy="12" rx="10" ry="4.6" />
-        <ellipse cx="12" cy="12" rx="10" ry="4.6" transform="rotate(60 12 12)" />
-        <ellipse cx="12" cy="12" rx="10" ry="4.6" transform="rotate(120 12 12)" />
-      </g>
-      <circle cx="12" cy="12" r="3" fill={color} />
+  // Higgsfield — reproducido del favicon oficial de higgsfield.ai:
+  // trazo negro serpenteante sobre cuadrado verde lima #D1FE17.
+  // No esta en Simple Icons, por eso se dibuja aqui.
+  higgsfield: ({ size = 22 }) => (
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden focusable="false">
+      <rect width="48" height="48" rx="11" fill="#D1FE17" />
+      <path
+        d="M10 17c3.4 0 4.4-4 8-4 2.7 0 4.3 2 4.3 4.3 0 3.6-4.9 5-4.9 8.7 0 2.4 1.8 4 4.3 4 3.6 0 5.3-3.6 9-3.6 2.5 0 4.2 1.7 4.2 4.2 0 3.2-2.6 5.5-5.5 5.5-2.4 0-3.9-1.4-3.9-3.3 0-2.8 2.8-4.2 6.5-4.2"
+        fill="none" stroke="#131313" strokeWidth="4.4"
+        strokeLinecap="round" strokeLinejoin="round"
+      />
     </svg>
   ),
   // Perplexity — isotipo oficial
@@ -2867,10 +2867,10 @@ function EnProceso({ t }) {
           num="05"
           eyebrow="En proceso"
           titulo="Lo que estoy construyendo ahora"
-          descripcion="Una pizarra abierta: proyectos en marcha, formación en curso e ideas que todavía no empiezan. Sin fechas prometidas."
+          descripcion="Una pizarra abierta: workflows en marcha, agentes que quiero construir e ideas que todavía no empiezan. Sin fechas prometidas — lo que está aquí es lo que estoy pensando, no lo que ya entregué."
         />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {lista.map((item, i) => (
             <TarjetaProceso key={item.titulo} t={t} item={item} indice={i} />
           ))}

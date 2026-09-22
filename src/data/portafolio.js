@@ -145,46 +145,6 @@ export const DATOS = {
       ],
     },
     {
-      /* AGENTES — categoría propia. Un agente no es un flujo con pasos
-         fijos: recibe un objetivo, decide qué hacer y usa herramientas
-         hasta cumplirlo. Eso es lo que se describe aquí. */
-      categoria: "Agentes de IA",
-      icono: "bot",
-      descripcion: "Sistemas que reciben un objetivo y deciden cómo cumplirlo.",
-      items: [
-        {
-          nombre: "Agentes con herramientas",
-          slug: "",
-          color: "",
-          detalle: "Le doy un objetivo y un conjunto de herramientas, y el agente decide qué usar y en qué orden. No sigue un guion: evalúa el resultado de cada paso y corrige el siguiente.",
-        },
-        {
-          nombre: "Subagentes en paralelo",
-          slug: "",
-          color: "",
-          detalle: "Una tarea grande repartida entre varios agentes que trabajan a la vez, cada uno con su especialidad, y un coordinador que junta los resultados.",
-        },
-        {
-          nombre: "Límites y confirmación humana",
-          slug: "",
-          color: "",
-          detalle: "Lo que define a un agente utilizable no es lo que puede hacer, sino lo que no puede. Defino qué ejecuta solo y qué requiere que una persona apruebe antes.",
-        },
-        {
-          nombre: "Memoria y contexto",
-          slug: "",
-          color: "",
-          detalle: "El agente recuerda lo que ya hizo y con qué datos trabaja, para que la segunda ejecución no empiece de cero.",
-        },
-        {
-          nombre: "Evaluación de resultados",
-          slug: "",
-          color: "",
-          detalle: "Un agente sin forma de medir si acertó es una apuesta. Compruebo sus salidas contra casos conocidos antes de dejarlo trabajar solo.",
-        },
-      ],
-    },
-    {
       categoria: "Front-End",
       icono: "monitor",
       descripcion: "La interfaz que hace usable al sistema de IA.",
@@ -514,12 +474,36 @@ export const DATOS = {
      Añade, quita o reordena libremente: la sección se adapta. */
   enProceso: [
     {
-      titulo: "Jarvis en mi Alexa",
+      titulo: "Orquestación de agentes para software",
       estado: "explorando",
-      etiqueta: "Asistente de voz",
+      etiqueta: "Agentes de IA",
       texto:
-        "Tengo un Echo en casa y quiero dejar de hablarle a Alexa para hablarle a algo mío: conectar un modelo de lenguaje por API y devolver la respuesta con voz sintetizada tipo Jarvis. Lo interesante no es el disfraz de voz, es el puente — que el asistente responda con mis datos y pueda disparar mis automatizaciones de n8n por voz.",
-      pila: ["Alexa Skills", "API de LLM", "Síntesis de voz", "n8n"],
+        "La idea que más me interesa: montar un equipo de agentes que se reparta el trabajo de una pequeña fábrica de software. Uno que desarrolle, otro que revise la calidad, otro que escriba y corra las pruebas, otro que lleve las redes y otro que busque clientes. Lo difícil no es cada agente por separado, es la coordinación entre ellos y saber dónde tiene que entrar una persona.",
+      pila: ["Claude", "MCP", "Subagentes", "n8n"],
+    },
+    {
+      titulo: "Agente de noticias por relevancia",
+      estado: "explorando",
+      etiqueta: "Agentes de IA",
+      texto:
+        "No un bot que envíe titulares cada mañana, sino un agente que juzgue: que avise cuando algo de verdad importa y se calle cuando no hay nada. Empezaría con tecnología, que es lo que sigo a diario, pero el mismo criterio sirve para cualquier campo donde llegar temprano valga algo.",
+      pila: ["Claude", "Búsqueda", "Evaluación de relevancia", "Telegram"],
+    },
+    {
+      titulo: "Publicaciones en LinkedIn automatizadas",
+      estado: "construyendo",
+      etiqueta: "Workflow",
+      texto:
+        "El tercer flujo de la familia: publicar en LinkedIn con criterio profesional, que es un registro distinto al de redes de consumo. Aquí el contenido tiene que sostener una conversación de negocio, no buscar alcance.",
+      pila: ["n8n", "Claude", "API de LinkedIn"],
+    },
+    {
+      titulo: "Vídeos de mis proyectos",
+      estado: "construyendo",
+      etiqueta: "Portafolio",
+      texto:
+        "Estoy grabando los proyectos funcionando y, donde el cliente acepte, su propio testimonio: quien usa el sistema contando qué le resolvió. Un caso de estudio se lee; un vídeo del vendedor usando la app en ruta se entiende de inmediato.",
+      pila: ["Grabación en campo", "Testimonios de cliente", "Casos de estudio"],
     },
     {
       titulo: "Biblioteca de Skills propias",
@@ -530,12 +514,12 @@ export const DATOS = {
       pila: ["Claude Skills", "MCP", "Documentación"],
     },
     {
-      titulo: "Vídeos de mis proyectos",
-      estado: "construyendo",
-      etiqueta: "Portafolio",
+      titulo: "Jarvis en mi Alexa",
+      estado: "explorando",
+      etiqueta: "Asistente de voz",
       texto:
-        "Estoy grabando los proyectos funcionando y, donde el cliente acepte, su propio testimonio: quien usa el sistema contando qué le resolvió. Un caso de estudio se lee; un vídeo del vendedor usando la app en ruta se entiende de inmediato.",
-      pila: ["Grabación en campo", "Testimonios de cliente", "Casos de estudio"],
+        "Tengo un Echo en casa y quiero dejar de hablarle a Alexa para hablarle a algo mío: conectar un modelo de lenguaje por API y devolver la respuesta con voz sintetizada tipo Jarvis. Lo interesante no es el disfraz de voz, es el puente — que el asistente responda con mis datos y pueda disparar mis automatizaciones de n8n por voz.",
+      pila: ["Alexa Skills", "API de LLM", "Síntesis de voz", "n8n"],
     },
     {
       titulo: "GPT-6 Astra para agentes",
@@ -573,6 +557,94 @@ export const DATOS = {
        Sin el campo `video` el bloque simplemente no aparece: la página
        no queda con un hueco vacío. */
   proyectos: [
+    {
+      id: "redes-automatizadas",
+      codigo: "PRJ-10",
+      categoria: "negocio",
+      orden: 1,
+      nombre: "Redes sociales automatizadas",
+      corto: "Workflow de n8n que produce y publica el contenido de Conecta Systems en varias redes: posts, carruseles y vídeo, orientado a traer clientes.",
+      problema: "Mantener presencia constante en redes exige horas diarias de trabajo manual que un equipo pequeño no tiene.",
+      resultado: "Sistema propio de Conecta Systems, en desarrollo avanzado: el contenido se genera y programa solo, con revisión humana antes de publicar.",
+      stack: ["n8n", "Claude", "Higgsfield", "APIs de redes"],
+      gradiente: ["#161D2A", "#243348"],
+      imagen: "/proyectos/demo/p1.jpg",   // DEMO — reemplazar por captura real del workflow
+      detalle: {
+        resumen:
+          "Flujo de automatización que cubre el ciclo completo del contenido de marca: decide el tema, redacta el texto, genera la pieza visual o el vídeo, y lo programa en cada red con el formato que corresponde. El objetivo del contenido es comercial: que el enlace traiga interesados, no acumular visualizaciones.",
+        problemaLargo:
+          "Publicar de forma constante es lo que sostiene una marca pequeña, pero el trabajo manual no escala: elegir tema, redactar, diseñar la pieza, adaptarla a cada red y programarla consume horas todos los días. En la práctica se publica a rachas y la presencia se cae justo cuando hay más trabajo de clientes.",
+        solucion:
+          "Un workflow de n8n donde Claude dirige el criterio editorial mediante MCP y n8n ejecuta: redacción, generación de la pieza (imagen, carrusel o vídeo con Higgsfield), adaptación por red y programación. Queda un punto de revisión humana antes de publicar: el sistema propone, una persona aprueba.",
+        arquitectura:
+          "n8n como orquestador con disparadores programados. Claude conectado por MCP aporta las decisiones de contenido; las APIs de cada red reciben la publicación ya formateada. El estado de cada pieza se guarda para no repetir temas ni pisar publicaciones.",
+        stackDetalle: {
+          frontend: ["No aplica — es un sistema de fondo, sin interfaz propia"],
+          backend: ["n8n — orquestación de todo el flujo", "APIs REST y webhooks de cada red social"],
+          baseDatos: ["Registro del contenido publicado para evitar repeticiones"],
+          herramientas: ["Programación por horarios", "Punto de aprobación humana antes de publicar"],
+          ia: ["Claude vía MCP — criterio editorial y redacción", "Higgsfield — generación de vídeo"],
+        },
+        decisiones: [
+          {
+            titulo: "El sistema propone, la persona aprueba",
+            texto: "Publicar sin revisión en el canal de la propia marca es un riesgo que no compensa. El flujo deja una parada obligatoria: automatiza el trabajo, no la responsabilidad.",
+          },
+          {
+            titulo: "Contenido para traer clientes, no para acumular vistas",
+            texto: "Cada pieza se construye alrededor de un enlace y una razón para hacer clic. Es la diferencia de fondo con el flujo de monetización por visualizaciones.",
+          },
+        ],
+        impacto:
+          "Convierte la presencia en redes de una tarea diaria en un proceso que corre solo. En desarrollo avanzado: ya produce y programa contenido, y sigue afinándose.",
+        demo: "#",
+        repo: "#",
+      },
+    },
+    {
+      id: "fabrica-video-monetizacion",
+      codigo: "PRJ-11",
+      categoria: "negocio",
+      orden: 2,
+      nombre: "Fábrica de vídeo para monetización",
+      corto: "Workflow que produce vídeo en cadena y lo publica en YouTube, TikTok, Facebook e Instagram, pensado para monetizar por visualizaciones.",
+      problema: "Monetizar con vídeo exige volumen y constancia: producir a mano una pieza diaria para varias plataformas es inviable.",
+      resultado: "Flujo en desarrollo avanzado: genera el vídeo completo y lo distribuye a las cuatro plataformas con el formato de cada una.",
+      stack: ["n8n", "Higgsfield", "Claude", "APIs de vídeo"],
+      gradiente: ["#1A1726", "#2C2740"],
+      imagen: "/proyectos/demo/p2.jpg",   // DEMO — reemplazar por captura real del workflow
+      detalle: {
+        resumen:
+          "Sistema de producción de vídeo en cadena: del tema al archivo publicado, sin intervención en cada paso. Guion, voz, imágenes, montaje y subida a YouTube, TikTok, Facebook e Instagram. A diferencia del flujo de redes de marca, aquí el objetivo es el volumen y las visualizaciones: la monetización viene de la propia plataforma.",
+        problemaLargo:
+          "Los programas de monetización premian la constancia y el volumen. Producir vídeo a mano —guion, voz, imágenes, montaje, subida, adaptación de formato por red— lleva horas por pieza, así que el ritmo necesario es imposible de sostener manualmente.",
+        solucion:
+          "Un workflow que encadena cada etapa: Claude escribe el guion, la voz se sintetiza, Higgsfield genera el material visual, el montaje se automatiza y n8n publica en cada plataforma con su relación de aspecto, duración y metadatos. Una pieza sale del sistema lista para su público.",
+        arquitectura:
+          "n8n orquesta una cadena de pasos donde cada etapa recibe la salida de la anterior. Las publicaciones salen por las APIs oficiales de cada plataforma, con una variante de formato por destino.",
+        stackDetalle: {
+          frontend: ["No aplica — sistema de fondo"],
+          backend: ["n8n — cadena de produccion y publicación", "APIs de YouTube, TikTok, Meta"],
+          baseDatos: ["Control de piezas producidas y publicadas por plataforma"],
+          herramientas: ["Síntesis de voz", "Montaje automatizado", "Adaptación de formato por red"],
+          ia: ["Claude — guion y estructura narrativa", "Higgsfield — generación del material visual"],
+        },
+        decisiones: [
+          {
+            titulo: "Una pieza, cuatro formatos",
+            texto: "Cada plataforma tiene su relación de aspecto, duración óptima y forma de titular. Publicar el mismo archivo en las cuatro desperdicia alcance, así que el flujo genera una variante por destino.",
+          },
+          {
+            titulo: "Separado del flujo de marca",
+            texto: "Aunque comparte herramientas con el workflow de Conecta Systems, el objetivo es opuesto: aquí manda el volumen y la retención; allí, la calidad del lead. Mezclarlos habría dado un sistema peor en las dos cosas.",
+          },
+        ],
+        impacto:
+          "Hace viable un ritmo de publicación que a mano no se sostiene. En desarrollo avanzado, con la cadena de producción funcionando de punta a punta.",
+        demo: "#",
+        repo: "#",
+      },
+    },
     {
       id: "vistony-ruta-nazca",
       codigo: "PRJ-01",
