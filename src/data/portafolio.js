@@ -379,14 +379,14 @@ export const DATOS = {
       lugar: "Universidad Tecnológica del Perú · Ica",
       fecha: "2026",
       categoria: "formacion",
-      portada: "",
+      portada: "/galeria/demo/d1.jpg",
       alto: "alto",
       relato:
         "Conferencia organizada por mi universidad con ingenieros de Google, Microsoft y Tata Consultancy Services. Escuchar a peruanos que llegaron a esas empresas cambia la escala de lo que uno cree posible desde Ica.",
       album: [
-        { foto: "", pie: "Mi fotocheck de acreditación del evento" },
-        { foto: "", pie: "Los ponentes en escena durante una de las charlas" },
-        { foto: "", pie: "Con mi enamorada frente al letrero del Tech Summit" },
+        { foto: "/galeria/demo/d2.jpg", pie: "Mi fotocheck de acreditación del evento" },
+        { foto: "/galeria/demo/d3.jpg", pie: "Los ponentes en escena durante una de las charlas" },
+        { foto: "/galeria/demo/d4.jpg", pie: "Con mi enamorada frente al letrero del Tech Summit" },
       ],
     },
     {
@@ -394,9 +394,12 @@ export const DATOS = {
       lugar: "Universidad Tecnológica del Perú",
       fecha: "En curso",
       categoria: "formacion",
-      portada: "",
+      portada: "/galeria/demo/d5.jpg",
       alto: "medio",
-      album: [],
+      album: [
+        { foto: "/galeria/demo/d6.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d7.jpg", pie: "Foto de ejemplo" },
+      ],
     },
 
     // 💼 Trabajo
@@ -405,18 +408,26 @@ export const DATOS = {
       lugar: "Indra · Minsait",
       fecha: "2025",
       categoria: "trabajo",
-      portada: "",
+      portada: "/galeria/demo/d8.jpg",
       alto: "medio",
-      album: [],
+      album: [
+        { foto: "/galeria/demo/d9.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d10.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d11.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d12.jpg", pie: "Foto de ejemplo" },
+      ],
     },
     {
       titulo: "Trabajo con clientes",
       lugar: "Conecta Systems",
       fecha: "2024–2025",
       categoria: "trabajo",
-      portada: "",
+      portada: "/galeria/demo/d13.jpg",
       alto: "alto",
-      album: [],
+      album: [
+        { foto: "/galeria/demo/d14.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d15.jpg", pie: "Foto de ejemplo" },
+      ],
     },
 
     // 🧑‍🏫 Enseñanza
@@ -425,29 +436,42 @@ export const DATOS = {
       lugar: "Colegio J. C. Mariátegui",
       fecha: "2023",
       categoria: "ensenanza",
-      portada: "",
+      portada: "/galeria/demo/d16.jpg",
       alto: "alto",
       relato:
         "Llevé inteligencia artificial y robótica básica a un aula de primaria. Explicar un modelo de lenguaje a un niño de diez años obliga a entenderlo de verdad.",
-      album: [],
+      album: [
+        { foto: "/galeria/demo/d17.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d18.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d19.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d20.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d1.jpg", pie: "Foto de ejemplo" },
+      ],
     },
     {
       titulo: "Charla de Inteligencia Artificial",
       lugar: "Antonia Moreno de Cáceres",
       fecha: "2023",
       categoria: "ensenanza",
-      portada: "",
+      portada: "/galeria/demo/d2.jpg",
       alto: "medio",
-      album: [],
+      album: [
+        { foto: "/galeria/demo/d3.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d4.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d5.jpg", pie: "Foto de ejemplo" },
+      ],
     },
     {
       titulo: "IA y robótica básica",
       lugar: "San Francisco College",
       fecha: "2023",
       categoria: "ensenanza",
-      portada: "",
+      portada: "/galeria/demo/d6.jpg",
       alto: "medio",
-      album: [],
+      album: [
+        { foto: "/galeria/demo/d7.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d8.jpg", pie: "Foto de ejemplo" },
+      ],
     },
 
     // ✨ Personal
@@ -456,9 +480,12 @@ export const DATOS = {
       lugar: "Detrás del código",
       fecha: "Hoy",
       categoria: "personal",
-      portada: "",
+      portada: "/galeria/demo/d9.jpg",
       alto: "medio",
-      album: [],
+      album: [
+        { foto: "/galeria/demo/d10.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/demo/d11.jpg", pie: "Foto de ejemplo" },
+      ],
     },
   ],
 
@@ -501,6 +528,14 @@ export const DATOS = {
       texto:
         "Cada procedimiento que repito acaba siendo una Skill de Claude. Estoy convirtiendo mi forma de trabajar en una biblioteca versionada: diseño, revisión de código y propuestas comerciales ya están dentro, y la lista crece con cada proyecto.",
       pila: ["Claude Skills", "MCP", "Documentación"],
+    },
+    {
+      titulo: "Vídeos de mis proyectos",
+      estado: "construyendo",
+      etiqueta: "Portafolio",
+      texto:
+        "Estoy grabando los proyectos funcionando y, donde el cliente acepte, su propio testimonio: quien usa el sistema contando qué le resolvió. Un caso de estudio se lee; un vídeo del vendedor usando la app en ruta se entiende de inmediato.",
+      pila: ["Grabación en campo", "Testimonios de cliente", "Casos de estudio"],
     },
     {
       titulo: "GPT-6 Astra para agentes",
@@ -548,7 +583,7 @@ export const DATOS = {
       resultado: "Usada a diario en campo: ruta ordenada por cercanía, catálogo digital y carga de ventas desde Excel.",
       stack: ["JavaScript", "Leaflet", "Geolocalización", "Excel"],
       gradiente: ["#1B2430", "#2E3D52"],
-      imagen: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=900&q=80", // mapa / ruta GPS (oscuro). ← reemplazar con captura real del proyecto
+      imagen: "/proyectos/demo/p1.jpg",   // DEMO — reemplazar por captura real
       detalle: {
         resumen:
           "Aplicación móvil (archivo único HTML, sin instalación) para un vendedor de lubricantes que cubre la ruta de Nazca: mapa con 286 clientes geocodificados, orden de visitas por GPS, catálogo de productos y seguimiento de avance diario.",
@@ -591,7 +626,7 @@ export const DATOS = {
       resultado: "Proyecto entregado y facturado a cliente real; primer canal digital de captación de la academia.",
       stack: ["React", "Tailwind", "Netlify"],
       gradiente: ["#16202E", "#24344A"],
-      imagen: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=900&q=80", // diseño web / interfaz (oscuro). ← reemplazar con captura real del proyecto
+      imagen: "/proyectos/demo/p2.jpg",   // DEMO — reemplazar por captura real
       detalle: {
         resumen:
           "Sitio institucional para una academia: oferta académica, horarios, docentes y canal de contacto directo. Uno de los primeros proyectos comerciales de Conecta Systems, entregado a un cliente real.",
@@ -634,7 +669,7 @@ export const DATOS = {
       resultado: "Plataforma desplegada en Netlify con contenido estructurado por niveles y seguimiento de progreso.",
       stack: ["React", "Vite", "Tailwind"],
       gradiente: ["#1E2A38", "#33465E"],
-      imagen: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=900&q=80", // plataforma e-learning / app (oscuro). ← reemplazar con captura real del proyecto
+      imagen: "/proyectos/demo/p3.jpg",   // DEMO — reemplazar por captura real
       detalle: {
         resumen:
           "Plataforma de microaprendizaje para el área comercial de lubricantes: lecciones cortas sobre productos y técnicas de venta, con progreso persistente y evaluaciones por módulo.",
@@ -678,7 +713,7 @@ export const DATOS = {
       resultado: "Una web personal que muestra mi metodología con IA + un pipeline que me envía noticias a Telegram, filtradas a mi criterio.",
       stack: ["React", "APIs de IA", "Automatización", "Telegram"],
       gradiente: ["#141C28", "#233247"],
-      imagen: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=900&q=80", // IA / flujo de trabajo (oscuro). ← reemplazar con captura real del proyecto
+      imagen: "/proyectos/demo/p4.jpg",   // DEMO — reemplazar por captura real
       detalle: {
         resumen:
           "AIVERSE OS es mi espacio personal para mostrar cómo trabajo con la Inteligencia Artificial: el flujo, las herramientas y la forma en que las combino. Es a la vez una vitrina de mi metodología y un sistema real de automatización que uso a diario. (En actualización constante.)",
@@ -722,7 +757,7 @@ export const DATOS = {
       resultado: "Herramienta de uso real que ordena la información y reduce el análisis previo de horas a minutos.",
       stack: ["React", "Vite", "Visualización de datos"],
       gradiente: ["#1C2635", "#2B3C52"],
-      imagen: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80", // datos / estadísticas (oscuro). ← reemplazar con captura real del proyecto
+      imagen: "/proyectos/demo/p5.jpg",   // DEMO — reemplazar por captura real
       detalle: {
         resumen:
           "Aplicación web construida para un usuario real (un familiar aficionado a la hípica) que centraliza estadísticas de caballos, jinetes y resultados históricos para analizar carreras con datos en lugar de intuición.",
@@ -765,7 +800,7 @@ export const DATOS = {
       resultado: "Sitio web profesional que estructura su historial artístico y mejora su visibilidad y branding en internet.",
       stack: ["React", "Tailwind", "SEO", "Netlify"],
       gradiente: ["#172231", "#26374D"],
-      imagen: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=80", // escenario / actor (oscuro). ← reemplazar con captura real
+      imagen: "/proyectos/demo/p6.jpg",   // DEMO — reemplazar por captura real
       detalle: {
         resumen:
           "Plataforma web y jerarquía de contenidos para la gestión del historial artístico y el branding digital del actor Rafo Calderón. Proyecto cliente de Conecta Systems. (Más información se añadirá próximamente.)",
@@ -809,7 +844,7 @@ export const DATOS = {
       resultado: "Un espacio propio que ordena mi stack y enseña, con criterio, cómo y cuándo usar cada herramienta.",
       stack: ["React", "Vite", "Tailwind"],
       gradiente: ["#1A2432", "#2F4159"],
-      imagen: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=80", // código / herramientas dev (oscuro). ← reemplazar con captura real
+      imagen: "/proyectos/demo/p7.jpg",   // DEMO — reemplazar por captura real
       detalle: {
         resumen:
           "Un lado más personal: una web donde comparto mi kit de herramientas de desarrollo, cómo las uso en el día a día y cómo elegir la adecuada según el proyecto que alguien quiere construir. (Más información se añadirá próximamente.)",
@@ -853,7 +888,7 @@ export const DATOS = {
       resultado: "Taller dictado durante 2 meses + charlas en 3 colegios: divulgación temprana de IA a estudiantes y comunidad escolar.",
       stack: ["Educación", "IA", "GPT", "Robótica básica"],
       gradiente: ["#152030", "#223144"],
-      imagen: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80", // educación / niños aprendiendo (oscuro). ← reemplazar con foto real de Kidsapiens
+      imagen: "/proyectos/demo/p8.jpg",   // DEMO — reemplazar por captura real
       // tipo "historia": la página de detalle usa un layout distinto (no técnico)
       tipo: "historia",
       detalle: {
@@ -888,7 +923,7 @@ export const DATOS = {
       resultado: "Un asistente automático que me entrega noticias relevantes a mi Telegram en mis horarios, sin que yo tenga que buscar nada.",
       stack: ["Automatización", "Gemini API", "Telegram Bot", "APIs de búsqueda"],
       gradiente: ["#1D2836", "#31435C"],
-      imagen: "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?auto=format&fit=crop&w=900&q=80", // mensajería / notificaciones (oscuro). ← reemplazar con captura real
+      imagen: "/proyectos/demo/p9.jpg",   // DEMO — reemplazar por captura real
       detalle: {
         resumen:
           "Un bot personal de Telegram que automatiza mi consumo de noticias tecnológicas: en lugar de ir yo a buscar la información, ella viene a mí, ya filtrada y resumida, dos veces al día. (Proyecto en desarrollo.)",

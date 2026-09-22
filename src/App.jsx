@@ -30,26 +30,32 @@ const LUCIDE_TECH = { powerbi: BarChart3, gpt: MessageSquare, notebooklm: BookOp
 /* Bloqueo del scroll de fondo para ventanas modales.
 
    Lleva un contador en lugar de guardar y restaurar el valor anterior:
-   si dos modales se solapan, el segundo no "hereda" el hidden del
-   primero y al cerrarse no deja la pagina congelada. Solo el ultimo en
-   liberarse devuelve el scroll.
+   si dos modales se solapan, el segundo no "hereda" el estado del
+   primero y al cerrarse no deja la pagina congelada.
 
-   En iOS, `overflow: hidden` en el body no basta: hay que fijar la
-   posicion, o el fondo sigue arrastrandose bajo el modal. Se guarda el
-   scroll actual y se restaura al cerrar, para no perder el sitio. */
+   IMPORTANTE — por que NO se usa `position: fixed` en el body:
+   fijar el body y desplazarlo con `top: -Npx` es la receta clasica
+   para iOS, pero arrastra con el a todo hijo `position: fixed`, y el
+   modal es uno. Resultado: el modal aparecia desplazado N pixeles
+   hacia abajo, fuera de la pantalla. Aqui se bloquea solo el
+   desbordamiento, y se compensa el ancho de la barra de scroll para
+   que el contenido no salte al abrir.
+
+   En iOS hace falta ademas `touch-action: none`, porque alli
+   `overflow: hidden` no detiene el arrastre con el dedo. */
 let modalesAbiertos = 0;
-let scrollGuardado = 0;
 
 function bloquearScroll() {
   if (modalesAbiertos === 0) {
-    scrollGuardado = window.scrollY || window.pageYOffset || 0;
+    const raiz = document.documentElement;
     const b = document.body;
-    b.style.position = "fixed";
-    b.style.top = `-${scrollGuardado}px`;
-    b.style.left = "0";
-    b.style.right = "0";
-    b.style.width = "100%";
+    // Compensa la barra de scroll que desaparece: sin esto el
+    // contenido de detras da un salto lateral al abrir el modal.
+    const anchoBarra = window.innerWidth - raiz.clientWidth;
+    if (anchoBarra > 0) b.style.paddingRight = `${anchoBarra}px`;
     b.style.overflow = "hidden";
+    // iOS ignora overflow:hidden para el gesto tactil
+    b.style.touchAction = "none";
   }
   modalesAbiertos += 1;
 
@@ -60,14 +66,9 @@ function bloquearScroll() {
     modalesAbiertos = Math.max(0, modalesAbiertos - 1);
     if (modalesAbiertos === 0) {
       const b = document.body;
-      b.style.position = "";
-      b.style.top = "";
-      b.style.left = "";
-      b.style.right = "";
-      b.style.width = "";
       b.style.overflow = "";
-      // Volver exactamente donde estaba, sin animacion
-      window.scrollTo({ top: scrollGuardado, behavior: "instant" });
+      b.style.touchAction = "";
+      b.style.paddingRight = "";
     }
   };
 }
@@ -1885,6 +1886,46 @@ function PaginaHistoria({ t, proyecto: p, volver }) {
   );
 }
 
+/* Enlace de proyecto (web publicada o repositorio).
+
+   Si todavia no hay URL, el boton NO desaparece: se muestra apagado y
+   marcado como pendiente. Asi la ficha del proyecto se lee completa y
+   queda claro que el enlace llegara, en lugar de dejar un hueco.
+   Cuando el dato exista en portafolio.js, se activa solo. */
+function EnlaceProyecto({ t, href, icono: Icono, children, primario = false }) {
+  const activo = Boolean(href) && href !== "#";
+
+  if (!activo) {
+    return (
+      <span
+        className="inline-flex items-center gap-2.5 px-5 py-3"
+        style={{
+          borderRadius: 10,
+          border: `1px dashed ${t.border}`,
+          color: t.faint,
+          fontWeight: 500,
+          fontSize: "0.9rem",
+          cursor: "not-allowed",
+        }}
+        title="Enlace pendiente de publicar"
+        aria-disabled="true"
+      >
+        <Icono size={15} strokeWidth={2} />
+        {children}
+        <span style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", opacity: 0.8 }}>
+          próximamente
+        </span>
+      </span>
+    );
+  }
+
+  return (
+    <Boton t={t} primario={primario} icono={Icono} href={href}>
+      {children}
+    </Boton>
+  );
+}
+
 /* Bloque de contenido del detalle: etiqueta a la izquierda,
    texto a la derecha. Rejilla editorial, no muro de párrafos. */
 function BloqueDetalle({ t, etiqueta, titulo, children, ultimo = false }) {
@@ -1961,9 +2002,8 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
   if (p.tipo === "historia") return <PaginaHistoria t={t} proyecto={p} volver={volver} />;
 
   const grupos = GRUPOS_STACK.filter(([clave]) => d.stackDetalle?.[clave]?.length);
-  const demoOk = d.demo && d.demo !== "#";
-  const repoOk = d.repo && d.repo !== "#";
-  const hayEnlaces = demoOk || repoOk;
+  // Los enlaces se muestran siempre: si falta la URL, EnlaceProyecto
+  // los pinta desactivados en vez de ocultarlos.
   const tipo = (CATEGORIAS.find((c) => c.id === p.categoria) || {}).label || p.categoria;
 
   return (
@@ -2049,17 +2089,19 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
         </Reveal>
 
         {/* ---------- ENLACES ---------- */}
-        {hayEnlaces && (
-          <Reveal>
-            <div className="flex flex-wrap gap-3 pt-8">
-              {demoOk && <Boton t={t} primario icono={ExternalLink} href={d.demo}>Ver el proyecto en vivo</Boton>}
-              {repoOk && <Boton t={t} icono={FolderGit2} href={d.repo}>Código en GitHub</Boton>}
-            </div>
-          </Reveal>
-        )}
+        <Reveal>
+          <div className="flex flex-wrap gap-3 pt-8">
+            <EnlaceProyecto t={t} primario href={d.demo} icono={ExternalLink}>
+              Ver la web publicada
+            </EnlaceProyecto>
+            <EnlaceProyecto t={t} href={d.repo} icono={FolderGit2}>
+              Código en GitHub
+            </EnlaceProyecto>
+          </div>
+        </Reveal>
 
         {/* ---------- CUERPO EDITORIAL ---------- */}
-        <div className={hayEnlaces ? "mt-6" : "mt-2"}>
+        <div className="mt-6">
           <BloqueDetalle t={t} etiqueta="Resumen">
             <Parrafo t={t}>{d.resumen}</Parrafo>
           </BloqueDetalle>
@@ -2170,8 +2212,12 @@ function PaginaProyecto({ t, proyecto: p, volver }) {
         {/* ---------- PIE DE NAVEGACIÓN ---------- */}
         <Reveal>
           <div className="flex flex-wrap gap-3 pt-10" style={{ borderTop: `1px solid ${t.borderSoft}` }}>
-            {demoOk && <Boton t={t} primario icono={ExternalLink} href={d.demo}>Ver el proyecto</Boton>}
-            {repoOk && <Boton t={t} icono={FolderGit2} href={d.repo}>Código en GitHub</Boton>}
+            <EnlaceProyecto t={t} primario href={d.demo} icono={ExternalLink}>
+              Ver la web publicada
+            </EnlaceProyecto>
+            <EnlaceProyecto t={t} href={d.repo} icono={FolderGit2}>
+              Código en GitHub
+            </EnlaceProyecto>
             <Boton t={t} icono={ArrowLeft} onClick={() => volver("proyectos")}>Más proyectos</Boton>
           </div>
         </Reveal>
@@ -2524,16 +2570,30 @@ function VisorAlbum({ t, momento, onCerrar }) {
 
   return (
     <div
-      className="visor-album fixed inset-0 flex items-center justify-center p-4 md:p-8"
-      style={{ zIndex: CAPA.modal, background: "rgba(6,7,9,0.92)", backdropFilter: "blur(10px)" }}
+      className="visor-album fixed inset-0 flex items-center justify-center p-3 sm:p-4 md:p-8"
+      style={{
+        zIndex: CAPA.modal,
+        background: "rgba(6,7,9,0.92)",
+        backdropFilter: "blur(10px)",
+        // Altura real del viewport: en movil la barra del navegador
+        // cambia de alto y con `vh` el modal se sale de pantalla.
+        height: "100dvh",
+        overscrollBehavior: "contain",
+      }}
       role="dialog"
       aria-modal="true"
       aria-label={`Álbum: ${momento.titulo}`}
       onClick={onCerrar}
     >
       <div
-        className="visor-album-caja relative w-full max-w-4xl max-h-full overflow-y-auto"
-        style={{ background: t.bgAlt, border: `1px solid ${t.border}`, borderRadius: 16 }}
+        className="visor-album-caja relative w-full max-w-4xl overflow-y-auto"
+        style={{
+          background: t.bgAlt,
+          border: `1px solid ${t.border}`,
+          borderRadius: 16,
+          maxHeight: "100%",
+          overscrollBehavior: "contain",
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -2810,7 +2870,7 @@ function EnProceso({ t }) {
           descripcion="Una pizarra abierta: proyectos en marcha, formación en curso e ideas que todavía no empiezan. Sin fechas prometidas."
         />
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
           {lista.map((item, i) => (
             <TarjetaProceso key={item.titulo} t={t} item={item} indice={i} />
           ))}

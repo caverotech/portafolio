@@ -1,0 +1,25 @@
+IMAGENES DE PRUEBA — BORRAR ANTES DE PUBLICAR EN SERIO
+
+Estas fotos (p1.jpg ... p9.jpg) son genericas, descargadas de
+picsum.photos solo para ver como queda la seccion de Proyectos llena.
+NO son fotos de Alexys ni de sus proyectos.
+
+COMO SUSTITUIRLAS
+1. Pon tus fotos reales en public/proyectos/ (no en esta subcarpeta),
+   con nombres descriptivos en minusculas y con guiones:
+     alexys-cavero-utp-tech-summit-2026.jpg
+   NO: IMG_20260315_094512.jpg
+   El nombre del archivo cuenta para Google Imagenes.
+
+2. En src/data/portafolio.js, dentro de `proyectos`, cambia las rutas:
+     imagen: "/proyectos/demo/d1.jpg"
+        ->   "/proyectos/alexys-cavero-utp-tech-summit-2026.jpg"
+   y los `foto` de cada entrada de `album`.
+
+3. Escribe el `pie` real de cada foto: aparece bajo la imagen en el
+   carrusel y es lo que Google lee para entender la escena.
+
+4. Borra esta carpeta entera cuando ya no quede ninguna referencia.
+
+5. Descomenta los bloques correspondientes en
+   public/sitemap-images.xml y reenvia el sitemap en Search Console.
