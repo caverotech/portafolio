@@ -631,7 +631,7 @@ export const DATOS = {
       estado: "estudiando",
       etiqueta: "Idiomas",
       texto:
-        "Estoy preparando la certificación de inglés en nivel B2. La documentación técnica, los modelos y las conversaciones del sector están en inglés, así que no es un requisito de trámite: es la diferencia entre leer una fuente el día que sale y esperar a que alguien la traduzca.",
+        "Estoy en B1 y preparando la certificación de nivel B2. La documentación técnica, los modelos y las conversaciones del sector están en inglés, así que no es un requisito de trámite: es la diferencia entre leer una fuente el día que sale y esperar a que alguien la traduzca.",
       pila: ["Inglés B2", "Comprensión técnica", "Certificación"],
     },
   ],
