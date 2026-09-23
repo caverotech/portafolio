@@ -13,7 +13,7 @@ import { movReducido } from "../hooks/useReveal";
 
      0. TELÓN      el negro se abre y aparece la retícula
      1. MARCA      el monograma se dibuja trazo a trazo
-     2. LUGAR      coordenadas y año, al margen
+     2. AÑO        la referencia temporal, al margen
      3. MARCA      el monograma se dibuja a gran escala
      4. INTENCIÓN  la frase que resume el trabajo, por líneas
      5. CAPACIDADES  se escriben una a una en el pie
@@ -129,7 +129,7 @@ export default function Bienvenida({ onTerminar }) {
 
     en(120, () => setPaso(1));                       // telón + retícula
     en(480, () => { setPaso(2); audio.current?.tic(520); });  // dominio
-    en(760, () => setPaso(3));                       // coordenadas
+    en(760, () => setPaso(3));                       // año
     en(1000, () => { setPaso(4); audio.current?.acorde(); }); // monograma
     en(2050, () => setPaso(5));                      // frase + nodo cobre
 
@@ -220,7 +220,7 @@ export default function Bienvenida({ onTerminar }) {
       {/* ---------- CONTENIDO ---------- */}
       <div className="relative h-full w-full max-w-[1500px] mx-auto px-6 md:px-10 lg:px-14 flex flex-col" style={{ zIndex: 2 }}>
 
-        {/* Cabecera: marca y coordenadas */}
+        {/* Cabecera: marca y año */}
         <div className="flex items-start justify-between gap-6 pt-8 md:pt-10">
           {/* Dominio, sin monograma: el grande lo sustituye */}
           <div
@@ -235,7 +235,7 @@ export default function Bienvenida({ onTerminar }) {
             </span>
           </div>
 
-          {/* Coordenadas y año */}
+          {/* Año */}
           <div
             className="text-right"
             style={{
@@ -245,9 +245,6 @@ export default function Bienvenida({ onTerminar }) {
             }}
           >
             <div style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.faint }}>
-              14°04′S 75°44′W
-            </div>
-            <div className="mt-1" style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: t.faint }}>
               PORTAFOLIO 2026
             </div>
           </div>

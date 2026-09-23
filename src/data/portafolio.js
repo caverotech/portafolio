@@ -12,7 +12,9 @@ export const DATOS = {
   tituloLinea2: "Agentes · LLMs · Procesos automatizados · Estudiante de Ingeniería de Sistemas",
   descripcion:
     "Diseño y construyo agentes de IA y flujos automatizados que reemplazan trabajo manual en negocios reales: integro modelos de lenguaje, orquesto procesos de punta a punta y desarrollo la interfaz que los vuelve usables. IA que entra en producción, no demos.",
-  ubicacion: "Ica, Perú",
+  // Solo el país: la ciudad se quitó de todo lo visible. Para la
+  // búsqueda local sigue declarada en los metadatos de index.html.
+  ubicacion: "Perú",
   disponible: "Disponible para oportunidades",
   email: "ing.alexyscavero@gmail.com",
   github: "https://github.com/ingalexyscavero-design",
@@ -425,13 +427,13 @@ export const DATOS = {
     // 🎓 Formación / Eventos
     {
       titulo: "UTP Tech Summit",
-      lugar: "Universidad Tecnológica del Perú · Ica",
+      lugar: "Universidad Tecnológica del Perú",
       fecha: "2026",
       categoria: "formacion",
       portada: "/galeria/demo/d1.jpg",
       alto: "alto",
       relato:
-        "Conferencia organizada por mi universidad con ingenieros de Google, Microsoft y Tata Consultancy Services. Escuchar a peruanos que llegaron a esas empresas cambia la escala de lo que uno cree posible desde Ica.",
+        "Conferencia organizada por mi universidad con ingenieros de Google, Microsoft y Tata Consultancy Services. Escuchar a peruanos que llegaron a esas empresas cambia la escala de lo que uno cree posible.",
       album: [
         { foto: "/galeria/demo/d2.jpg", pie: "Mi fotocheck de acreditación del evento" },
         { foto: "/galeria/demo/d3.jpg", pie: "Los ponentes en escena durante una de las charlas" },
@@ -1044,8 +1046,8 @@ export const DATOS = {
       categoria: "personal",
       orden: 1,
       nombre: "Kidsapiens · IA para niños",
-      corto: "Taller propio de Inteligencia Artificial para niños de primaria (2023), más charlas y exposiciones de IA en colegios de Ica.",
-      problema: "En 2023, con la IA recién explotando, casi nadie la acercaba a los niños ni la explicaba de forma sencilla en Ica.",
+      corto: "Taller propio de Inteligencia Artificial para niños de primaria (2023), más charlas y exposiciones de IA en colegios.",
+      problema: "En 2023, con la IA recién explotando, casi nadie la acercaba a los niños ni la explicaba de forma sencilla.",
       resultado: "Taller dictado durante 2 meses + charlas en 3 colegios: divulgación temprana de IA a estudiantes y comunidad escolar.",
       stack: ["Educación", "IA", "GPT", "Robótica básica"],
       gradiente: ["#152030", "#223144"],
@@ -1061,7 +1063,7 @@ export const DATOS = {
         experiencias: [
           { lugar: "Colegio J. C. Mariátegui", rol: "Taller Kidsapiens · 2 meses", detalle: "Taller sabatino de IA para niños de primaria. Iniciativa propia como Auxiliar." },
           { lugar: "Antonia Moreno de Cáceres", rol: "Charlas de IA", detalle: "Charlas de divulgación sobre Inteligencia Artificial a la comunidad escolar." },
-          { lugar: "San Francisco College", rol: "Exposición de IA y robótica", detalle: "Exposición de IA y robótica básica en uno de los colegios privados referentes de Ica." },
+          { lugar: "San Francisco College", rol: "Exposición de IA y robótica", detalle: "Exposición de IA y robótica básica en uno de los colegios privados referentes de la región." },
         ],
         // Qué me dejó (no decisiones técnicas)
         aprendizajes: [
@@ -1070,7 +1072,7 @@ export const DATOS = {
           { titulo: "Iniciativa y liderazgo", texto: "Nadie me pidió montar el taller: lo propuse, lo diseñé y lo ejecuté. Crear algo de cero y sostenerlo es una habilidad en sí misma." },
         ],
         impacto:
-          "Kidsapiens funcionó durante dos meses con buena acogida y se convirtió en el inicio de un pequeño recorrido de divulgación de IA en Ica. Una experiencia temprana de liderazgo, comunicación y de creer que la tecnología tiene más sentido cuando se comparte.",
+          "Kidsapiens funcionó durante dos meses con buena acogida y se convirtió en el inicio de un pequeño recorrido de divulgación de IA en colegios. Una experiencia temprana de liderazgo, comunicación y de creer que la tecnología tiene más sentido cuando se comparte.",
       },
     },
     {

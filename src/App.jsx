@@ -3105,8 +3105,8 @@ function Contacto({ t }) {
               </h2>
               <p className="mt-7 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "52ch" }}>
                 Estoy abierto a oportunidades como Ingeniero de IA y Automatización.
-                Trabajo desde <strong style={{ color: t.text, fontWeight: 500 }}>Ica</strong> con
-                negocios de <strong style={{ color: t.text, fontWeight: 500 }}>Lima y todo el Perú</strong>,
+                Trabajo con negocios de{" "}
+                <strong style={{ color: t.text, fontWeight: 500 }}>todo el Perú</strong>,
                 presencial o en remoto. Cuéntame qué necesitas resolver y vemos juntos
                 si la IA es el camino.
               </p>

@@ -10,7 +10,7 @@ import { useSecuenciaEntrada, useRatonSuave, movReducido } from "../hooks/useRev
    Narrativa de entrada, en este orden (≈1.4s en total):
 
      1. ATMÓSFERA  el retrato emerge de la oscuridad
-     2. IDENTIDAD  coordenadas y disponibilidad
+     2. DISPONIBLE señal de que acepto trabajo
      3. NOMBRE     clip reveal por línea
      4. ROL        la frase que debe recordarse
      5. VALOR      propuesta en una línea
@@ -67,7 +67,7 @@ export default function Hero({ t = TEMA, irASeccion }) {
           {/* ---------------- TEXTO: columnas 1–7 ---------------- */}
           <div className="lg:col-span-7 relative" style={{ zIndex: 2 }}>
 
-            {/* 2 · IDENTIDAD — microdetalles de encuadre */}
+            {/* 2 · DISPONIBILIDAD — el dato que importa antes del nombre */}
             <div
               className="flex items-center gap-4 mb-8 md:mb-10"
               style={{
@@ -84,10 +84,6 @@ export default function Hero({ t = TEMA, irASeccion }) {
                 <span style={{ fontFamily: MONO, fontSize: TIPO.etiqueta, letterSpacing: "0.16em", color: t.muted, textTransform: "uppercase" }}>
                   Disponible
                 </span>
-              </span>
-              <span className="h-px w-8 md:w-14" style={{ background: t.border }} />
-              <span style={{ fontFamily: MONO, fontSize: TIPO.etiqueta, letterSpacing: "0.16em", color: t.faint, textTransform: "uppercase" }}>
-                14°04′S 75°44′W
               </span>
             </div>
 
