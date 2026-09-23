@@ -8,8 +8,12 @@
 
 export const DATOS = {
   nombre: "Alexys Cavero",
-  titulo: "Ingeniero de IA & Automatización",
-  tituloLinea2: "Agentes · LLMs · Procesos automatizados · Estudiante de Ingeniería de Sistemas",
+  /* El título alinea la web con el CV, que dice "Desarrollador Full
+     Stack... enfocado en IA aplicada". "Full Stack" abre la puerta a
+     ofertas de desarrollo; el resto marca la especialidad. Corto a
+     propósito: se pinta a tamaño grande en el hero. */
+  titulo: "Full Stack · IA & Automatización",
+  tituloLinea2: "Agentes · LLMs · Workflows · Estudiante de Ingeniería de Sistemas",
   descripcion:
     "Diseño y construyo agentes de IA y flujos automatizados que reemplazan trabajo manual en negocios reales: integro modelos de lenguaje, orquesto procesos de punta a punta y desarrollo la interfaz que los vuelve usables. IA que entra en producción, no demos.",
   // Solo el país: la ciudad se quitó de todo lo visible. Para la
@@ -397,7 +401,7 @@ export const DATOS = {
      Van al pie de la sección de certificaciones. */
   certificadosCierre: {
     objetivo:
-      "Ruta orientada a un perfil de Ingeniero de IA y Automatización: diseño de automatizaciones empresariales, flujos con IA generativa, integración de APIs y desarrollo de software para empresas.",
+      "Ruta orientada a un perfil Full Stack especializado en IA y automatización: diseño de automatizaciones empresariales, flujos con IA generativa, integración de APIs y desarrollo de software para empresas.",
     complementan:
       "Anthropic y Google Cloud refuerzan IA generativa y LLMs. n8n acredita automatización de procesos e integraciones. IBM aporta los fundamentos aplicados al contexto empresarial. CS50 consolida la base de ingeniería de software.",
     transparencia:

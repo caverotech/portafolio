@@ -3139,7 +3139,7 @@ function Contacto({ t }) {
                 <span style={{ fontStyle: "italic", color: t.accent }}>automatizado</span>?
               </h1>
               <p className="mt-7 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "52ch" }}>
-                Estoy abierto a oportunidades como Ingeniero de IA y Automatización.
+                Estoy abierto a oportunidades como Desarrollador Full Stack en IA y Automatización.
                 Trabajo con negocios de{" "}
                 <strong style={{ color: t.text, fontWeight: 500 }}>todo el Perú</strong>,
                 presencial o en remoto. Cuéntame qué necesitas resolver y vemos juntos

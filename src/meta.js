@@ -23,9 +23,12 @@ const MARCA = "Alexys Cavero";
    que ya estaba bien resuelta. Se repiten aquí para que el
    prerenderizador tenga un único origen de datos. */
 const HOME = {
-  titulo: "Alexys Cavero · Ingeniero de IA y Automatización en Perú",
+  /* En el título y la descripción el rol va en texto corrido, sin el
+     "·" que el hero usa como separador visual: aquí lo que cuenta son
+     los términos por los que alguien busca. */
+  titulo: "Alexys Cavero · Desarrollador Full Stack, IA y Automatización en Perú",
   descripcion:
-    "Ingeniero de IA y Automatización en Ica, Perú. Construyo agentes de IA, automatizo procesos con n8n y Claude, e integro LLMs en sistemas reales — con la interfaz que los hace usables. Trabajo remoto en todo Perú.",
+    "Desarrollador Full Stack especializado en IA y automatización, en Ica, Perú. Construyo agentes de IA, automatizo procesos con n8n y Claude, e integro LLMs en sistemas reales — con la interfaz que los hace usables. Trabajo remoto en todo Perú.",
 };
 
 /* Título y descripción de cada sección, tomados de su encabezado
@@ -79,7 +82,7 @@ const SECCIONES = {
     // App.jsx: h2 de la sección Contacto (sin el marcado del énfasis)
     titulo: `Contacto · ¿Tienes un proceso que debería estar automatizado? · ${MARCA}`,
     descripcion:
-      "Estoy abierto a oportunidades como Ingeniero de IA y Automatización. Trabajo con negocios de todo el Perú, presencial o en remoto.",
+      "Estoy abierto a oportunidades como Desarrollador Full Stack en IA y Automatización. Trabajo con negocios de todo el Perú, presencial o en remoto.",
   },
 };
 

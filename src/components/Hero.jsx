@@ -125,7 +125,11 @@ export default function Hero({ t = TEMA, irASeccion }) {
                   lineHeight: 1.2,
                 }}
               >
-                Ingeniero de IA
+                {/* Los separadores van en gris tenue: dejan leer las tres
+                    piezas del rol sin que compitan con el nombre. */}
+                Full Stack
+                <span style={{ color: t.faint }}> · </span>
+                IA
                 <span style={{ color: t.faint }}> & </span>
                 Automatización
               </p>
