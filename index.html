@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- iOS no usa el SVG: sin apple-touch-icon, al añadir la web a la
+         pantalla de inicio pone una captura reducida de la página. -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- ══════════════════════════════════════════════════════════
@@ -42,7 +46,14 @@
     <meta property="og:type" content="profile" />
     <meta property="og:url" content="https://www.caverotech.com/" />
     <meta property="og:locale" content="es_PE" />
-    <meta property="og:image" content="https://www.caverotech.com/Foto-2026.jpeg" />
+    <!-- Tarjeta 1200x630 (1.91:1), la proporción que usan LinkedIn,
+         WhatsApp y X. Foto-2026.jpeg es cuadrada, así que al recortarla
+         a ese formato se perdía parte de la cara. La genera
+         scripts/og.py a partir del mismo retrato, sin modificarlo. -->
+    <meta property="og:image" content="https://www.caverotech.com/og-2026.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:alt" content="Alexys Cavero, Ingeniero de IA y Automatización" />
     <meta property="profile:first_name" content="Alexys" />
     <meta property="profile:last_name" content="Cavero" />
@@ -53,7 +64,7 @@
       name="twitter:description"
       content="Agentes de IA, automatización con n8n e integración de LLMs. Ica, Perú."
     />
-    <meta name="twitter:image" content="https://www.caverotech.com/Foto-2026.jpeg" />
+    <meta name="twitter:image" content="https://www.caverotech.com/og-2026.jpg" />
     <meta name="twitter:image:alt" content="Alexys Cavero, Ingeniero de IA y Automatización" />
 
     <meta name="theme-color" content="#0A0B0D" />
@@ -165,21 +176,32 @@
               "serviceUrl": "https://www.caverotech.com/#contacto",
               "availableLanguage": { "@type": "Language", "name": "Español" }
             }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.caverotech.com/#sitio",
+            "url": "https://www.caverotech.com/",
+            "name": "Alexys Cavero · caverotech.com",
+            "inLanguage": "es-PE",
+            "publisher": { "@id": "https://www.caverotech.com/#alexys" },
+            "author": { "@id": "https://www.caverotech.com/#alexys" }
           }
         ]
       }
     </script>
   </head>
   <body>
-    <!-- Contenido para rastreadores y lectores de pantalla.
-         La web es una SPA: sin JavaScript el <div id="root"> está vacío
-         y un rastreador que no ejecute JS no vería absolutamente nada.
-         Google sí ejecuta JS, pero otros (y las vistas previas de
-         WhatsApp o LinkedIn) no siempre. Este bloque garantiza que
-         siempre haya un H1 y un texto que describa el sitio. -->
+    <!-- Respaldo para quien navegue sin JavaScript.
+         Desde que el build prerenderiza cada ruta (scripts/prerender.mjs),
+         el HTML ya llega con el contenido real, así que este bloque dejó
+         de ser el único texto disponible y pasó a ser una red de
+         seguridad con los datos de contacto.
+         Ojo: aquí NO va un encabezado de primer nivel. El de cada
+         página es el de su contenido prerenderizado; poner otro aquí
+         daba dos en la portada y rompía la jerarquía. -->
     <noscript>
       <div style="max-width: 46rem; margin: 0 auto; padding: 3rem 1.5rem; color: #EDEFF2; font-family: system-ui, sans-serif; line-height: 1.6;">
-        <h1 style="font-size: 2rem; letter-spacing: -0.03em;">Alexys Cavero</h1>
+        <p style="font-size: 2rem; letter-spacing: -0.03em; font-weight: 600;">Alexys Cavero</p>
         <p style="color: #E8983E; font-weight: 600;">Ingeniero de IA y Automatización · Perú</p>
         <p>
           Construyo agentes de IA y flujos automatizados que reemplazan trabajo

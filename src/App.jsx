@@ -1,9 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { createPortal } from "react-dom";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+/* Lottie pesa 332 KB —la mitad del bundle— y solo se usa para el robot
+   que saluda en Contacto. Cargándolo con lazy() sale a su propio chunk
+   y no se descarga hasta que alguien abre esa sección.
+   En el prerenderizado no se renderiza (Suspense devuelve el fallback),
+   que es lo correcto: es decoración, no contenido indexable. */
+const DotLottieReact = lazy(() =>
+  import("@lottiefiles/dotlottie-react").then((m) => ({ default: m.DotLottieReact }))
+);
 import {
   Github, Linkedin, Mail, Download, ArrowRight, ArrowLeft,
-  Menu, X, MapPin, Layers, Database, Wrench,
+  Menu, X, MapPin, Layers, Database,
   Sparkles, ExternalLink, FolderGit2, ArrowUp,
   Code2, Server, Settings2, BrainCircuit,
   BarChart3, BookOpen, MessageSquare, Bot, Workflow, Camera, Images, Hammer, Lightbulb, Check,
@@ -13,6 +20,8 @@ import {
 
 // Datos del portafolio y tema, separados en sus propios archivos para mantener todo ordenado
 import { DATOS, CATEGORIAS } from "./data/portafolio";
+import { resolverRuta, rutaDeVista, rutaProyecto, RUTAS } from "./rutas";
+import { metaDeRuta } from "./meta";
 import { TEMA, DISPLAY, SANS, MONO, TIPO, CAPA } from "./theme/theme";
 import { useReveal, movReducido } from "./hooks/useReveal";
 import Bienvenida from "./components/Bienvenida";
@@ -432,12 +441,17 @@ function CabeceraSeccion({ t, num, eyebrow, titulo, descripcion, acento = "cobre
           <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.2em", color: t.faint, textTransform: "uppercase" }}>{eyebrow}</span>
         </div>
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <h2
+          {/* h1: cada sección es su propia ruta (/tecnologias, /momentos…),
+              así que su título es el encabezado principal de esa página.
+              Antes era h2 y las páginas quedaban sin h1, algo que penaliza
+              tanto el SEO como los lectores de pantalla. El tamaño y el
+              estilo los fija el style, así que no cambia nada visual. */}
+          <h1
             className="max-w-2xl"
             style={{ color: t.text, fontFamily: DISPLAY, fontSize: "clamp(2rem, 4vw, 3.1rem)", lineHeight: 1.05, fontWeight: 400, letterSpacing: "-0.02em" }}
           >
             {titulo}
-          </h2>
+          </h1>
           {children}
         </div>
         {descripcion && (
@@ -520,6 +534,17 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva, oscuro }) {
 
   const click = (id) => { setAbierto(false); enDetalle ? volver(id) : irASeccion(id); };
 
+  /* Los enlaces del nav son <a href> de verdad, no botones: así un
+     rastreador descubre las rutas y el usuario puede abrirlas en otra
+     pestaña. Este handler evita la recarga en el clic normal, pero
+     deja pasar ctrl/cmd+clic, shift+clic y el clic central, que el
+     navegador debe seguir gestionando él. */
+  const interceptar = (e, id) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault();
+    click(id);
+  };
+
   // Paleta activa según el fondo de la sección
   const c = oscuro
     ? { texto: t.text, suave: t.muted, tenue: t.faint, borde: t.border, bordeSuave: t.borderSoft, acento: t.accent, fondo: "rgba(14,15,18,0.85)", logoBg: t.text, logoFg: t.bg }
@@ -551,17 +576,18 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva, oscuro }) {
           {SECCIONES.map((s) => {
             const activa = !enDetalle && seccionActiva === s.id;
             return (
-              <button
+              <a
                 key={s.id}
-                type="button"
-                onClick={() => click(s.id)}
+                href={RUTAS[s.id]}
+                onClick={(e) => interceptar(e, s.id)}
+                aria-current={activa ? "page" : undefined}
                 className="nav-link px-3 py-2 rounded-md text-sm transition-colors duration-200"
                 style={{ color: activa ? c.texto : c.suave, fontWeight: activa ? 600 : 400 }}
                 onMouseEnter={(e) => { if (!activa) e.currentTarget.style.color = c.texto; }}
                 onMouseLeave={(e) => { if (!activa) e.currentTarget.style.color = c.suave; }}
               >
                 {s.label}
-              </button>
+              </a>
             );
           })}
         </div>
@@ -584,16 +610,16 @@ function Nav({ t, irASeccion, enDetalle, volver, seccionActiva, oscuro }) {
           style={{ borderTop: `1px solid ${c.bordeSuave}`, background: c.fondo }}
         >
           {SECCIONES.map((s, i) => (
-            <button
+            <a
               key={s.id}
-              type="button"
-              onClick={() => click(s.id)}
+              href={RUTAS[s.id]}
+              onClick={(e) => interceptar(e, s.id)}
               className="menu-item flex items-center justify-between text-left px-3.5 py-3.5 rounded-lg text-base font-medium"
               style={{ color: c.texto, animationDelay: `${i * 35}ms` }}
             >
               {s.label}
               <ArrowRight size={16} style={{ color: c.tenue }} />
-            </button>
+            </a>
           ))}
         </div>
       )}
@@ -1746,9 +1772,16 @@ function MiniaturaProyecto({ t, p, alta = false, color = false }) {
    La imagen aparece sólo como miniatura a la derecha, sin dominar. */
 function FilaProyecto({ t, p, abrir, delay, indice }) {
   return (
-    <button
-      type="button"
-      onClick={() => abrir(p.id)}
+    /* Enlace real a /proyectos/<id>: así el detalle es rastreable y
+       se puede abrir en otra pestaña. El clic normal lo intercepta
+       React para navegar sin recargar. */
+    <a
+      href={rutaProyecto(p.id)}
+      onClick={(e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        abrir(p.id);
+      }}
       data-cursor="ABRIR"
       className="fila-proyecto fila-entra w-full text-left py-7 md:py-9 flex items-start gap-5 md:gap-9"
       style={{
@@ -1822,7 +1855,7 @@ function FilaProyecto({ t, p, abrir, delay, indice }) {
           style={{ transition: "transform 400ms cubic-bezier(0.22,0.61,0.36,1)" }}
         />
       </span>
-    </button>
+    </a>
   );
 }
 
@@ -1868,7 +1901,8 @@ function Proyectos({ t, abrir }) {
               Proyectos
             </span>
           </div>
-          <h2
+          {/* h1 de la ruta /proyectos (ver nota en CabeceraSeccion) */}
+          <h1
             style={{
               fontFamily: DISPLAY, fontWeight: 400,
               fontSize: "clamp(2.1rem, 5.5vw, 4.2rem)",
@@ -1877,7 +1911,7 @@ function Proyectos({ t, abrir }) {
             }}
           >
             Sistemas que resuelven un problema concreto
-          </h2>
+          </h1>
           <p className="mt-6 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "58ch" }}>
             Cada caso incluye el problema de negocio, la solución, la arquitectura y las
             decisiones técnicas detrás — incluida la capa de IA y automatización.
@@ -3092,7 +3126,8 @@ function Contacto({ t }) {
                   Contacto
                 </span>
               </div>
-              <h2
+              {/* h1 de la ruta /contacto (ver nota en CabeceraSeccion) */}
+              <h1
                 style={{
                   fontFamily: DISPLAY, fontWeight: 400,
                   fontSize: "clamp(2.2rem, 6vw, 4.6rem)",
@@ -3102,7 +3137,7 @@ function Contacto({ t }) {
               >
                 ¿Tienes un proceso que debería estar{" "}
                 <span style={{ fontStyle: "italic", color: t.accent }}>automatizado</span>?
-              </h2>
+              </h1>
               <p className="mt-7 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "52ch" }}>
                 Estoy abierto a oportunidades como Ingeniero de IA y Automatización.
                 Trabajo con negocios de{" "}
@@ -3154,13 +3189,17 @@ function Contacto({ t }) {
                 <span style={{ fontFamily: MONO, fontSize: 10.5, color: t.faint, letterSpacing: "0.1em" }}>
                   {DATOS.ubicacion.toUpperCase()}
                 </span>
+                {/* El hueco se reserva con width/height fijos, así que
+                    la carga diferida no desplaza nada al aparecer (CLS). */}
                 <div className="avatar-saluda" style={{ width: 130, height: 98, opacity: 0.9 }}>
-                  <DotLottieReact
-                    src="/robot.lottie"
-                    loop
-                    autoplay
-                    style={{ width: "100%", height: "100%" }}
-                  />
+                  <Suspense fallback={null}>
+                    <DotLottieReact
+                      src="/robot.lottie"
+                      loop
+                      autoplay
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </Suspense>
                 </div>
               </div>
             </Reveal>
@@ -3217,22 +3256,145 @@ function Footer({ t }) {
    APP
    ============================================================ */
 
-export default function App() {
+/* ============================================================
+   404 — ruta que no existe
+   ------------------------------------------------------------
+   Antes cualquier URL desconocida devolvía el 404 genérico de
+   Vercel, una pantalla en blanco sin salida. Esta mantiene el
+   lenguaje visual del sitio y, sobre todo, ofrece el camino de
+   vuelta: los enlaces a las secciones que sí existen.
+   ============================================================ */
+function NoEncontrada({ t, irASeccion }) {
+  return (
+    <section
+      className="relative flex items-center"
+      style={{ background: t.bg, color: t.text, minHeight: "72vh" }}
+    >
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16 py-24 w-full">
+        <div className="flex items-center gap-3 mb-6">
+          <span style={{ fontFamily: MONO, fontSize: 11.5, color: t.accent, letterSpacing: "0.08em" }}>404</span>
+          <span className="h-px w-7" style={{ background: t.accent, opacity: 0.5 }} />
+          <span style={{ fontFamily: MONO, fontSize: 10.5, letterSpacing: "0.2em", color: t.faint, textTransform: "uppercase" }}>
+            Página no encontrada
+          </span>
+        </div>
+
+        <h1
+          style={{
+            fontFamily: DISPLAY, fontWeight: 400,
+            fontSize: "clamp(2.1rem, 5.5vw, 4rem)",
+            lineHeight: 1.02, letterSpacing: "-0.03em",
+            color: t.text, maxWidth: "24ch",
+          }}
+        >
+          Esta dirección no lleva a ninguna parte
+        </h1>
+
+        <p className="mt-6 leading-relaxed" style={{ color: t.muted, fontSize: "1.02rem", maxWidth: "52ch" }}>
+          Puede que el enlace esté mal escrito o que esa página ya no exista.
+          Estas sí:
+        </p>
+
+        <nav className="mt-10 flex flex-wrap gap-x-7 gap-y-3" aria-label="Secciones del sitio">
+          {SECCIONES.map((s) => (
+            <a
+              key={s.id}
+              href={RUTAS[s.id]}
+              onClick={(e) => { e.preventDefault(); irASeccion(s.id); }}
+              className="filtro-texto"
+              style={{ color: t.muted, fontSize: 14.5, textDecoration: "underline", textUnderlineOffset: 4 }}
+            >
+              {s.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </section>
+  );
+}
+
+export default function App({ rutaInicial = null }) {
   const t = TEMA;
-  // ¿Mostrar la pantalla de bienvenida antes del portafolio?
-  // (mientras elegimos cuál de las 3 intros usar, está en modo selector)
-  const [mostrarIntro, setMostrarIntro] = useState(true);
-  // vista: { pagina: 'seccion', id } | { pagina: 'proyecto', id }
-  const [vista, setVista] = useState({ pagina: "seccion", id: "inicio" });
+
+  /* `rutaInicial` solo llega en el prerenderizado (ver
+     src/entrada-servidor.jsx): en Node no hay window.location. En el
+     navegador es null y manda la URL real. */
+  const caminoDeEntrada =
+    rutaInicial || (typeof window === "undefined" ? "/" : window.location.pathname);
+
+  /* La URL manda. Antes la navegación era solo estado en memoria: la
+     URL se quedaba en "/" para siempre, así que /proyectos daba 404,
+     no se podía compartir una sección y Google veía un único
+     documento. Ahora cada sección tiene su ruta (ver src/rutas.js) y
+     el estado se sincroniza en los dos sentidos. */
+  const [vista, setVista] = useState(() => resolverRuta(caminoDeEntrada, DATOS.proyectos));
+
+  /* La bienvenida solo tiene sentido al entrar por la portada. Si
+     alguien llega directo a /proyectos —el enlace del CV— se salta:
+     viene a ver algo concreto.
+
+     En el prerenderizado nunca se muestra: el HTML debe contener el
+     contenido de la sección, no la animación de entrada. */
+  const [mostrarIntro, setMostrarIntro] = useState(() => {
+    if (rutaInicial || typeof window === "undefined") return false;
+    return window.location.pathname === "/" || window.location.pathname === "";
+  });
+
+  /* Escribe la URL sin recargar y guarda la entrada en el historial,
+     para que el botón Atrás del navegador funcione. */
+  const navegar = (siguiente, { reemplazar = false } = {}) => {
+    setVista(siguiente);
+    if (typeof window === "undefined") return;
+    const ruta = rutaDeVista(siguiente);
+    if (window.location.pathname !== ruta) {
+      if (reemplazar) window.history.replaceState({}, "", ruta);
+      else window.history.pushState({}, "", ruta);
+    }
+  };
+
+  /* Atrás y Adelante del navegador. */
+  useEffect(() => {
+    const alVolver = () => setVista(resolverRuta(window.location.pathname, DATOS.proyectos));
+    window.addEventListener("popstate", alVolver);
+    return () => window.removeEventListener("popstate", alVolver);
+  }, []);
+
+  /* Metadatos por ruta: el prerenderizado deja el HTML correcto, y
+     esto los mantiene al día en la navegación del cliente (importa
+     para lo que lea la pestaña y para quien comparta desde ahí). */
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    /* Para el 404 hay que usar la URL real, no rutaDeVista: esa
+       devolvería "/" y acabaríamos poniéndole los metadatos del home
+       a una página que no existe. */
+    const camino = vista.pagina === "404" ? window.location.pathname : rutaDeVista(vista);
+    const m = metaDeRuta(camino);
+    document.title = m.titulo;
+    const fijar = (sel, attr, valor) => {
+      const el = document.head.querySelector(sel);
+      if (el) el.setAttribute(attr, valor);
+    };
+    fijar('meta[name="description"]', "content", m.descripcion);
+    fijar('link[rel="canonical"]', "href", m.canonical);
+    fijar('meta[property="og:url"]', "content", m.canonical);
+    fijar('meta[property="og:title"]', "content", m.titulo);
+    fijar('meta[property="og:description"]', "content", m.descripcion);
+    // Una ruta inexistente no debe entrar en el índice de Google.
+    fijar(
+      'meta[name="robots"]',
+      "content",
+      m.noIndexar ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1"
+    );
+  }, [vista]);
 
   // Navegar a una sección = mostrar SOLO esa sección (estilo app), y subir arriba
   const irASeccion = (id) => {
-    setVista({ pagina: "seccion", id });
+    navegar({ pagina: "seccion", id });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const abrirProyecto = (id) => {
-    setVista({ pagina: "proyecto", id });
+    navegar({ pagina: "proyecto", id });
     window.scrollTo({ top: 0 });
   };
 
@@ -3283,7 +3445,11 @@ export default function App() {
       />
 
       <div className="relative" style={{ zIndex: 2, minHeight: "70vh" }}>
-        {proyectoActivo ? (
+        {vista.pagina === "404" ? (
+          <main className="seccion-entra">
+            <NoEncontrada t={t} irASeccion={irASeccion} />
+          </main>
+        ) : proyectoActivo ? (
           <PaginaProyecto t={t} proyecto={proyectoActivo} volver={volver} />
         ) : (
           <main key={seccionActiva} className="seccion-entra">
