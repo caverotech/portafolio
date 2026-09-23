@@ -17,9 +17,9 @@ export const DATOS = {
   ubicacion: "Perú",
   disponible: "Disponible para oportunidades",
   email: "ing.alexyscavero@gmail.com",
-  github: "https://github.com/ingalexyscavero-design",
-  linkedin: "https://www.linkedin.com/in/alexyscavero/",
-  cvUrl: "/Alexys-Cavero-CV-2026.pdf",       // ← PDF en public/
+  github: "https://github.com/caverotech",
+  linkedin: "https://www.linkedin.com/in/caverotech",
+  cvUrl: "/CV-Alexys-Cavero.pdf",            // ← PDF en public/ (setiembre 2026)
 
   /* FOTOS — reemplaza cada ruta por tus imágenes reales.
      Si una URL falla, el sitio muestra automáticamente un degradado. */
