@@ -559,8 +559,10 @@ export const DATOS = {
        estudiando   → formación o investigación en curso
        explorando   → idea con criterio, todavía sin empezar
 
-     Nota: las certificaciones NO van aquí, tienen su propia sección.
-     Esto es para proyectos e intereses técnicos.
+     Nota: las certificaciones técnicas en curso van en su propia
+     sección (certificaciones). Aquí solo entra formación que no es
+     una ruta de certificado técnico —por ejemplo el inglés B2—,
+     además de proyectos e intereses.
 
      Añade, quita o reordena libremente: la sección se adapta. */
   enProceso: [
@@ -619,6 +621,14 @@ export const DATOS = {
       texto:
         "El nuevo modelo de OpenAI está pensado para operar un ordenador y resolver tareas de varios pasos sin que alguien apruebe cada uno. Eso toca de lleno lo que construyo: quiero medir hasta dónde llega de verdad y en qué casos conviene sobre lo que ya uso con Claude.",
       pila: ["GPT-6 Astra", "API de OpenAI", "Agentes"],
+    },
+    {
+      titulo: "Certificado de inglés B2",
+      estado: "estudiando",
+      etiqueta: "Idiomas",
+      texto:
+        "Estoy preparando la certificación de inglés en nivel B2. La documentación técnica, los modelos y las conversaciones del sector están en inglés, así que no es un requisito de trámite: es la diferencia entre leer una fuente el día que sale y esperar a que alguien la traduzca.",
+      pila: ["Inglés B2", "Comprensión técnica", "Certificación"],
     },
   ],
 
