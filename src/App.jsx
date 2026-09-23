@@ -40,11 +40,11 @@ const LUCIDE_TECH = { powerbi: BarChart3, gpt: MessageSquare, notebooklm: BookOp
 
    La unica solucion correcta es sacar el modal de ese arbol. Se monta
    directo en <body>, donde nada lo atrapa. */
-function Portal({ children }) {
+function Portal({ children, nombre = "modal" }) {
   const [nodo] = useState(() => {
     if (typeof document === "undefined") return null;
     const d = document.createElement("div");
-    d.setAttribute("data-portal", "modal");
+    d.setAttribute("data-portal", nombre);
     return d;
   });
 

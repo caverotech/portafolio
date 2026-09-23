@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { TEMA, CAPA } from "../theme/theme";
 import { movReducido, punteroFino, useRatonSuave } from "../hooks/useReveal";
 
@@ -86,6 +87,36 @@ export default function Atmosfera({ t = TEMA }) {
   );
 }
 
+/* Portal propio para el cursor.
+
+   El cursor tiene que vivir fuera de `.app-entra`: ese contenedor
+   anima `opacity` con fill-mode `both`, y una opacidad animada crea
+   un contexto de apilamiento que no desaparece al acabar la
+   animación. Dentro de él, el z-index del cursor sólo compite con
+   sus hermanos, nunca con los modales, que se montan en <body>.
+   Resultado del bug: se ocultaba el cursor nativo y el propio
+   quedaba pintado DEBAJO del visor de fotos. Sin puntero visible.
+
+   Colgándolo de <body> queda hermano del modal, y ahí su z-index
+   sí cuenta. */
+function PortalCursor({ children }) {
+  const [nodo] = useState(() => {
+    if (typeof document === "undefined") return null;
+    const d = document.createElement("div");
+    d.setAttribute("data-portal", "cursor");
+    return d;
+  });
+
+  useEffect(() => {
+    if (!nodo) return;
+    document.body.appendChild(nodo);
+    return () => { if (nodo.parentNode) nodo.parentNode.removeChild(nodo); };
+  }, [nodo]);
+
+  if (!nodo) return null;
+  return createPortal(children, nodo);
+}
+
 /* ------------------------------------------------------------
    CURSOR — punto + aura, con estado contextual.
    Sólo con mouse real: en táctil no se monta nada.
@@ -150,6 +181,7 @@ export function Cursor({ t = TEMA }) {
   if (typeof window !== "undefined" && (!punteroFino() || movReducido())) return null;
 
   return (
+    <PortalCursor>
     <div aria-hidden className="hidden md:block">
       <div
         ref={punto}
@@ -182,5 +214,6 @@ export function Cursor({ t = TEMA }) {
         />
       </div>
     </div>
+    </PortalCursor>
   );
 }
