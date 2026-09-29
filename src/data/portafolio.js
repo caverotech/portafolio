@@ -486,21 +486,25 @@ export const DATOS = {
     },
 
     // 🧑‍🏫 Enseñanza
+    // Fotos en public/galeria/ensenanza/ (copias web de los originales
+    // de public/galeria/MOMENTOS/). Solo se publican las que .gitignore
+    // permite (selección de Alexys). Existen en local pero NO se suben,
+    // así que no referenciarlas:
+    //   kidsapiens-taller-ia-ninos-mariategui-02, -03
+    //   charla-ia-colegio-antonia-moreno-de-caceres-04, -05
     {
       titulo: "Kidsapiens · IA para niños",
       lugar: "Colegio J. C. Mariátegui",
       fecha: "2023",
       categoria: "ensenanza",
-      portada: "/galeria/demo/d16.jpg",
+      portada: "/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-04.jpg",
       alto: "alto",
       relato:
         "Llevé inteligencia artificial y robótica básica a un aula de primaria. Explicar un modelo de lenguaje a un niño de diez años obliga a entenderlo de verdad.",
       album: [
-        { foto: "/galeria/demo/d17.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d18.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d19.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d20.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d1.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-05.jpg", pie: "El aula de Kidsapiens, con sus normas de convivencia en la pared" },
+        { foto: "/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-01.jpg", pie: "Primero la pizarra, luego las laptops" },
+        { foto: "/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-06.jpg", pie: "Sus obras creadas con IA, impresas y enmarcadas" },
       ],
     },
     {
@@ -508,12 +512,12 @@ export const DATOS = {
       lugar: "Antonia Moreno de Cáceres",
       fecha: "2023",
       categoria: "ensenanza",
-      portada: "/galeria/demo/d2.jpg",
+      portada: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-03.jpg",
       alto: "medio",
       album: [
-        { foto: "/galeria/demo/d3.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d4.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d5.jpg", pie: "Foto de ejemplo" },
+        { foto: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-00.jpg", pie: "Potenciar la creatividad y las habilidades digitales de los niños" },
+        { foto: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-01.jpg", pie: "Un auditorio lleno y con las manos arriba" },
+        { foto: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-02.jpg", pie: "Micrófono en mano, entre el público" },
       ],
     },
     {
@@ -521,12 +525,9 @@ export const DATOS = {
       lugar: "San Francisco College",
       fecha: "2023",
       categoria: "ensenanza",
-      portada: "/galeria/demo/d6.jpg",
-      alto: "medio",
-      album: [
-        { foto: "/galeria/demo/d7.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d8.jpg", pie: "Foto de ejemplo" },
-      ],
+      portada: "/galeria/ensenanza/exposicion-ia-robotica-san-francisco-college-01.jpg",
+      alto: "alto",
+      album: [],
     },
 
     // ✨ Personal

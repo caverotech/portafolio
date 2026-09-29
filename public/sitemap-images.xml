@@ -41,17 +41,34 @@
       <image:caption>Retrato profesional de Alexys Cavero, especialista en agentes de IA y automatización de procesos con n8n y Claude.</image:caption>
     </image:image>
 
-    <!-- ══ MOMENTOS · KIDSAPIENS ══
-         Estas seis fotos están en public/galeria/ pero NO subidas al
-         repositorio: muestran rostros de menores sin difuminar. Cuando
-         estén difuminadas y subidas, descomenta este bloque. -->
-    <!--
+    <!-- ══ MOMENTOS · ENSEÑANZA ══
+         Solo las fotos publicadas (lista en .gitignore). Las portadas
+         de cada momento, más una por escena clave. -->
     <image:image>
-      <image:loc>https://www.caverotech.com/galeria/kidsapiens-taller-ia-ninos-ica.jpg</image:loc>
-      <image:title>Taller de Inteligencia Artificial para niños, Kidsapiens · Ica</image:title>
-      <image:caption>Alexys Cavero enseñando inteligencia artificial y robótica básica a estudiantes de primaria en el colegio José Carlos Mariátegui, Ica.</image:caption>
+      <image:loc>https://www.caverotech.com/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-04.jpg</image:loc>
+      <image:title>Kidsapiens · Taller de Inteligencia Artificial para niños en Ica</image:title>
+      <image:caption>Taller Kidsapiens de inteligencia artificial para estudiantes de primaria en el colegio José Carlos Mariátegui, Ica.</image:caption>
     </image:image>
-    -->
+    <image:image>
+      <image:loc>https://www.caverotech.com/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-06.jpg</image:loc>
+      <image:title>Obras creadas con IA por niños del taller Kidsapiens</image:title>
+      <image:caption>Estudiantes del taller Kidsapiens muestran sus imágenes generadas con inteligencia artificial, impresas y enmarcadas.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.caverotech.com/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-03.jpg</image:loc>
+      <image:title>Charla de Inteligencia Artificial en el colegio Antonia Moreno de Cáceres, Ica</image:title>
+      <image:caption>Charla de divulgación sobre inteligencia artificial para estudiantes del colegio Antonia Moreno de Cáceres.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.caverotech.com/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-01.jpg</image:loc>
+      <image:title>Auditorio lleno en la charla de IA del colegio Antonia Moreno de Cáceres</image:title>
+      <image:caption>Estudiantes participando con las manos arriba durante la charla de inteligencia artificial.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.caverotech.com/galeria/ensenanza/exposicion-ia-robotica-san-francisco-college-01.jpg</image:loc>
+      <image:title>Exposición de IA y robótica básica en San Francisco College, Ica</image:title>
+      <image:caption>Stand de inteligencia artificial y robótica básica para niños en San Francisco College.</image:caption>
+    </image:image>
 
     <!-- ══ MOMENTOS · UTP TECH SUMMIT ══
          Pendiente de subir las fotos. Cuando las pongas en

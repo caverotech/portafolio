@@ -12,8 +12,19 @@ dist
 # versionan hasta que estén tratadas. Siguen en el disco local, así que
 # la web las muestra en desarrollo.
 #   MOMENTOS/  → originales tal como llegan, por colegio (nunca se suben)
-#   ensenanza/ → copias optimizadas que usa la web; quitar esta línea
-#                cuando los rostros estén difuminados
+#   ensenanza/ → copias optimizadas que usa la web. Todo queda privado
+#                salvo la lista de abajo, elegida por Alexys foto por
+#                foto (2026-09-29). Una foto nueva no se sube hasta
+#                añadirla aquí a propósito.
 public/galeria/Kidsapiens*
 public/galeria/MOMENTOS/
-public/galeria/ensenanza/
+public/galeria/ensenanza/*
+!public/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-01.jpg
+!public/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-04.jpg
+!public/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-05.jpg
+!public/galeria/ensenanza/kidsapiens-taller-ia-ninos-mariategui-06.jpg
+!public/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-00.jpg
+!public/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-01.jpg
+!public/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-02.jpg
+!public/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-03.jpg
+!public/galeria/ensenanza/exposicion-ia-robotica-san-francisco-college-01.jpg
