@@ -7,8 +7,13 @@ dist
 # Configuración local de Claude Code (no compartir)
 .claude/
 
-# Fotos de Kidsapiens: el repositorio es público y en estas imágenes
-# aparecen rostros de menores sin difuminar (cinco llevan el aviso en
-# el propio nombre). NO se versionan hasta que estén tratadas.
-# Siguen en el disco local, así que la web las muestra en desarrollo.
+# Fotos de Kidsapiens y charlas en colegios: el repositorio es público
+# y en estas imágenes aparecen rostros de menores sin difuminar. NO se
+# versionan hasta que estén tratadas. Siguen en el disco local, así que
+# la web las muestra en desarrollo.
+#   MOMENTOS/  → originales tal como llegan, por colegio (nunca se suben)
+#   ensenanza/ → copias optimizadas que usa la web; quitar esta línea
+#                cuando los rostros estén difuminados
 public/galeria/Kidsapiens*
+public/galeria/MOMENTOS/
+public/galeria/ensenanza/
