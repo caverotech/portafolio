@@ -512,11 +512,11 @@ export const DATOS = {
       lugar: "Antonia Moreno de Cáceres",
       fecha: "2023",
       categoria: "ensenanza",
-      portada: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-03.jpg",
+      portada: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-01.jpg",
       alto: "medio",
       album: [
         { foto: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-00.jpg", pie: "Potenciar la creatividad y las habilidades digitales de los niños" },
-        { foto: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-01.jpg", pie: "Un auditorio lleno y con las manos arriba" },
+        { foto: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-03.jpg", pie: "La charla en escena, con la presentación proyectada al fondo" },
         { foto: "/galeria/ensenanza/charla-ia-colegio-antonia-moreno-de-caceres-02.jpg", pie: "Micrófono en mano, entre el público" },
       ],
     },
