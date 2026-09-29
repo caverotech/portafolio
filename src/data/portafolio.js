@@ -494,7 +494,7 @@ export const DATOS = {
     // public/galeria/MOMENTOS/Voluntariado/Huacachina/); mientras tanto
     // el muro muestra el marco con el ícono de la categoría.
     {
-      titulo: "Limpieza en Huacachina",
+      titulo: "Huacachina",
       lugar: "Voluntariado universitario",
       fecha: "2026",
       categoria: "voluntariado",
