@@ -40,6 +40,13 @@
       <image:title>Alexys Cavero, Desarrollador Full Stack en IA y Automatización en Ica, Perú</image:title>
       <image:caption>Retrato profesional de Alexys Cavero, especialista en agentes de IA y automatización de procesos con n8n y Claude.</image:caption>
     </image:image>
+  </url>
+
+  <!-- Cada foto va bajo la página donde se muestra: Google cruza el
+       sitemap con el HTML de esa URL. Las de Momentos están en
+       /momentos (prerenderizado), no en la portada. -->
+  <url>
+    <loc>https://www.caverotech.com/momentos</loc>
 
     <!-- ══ MOMENTOS · ENSEÑANZA ══
          Solo las fotos publicadas (lista en .gitignore). Las portadas
@@ -85,13 +92,15 @@
       <image:caption>Ingenieros de Google, Microsoft y Tata Consultancy Services durante las charlas del UTP Tech Summit en Ica, Perú.</image:caption>
     </image:image>
     -->
+  </url>
 
-    <!-- ══ PROYECTOS ══
+  <!-- ══ PROYECTOS ══
          Las capturas de los proyectos son hoy imágenes de stock de
          Unsplash, alojadas fuera del dominio: no aportan nada indexado
          a tu nombre. Cuando sustituyas cada `imagen` de
          src/data/portafolio.js por una captura real en
-         public/proyectos/, añade aquí su bloque. Ejemplo listo:
+         public/proyectos/, añade su bloque dentro de un <url> con la
+         página donde se muestra (p. ej. /proyectos). Ejemplo listo:
 
     <image:image>
       <image:loc>https://www.caverotech.com/proyectos/vistony-ruta-nazca-app-ventas-gps.jpg</image:loc>
@@ -99,6 +108,4 @@
       <image:caption>Aplicación móvil de ventas en campo con 286 clientes geocodificados y ruta optimizada por GPS, desarrollada por Alexys Cavero.</image:caption>
     </image:image>
     -->
-
-  </url>
 </urlset>
