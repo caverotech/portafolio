@@ -11,6 +11,11 @@
    UI, hay que cambiarlo aquí también (son dos sitios a propósito:
    el de la UI lleva JSX y saltos de línea, el de meta necesita
    texto plano de una línea).
+
+   ORDEN DEL TÍTULO: nombre · sección · encabezado. El nombre va
+   primero porque la búsqueda que más importa es la del propio
+   nombre, y Google pesa más el principio del título y corta el
+   final (~60 caracteres): así nombre y sección siempre se ven.
    ============================================================ */
 
 import { DATOS } from "./data/portafolio";
@@ -38,20 +43,20 @@ const SECCIONES = {
 
   "sobre-mi": {
     // App.jsx: eyebrow "Sobre mí" + h2
-    titulo: `Sobre mí · Automatizo lo que hoy alguien hace a mano · ${MARCA}`,
+    titulo: `${MARCA} · Sobre mí · Automatizo lo que hoy alguien hace a mano`,
     descripcion: DATOS.descripcion,
   },
 
   tecnologias: {
     // App.jsx: h2 + párrafo de la sección Tecnologías
-    titulo: `El stack con el que llevo IA a producción · ${MARCA}`,
+    titulo: `${MARCA} · Tecnologías · El stack con el que llevo IA a producción`,
     descripcion:
       "Cada tecnología de esta lista está en uso real en mis proyectos. No es una colección de logos: es el stack con el que diseño, integro y sostengo sistemas de IA.",
   },
 
   certificados: {
     // App.jsx: h2 de la sección Certificados
-    titulo: `La ruta que estoy recorriendo ahora · Formación · ${MARCA}`,
+    titulo: `${MARCA} · Formación · La ruta que estoy recorriendo ahora`,
     descripcion:
       DATOS.certificadosCierre?.objetivo ||
       "Formación en curso en inteligencia artificial y automatización.",
@@ -59,28 +64,28 @@ const SECCIONES = {
 
   proyectos: {
     // App.jsx: h2 + párrafo de la sección Proyectos
-    titulo: `Proyectos · Sistemas que resuelven un problema concreto · ${MARCA}`,
+    titulo: `${MARCA} · Proyectos · Sistemas que resuelven un problema concreto`,
     descripcion:
       "Cada caso incluye el problema de negocio, la solución, la arquitectura y las decisiones técnicas detrás — incluida la capa de IA y automatización.",
   },
 
   "en-proceso": {
     // App.jsx: h2 + párrafo de la sección En proceso
-    titulo: `En proceso · Lo que estoy construyendo ahora · ${MARCA}`,
+    titulo: `${MARCA} · En proceso · Lo que estoy construyendo ahora`,
     descripcion:
       "Una pizarra abierta: workflows en marcha, agentes que quiero construir e ideas que todavía no empiezan. Sin fechas prometidas — lo que está aquí es lo que estoy pensando, no lo que ya entregué.",
   },
 
   galeria: {
     // App.jsx: h2 + párrafo de la sección Momentos
-    titulo: `Momentos · El muro de mis momentos · ${MARCA}`,
+    titulo: `${MARCA} · Momentos · El muro de mis momentos`,
     descripcion:
       "Como programador y como persona: trabajo, formación, enseñanza, voluntariado y los momentos detrás del código. Este muro sigue creciendo.",
   },
 
   contacto: {
     // App.jsx: h2 de la sección Contacto (sin el marcado del énfasis)
-    titulo: `Contacto · ¿Tienes un proceso que debería estar automatizado? · ${MARCA}`,
+    titulo: `${MARCA} · Contacto · ¿Tienes un proceso que debería estar automatizado?`,
     descripcion:
       "Estoy abierto a oportunidades como Desarrollador Full Stack en IA y Automatización. Trabajo con negocios de todo el Perú, presencial o en remoto.",
   },
