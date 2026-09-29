@@ -77,21 +77,15 @@
       <image:caption>Stand de inteligencia artificial y robótica básica para niños en San Francisco College.</image:caption>
     </image:image>
 
-    <!-- ══ MOMENTOS · UTP TECH SUMMIT ══
-         Pendiente de subir las fotos. Cuando las pongas en
-         public/galeria/ con estos nombres, descomenta el bloque. -->
-    <!--
+    <!-- ══ MOMENTOS · UTP TECH SUMMIT ══ -->
     <image:image>
-      <image:loc>https://www.caverotech.com/galeria/utp-tech-summit-ica-2026.jpg</image:loc>
-      <image:title>UTP Tech Summit 2026 · Conferencia de tecnología en Ica</image:title>
-      <image:caption>Alexys Cavero en el UTP Tech Summit, conferencia con ingenieros de Google, Microsoft y Tata Consultancy Services en la Universidad Tecnológica del Perú.</image:caption>
+      <image:loc>https://www.caverotech.com/galeria/formacion/utp-tech-summit-2025-ica.jpg</image:loc>
+      <image:title>UTP Tech Summit 2025 · Conferencia de tecnología en la UTP Ica</image:title>
+      <image:caption>Afiche del UTP Tech Summit en la Universidad Tecnológica del Perú, sede Ica, con ponentes de Oracle, Google y Tata Consultancy Services.</image:caption>
     </image:image>
-    <image:image>
-      <image:loc>https://www.caverotech.com/galeria/utp-tech-summit-ponentes-google-microsoft.jpg</image:loc>
-      <image:title>Ponentes de Google y Microsoft en el UTP Tech Summit</image:title>
-      <image:caption>Ingenieros de Google, Microsoft y Tata Consultancy Services durante las charlas del UTP Tech Summit en Ica, Perú.</image:caption>
-    </image:image>
-    -->
+
+    <!-- ══ MOMENTOS · VOLUNTARIADO ══
+         Cuando llegue la foto de Huacachina, añadir aquí su bloque. -->
   </url>
 
   <!-- ══ PROYECTOS ══

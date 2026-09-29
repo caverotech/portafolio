@@ -429,60 +429,19 @@ export const DATOS = {
         categoría, así la sección nunca se ve rota. */
   galeria: [
     // 🎓 Formación / Eventos
+    // Portada: el afiche oficial del evento (original en
+    // public/galeria/MOMENTOS/UTP Tech Summit/). Año y ponentes según
+    // el afiche: bit.ly/UTPTech2025, Oracle, Google y TCS.
     {
       titulo: "UTP Tech Summit",
       lugar: "Universidad Tecnológica del Perú",
-      fecha: "2026",
-      categoria: "formacion",
-      portada: "/galeria/demo/d1.jpg",
-      alto: "alto",
-      relato:
-        "Conferencia organizada por mi universidad con ingenieros de Google, Microsoft y Tata Consultancy Services. Escuchar a peruanos que llegaron a esas empresas cambia la escala de lo que uno cree posible.",
-      album: [
-        { foto: "/galeria/demo/d2.jpg", pie: "Mi fotocheck de acreditación del evento" },
-        { foto: "/galeria/demo/d3.jpg", pie: "Los ponentes en escena durante una de las charlas" },
-        { foto: "/galeria/demo/d4.jpg", pie: "Con mi enamorada frente al letrero del Tech Summit" },
-      ],
-    },
-    {
-      titulo: "Ingeniería de Sistemas",
-      lugar: "Universidad Tecnológica del Perú",
-      fecha: "En curso",
-      categoria: "formacion",
-      portada: "/galeria/demo/d5.jpg",
-      alto: "medio",
-      album: [
-        { foto: "/galeria/demo/d6.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d7.jpg", pie: "Foto de ejemplo" },
-      ],
-    },
-
-    // 💼 Trabajo
-    {
-      titulo: "Transformación digital",
-      lugar: "Indra · Minsait",
       fecha: "2025",
-      categoria: "trabajo",
-      portada: "/galeria/demo/d8.jpg",
+      categoria: "formacion",
+      portada: "/galeria/formacion/utp-tech-summit-2025-ica.jpg",
       alto: "medio",
-      album: [
-        { foto: "/galeria/demo/d9.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d10.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d11.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d12.jpg", pie: "Foto de ejemplo" },
-      ],
-    },
-    {
-      titulo: "Trabajo con clientes",
-      lugar: "Conecta Systems",
-      fecha: "2024–2025",
-      categoria: "trabajo",
-      portada: "/galeria/demo/d13.jpg",
-      alto: "alto",
-      album: [
-        { foto: "/galeria/demo/d14.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d15.jpg", pie: "Foto de ejemplo" },
-      ],
+      relato:
+        "Conferencia organizada por mi universidad con especialistas de Oracle, Google y Tata Consultancy Services. Escuchar a quienes trabajan en esas empresas cambia la escala de lo que uno cree posible.",
+      album: [],
     },
 
     // 🧑‍🏫 Enseñanza
@@ -530,18 +489,20 @@ export const DATOS = {
       album: [],
     },
 
-    // ✨ Personal
+    // 🤝 Voluntariado
+    // Portada vacía hasta que llegue la foto (original a
+    // public/galeria/MOMENTOS/Voluntariado/Huacachina/); mientras tanto
+    // el muro muestra el marco con el ícono de la categoría.
     {
-      titulo: "Aprendiendo, siempre",
-      lugar: "Detrás del código",
-      fecha: "Hoy",
-      categoria: "personal",
-      portada: "/galeria/demo/d9.jpg",
+      titulo: "Limpieza en Huacachina",
+      lugar: "Voluntariado universitario",
+      fecha: "2026",
+      categoria: "voluntariado",
+      portada: "",
       alto: "medio",
-      album: [
-        { foto: "/galeria/demo/d10.jpg", pie: "Foto de ejemplo" },
-        { foto: "/galeria/demo/d11.jpg", pie: "Foto de ejemplo" },
-      ],
+      relato:
+        "Jornada de voluntariado con mi universidad para recolectar residuos en Huacachina.",
+      album: [],
     },
   ],
 
