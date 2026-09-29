@@ -114,16 +114,28 @@ export default function EstilosGlobales({ t = TEMA }) {
         }
       }
 
-      /* Movil: el retrato NO va detras del texto. Ocupa su propio
-         bloque encima del titular, en flujo normal y a color. */
-      .retrato-col { position: static; order: -1; }
+      /* Movil: el retrato es un avatar circular, alineado a la izquierda
+         con el texto y encima del titular. A 272 px de ancho ocupaba
+         media pantalla y empujaba el nombre y los botones fuera de la
+         primera vista; aqui el nombre es lo que manda. */
+      .retrato-col { position: static; order: -1; align-self: stretch; }
       .retrato-caja {
         position: relative;
         top: auto; right: auto; left: auto;
         transform: none;
         opacity: 1;
-        width: min(72vw, 17rem) !important;
-        margin: 0 auto;
+        width: 5.5rem !important;
+        margin: 0;
+      }
+      @media (max-width: 1023px) {
+        .retrato-caja { --mask-retrato: none; }
+        .retrato-caja > div {
+          aspect-ratio: 1 / 1 !important;
+          border-radius: 9999px;
+          overflow: hidden;
+          box-shadow: 0 0 0 1px ${t.border}, 0 12px 32px rgba(0,0,0,0.45);
+        }
+        .retrato-caja img { object-position: 50% 20% !important; }
       }
       @media (min-width: 1024px) {
         .retrato-col { position: relative; order: 0; }

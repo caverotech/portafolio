@@ -62,7 +62,7 @@ export default function Hero({ t = TEMA, irASeccion }) {
       style={{ minHeight: "100svh", paddingTop: "5.5rem", paddingBottom: "2rem" }}
     >
       <div className="relative w-full max-w-[1500px] mx-auto px-6 md:px-10 lg:px-14">
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-y-10 lg:gap-x-10 items-center">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-y-7 lg:gap-x-10 items-center">
 
           {/* ---------------- TEXTO: columnas 1–7 ---------------- */}
           <div className="lg:col-span-7 relative" style={{ zIndex: 2 }}>
@@ -226,7 +226,7 @@ export default function Hero({ t = TEMA, irASeccion }) {
                 <img
                   src={DATOS.fotos.perfil}
                   srcSet="/retrato/alexys-cavero-640.webp 640w, /retrato/alexys-cavero-960.webp 960w, /retrato/alexys-cavero-1254.webp 1254w"
-                  sizes="(min-width: 1024px) 480px, 272px"
+                  sizes="(min-width: 1024px) 480px, 88px"
                   alt={`${DATOS.nombre}, ${DATOS.titulo} en ${DATOS.ubicacion}`}
                   width="1000"
                   height="1250"
@@ -244,8 +244,9 @@ export default function Hero({ t = TEMA, irASeccion }) {
                 />
                 {/* Fundido lateral: entrega el lado izquierdo al titular */}
                 <div className="hidden lg:block absolute inset-0" style={{ background: `linear-gradient(90deg, ${t.bg} 0%, rgba(10,11,13,0.55) 24%, transparent 56%)` }} />
-                {/* Fundidos verticales, solapados y largos */}
-                <div className="absolute inset-x-0 bottom-0" style={{ height: "42%", background: `linear-gradient(transparent, rgba(10,11,13,0.55) 60%, rgba(10,11,13,0.92))` }} />
+                {/* Fundidos verticales, solapados y largos (solo desktop:
+                    en móvil el retrato es un avatar y no se funde) */}
+                <div className="hidden lg:block absolute inset-x-0 bottom-0" style={{ height: "42%", background: `linear-gradient(transparent, rgba(10,11,13,0.55) 60%, rgba(10,11,13,0.92))` }} />
                 <div className="hidden lg:block absolute inset-x-0 top-0" style={{ height: "30%", background: `linear-gradient(${t.bg}, transparent)` }} />
               </div>
             </div>
