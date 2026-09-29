@@ -9,7 +9,7 @@ import { movReducido } from "../hooks/useReveal";
    pulsar: el visitante llega y la secuencia ya está ocurriendo,
    como el arranque de una película.
 
-   Secuencia (≈4.2s, saltable en cualquier momento):
+   Secuencia (≈3s, saltable en cualquier momento):
 
      0. TELÓN      el negro se abre y aparece la retícula
      1. MARCA      el monograma se dibuja trazo a trazo
@@ -83,7 +83,7 @@ function LineaCartel({ children, activo, retardo = 0, estilo = {} }) {
           ...estilo,
           transform: activo ? "translateY(0)" : "translateY(110%)",
           opacity: activo ? 1 : 0,
-          transition: `transform 1100ms cubic-bezier(0.22,0.61,0.36,1) ${retardo}ms, opacity 700ms ease ${retardo}ms`,
+          transition: `transform 850ms cubic-bezier(0.22,0.61,0.36,1) ${retardo}ms, opacity 550ms ease ${retardo}ms`,
         }}
       >
         {children}
@@ -113,7 +113,7 @@ export default function Bienvenida({ onTerminar }) {
     if (cerrado.current) return;
     cerrado.current = true;
     setSaliendo(true);
-    setTimeout(onTerminar, 620);
+    setTimeout(onTerminar, 520);
   }, [onTerminar]);
 
   useEffect(() => {
@@ -127,22 +127,26 @@ export default function Bienvenida({ onTerminar }) {
     const timers = [];
     const en = (ms, fn) => timers.push(setTimeout(fn, ms));
 
-    en(120, () => setPaso(1));                       // telón + retícula
-    en(480, () => { setPaso(2); audio.current?.tic(520); });  // dominio
-    en(760, () => setPaso(3));                       // año
-    en(1000, () => { setPaso(4); audio.current?.acorde(); }); // monograma
-    en(2050, () => setPaso(5));                      // frase + nodo cobre
+    /* Compás comprimido (antes ≈5,2 s, ahora ≈3 s). En móvil la frase
+       es el elemento más grande de la pantalla, y Google mide cuándo
+       aparece (LCP): a 2 s de la intro llegaba a 3,7 s de carga. Los
+       pasos se solapan en lugar de esperarse, pero el orden es el mismo. */
+    en(60, () => setPaso(1));                        // telón + retícula
+    en(220, () => { setPaso(2); audio.current?.tic(520); });  // dominio
+    en(340, () => setPaso(3));                       // año
+    en(420, () => { setPaso(4); audio.current?.acorde(); }); // monograma
+    en(900, () => setPaso(5));                       // frase + nodo cobre
 
     // Capacidades, una a una
     capacidades.forEach((_, i) => {
-      en(2900 + i * 170, () => {
+      en(1350 + i * 110, () => {
         setCapsVisibles(i + 1);
         audio.current?.tic(560 + i * 60);
       });
     });
 
-    en(4150, () => setPaso(6));
-    en(4600, cerrar);
+    en(2150, () => setPaso(6));
+    en(2450, cerrar);
 
     return () => timers.forEach(clearTimeout);
   }, [cerrar, onTerminar]);
@@ -161,7 +165,7 @@ export default function Bienvenida({ onTerminar }) {
         background: t.bg,
         zIndex: 200,
         opacity: saliendo ? 0 : 1,
-        transition: "opacity 600ms cubic-bezier(0.22,0.61,0.36,1)",
+        transition: "opacity 500ms cubic-bezier(0.22,0.61,0.36,1)",
       }}
       onClick={cerrar}
       role="presentation"
@@ -204,7 +208,7 @@ export default function Bienvenida({ onTerminar }) {
         style={{
           height: "50%", background: t.bg, zIndex: 4,
           transform: paso >= 1 ? "translateY(-101%)" : "translateY(0)",
-          transition: "transform 1200ms cubic-bezier(0.76,0,0.24,1)",
+          transition: "transform 900ms cubic-bezier(0.76,0,0.24,1)",
         }}
       />
       <div
@@ -213,7 +217,7 @@ export default function Bienvenida({ onTerminar }) {
         style={{
           height: "50%", background: t.bg, zIndex: 4,
           transform: paso >= 1 ? "translateY(101%)" : "translateY(0)",
-          transition: "transform 1200ms cubic-bezier(0.76,0,0.24,1)",
+          transition: "transform 900ms cubic-bezier(0.76,0,0.24,1)",
         }}
       />
 
@@ -260,7 +264,7 @@ export default function Bienvenida({ onTerminar }) {
             style={{
               opacity: paso >= 4 ? 1 : 0,
               transform: paso >= 4 ? "scale(1)" : "scale(0.94)",
-              transition: "opacity 900ms ease, transform 1400ms cubic-bezier(0.22,0.61,0.36,1)",
+              transition: "opacity 700ms ease, transform 1000ms cubic-bezier(0.22,0.61,0.36,1)",
             }}
           >
             <svg
@@ -269,9 +273,9 @@ export default function Bienvenida({ onTerminar }) {
               style={{ width: "clamp(6rem, 17vw, 13rem)", height: "auto", display: "block" }}
             >
               <g fill="none" stroke={t.text} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 45 L23.5 20 L33 45" style={{ strokeDasharray: 62, strokeDashoffset: paso >= 4 ? 0 : 62, transition: "stroke-dashoffset 1200ms cubic-bezier(0.22,0.61,0.36,1)" }} />
+                <path d="M14 45 L23.5 20 L33 45" style={{ strokeDasharray: 62, strokeDashoffset: paso >= 4 ? 0 : 62, transition: "stroke-dashoffset 900ms cubic-bezier(0.22,0.61,0.36,1)" }} />
                 <path d="M18.2 36.5 H28.8" style={{ strokeDasharray: 11, strokeDashoffset: paso >= 4 ? 0 : 11, transition: "stroke-dashoffset 700ms cubic-bezier(0.22,0.61,0.36,1) 500ms" }} />
-                <path d="M53 26.5 A11.5 11.5 0 1 0 53 38.5" style={{ strokeDasharray: 58, strokeDashoffset: paso >= 4 ? 0 : 58, transition: "stroke-dashoffset 1200ms cubic-bezier(0.22,0.61,0.36,1) 260ms" }} />
+                <path d="M53 26.5 A11.5 11.5 0 1 0 53 38.5" style={{ strokeDasharray: 58, strokeDashoffset: paso >= 4 ? 0 : 58, transition: "stroke-dashoffset 900ms cubic-bezier(0.22,0.61,0.36,1) 260ms" }} />
               </g>
               <circle
                 cx="23.5" cy="20" r="3.4" fill={t.accent}

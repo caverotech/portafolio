@@ -219,8 +219,14 @@ export default function Hero({ t = TEMA, irASeccion }) {
               }}
             >
               <div className="relative" style={{ aspectRatio: "4 / 5" }}>
+                {/* WebP a tres anchos (public/retrato/): el JPEG original de
+                    1254 px pesaba 227 KB y bajaba entero hasta en un móvil
+                    que lo pinta a 272 px. El JPEG queda como `src` de
+                    respaldo y sigue siendo la imagen del JSON-LD. */}
                 <img
                   src={DATOS.fotos.perfil}
+                  srcSet="/retrato/alexys-cavero-640.webp 640w, /retrato/alexys-cavero-960.webp 960w, /retrato/alexys-cavero-1254.webp 1254w"
+                  sizes="(min-width: 1024px) 480px, 272px"
                   alt={`${DATOS.nombre}, ${DATOS.titulo} en ${DATOS.ubicacion}`}
                   width="1000"
                   height="1250"
